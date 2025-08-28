@@ -66,7 +66,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     },
     {
-      url: `${baseUrl}/dr-interested-impact-report-2025.pdf`,
+      url: `${baseUrl}/dr-interested-impact-report-2025 (1).pdf`,
       lastModified: currentDate,
       changeFrequency: "yearly",
       priority: 0.9,

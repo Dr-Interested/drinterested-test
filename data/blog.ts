@@ -75,7 +75,7 @@ export const authors: Record<string, Author> = {
       "https://www.linkedin.com/in/manasvi-kale-2124002a7?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
   },
   "dabosmita-das": {
-    name: "Dabosmita Parial",
+    name: "Dabosmita Das",
     image: "/Dabosmita.jpg",
     bio: "Dabosmita is a Year 12 student who is endlessly curious and excited to explore new ideas. She actively engages with the latest developments in technology and medicine, while also enjoying deep, contemplative discussions in philosophy. Her interdisciplinary mindset and passion for learning drive her to seek knowledge beyond the classroom.",
     linkedIn: "https://linkedin.com",

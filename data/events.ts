@@ -14,28 +14,26 @@ export type EventType = {
 // Upcoming events data
 export const upcomingEvents: EventType[] = [
   {
-    title: "Dr. Interested Webinar Series: Certificate Stream",
-    date: "August 31st to November 2nd",
-    time: "11AM EST",
-    location: "Virtual",
+    title: "EXPLORE³ Case Competition",
+    date: "November 22, 2025",
+    time: "9 AM – 4 PM",
+    location: "TMU Ted Rogers School of Business",
     description:
-      "Hear directly from medical students and executive team members on a variety of healthcare topics—from preparing for university and research tips to how to get involved in health policy. Complete all sections to register and track your progress throughout the series.",
-    image: "/webinar-cert.png",
+      "Tackle real-world innovation challenges, receive mentorship from industry leaders, and present your ideas to expert judges. Includes case package, light refreshments, networking, and early access perks. Fee: $10. Spots are limited! Learn more: https://www.instagram.com/explore3comp/",
+    image: "/ex3-logo.png",
     status: "open",
-    link: "https://forms.gle/gdr9VHdcPs21tNTM8",
-    featured: true,
+    link: "https://docs.google.com/forms/d/e/1FAIpQLSdl8z70fQGVrXVTAuPGXgOsyB0FyqgN94O0AfXn6qWgBRflMg/viewform",
   },
-    {
-    title: "Research Proposal Competition",
-    date: "July 1 to September 1",
-    time: "Independent",
-    location: "Virtual",
+  {
+    title: "Culture & Psychology Conference",
+    date: "October 11, 2025",
+    time: "TBD",
+    location: "York University, 169 Enterprise Blvd 3rd floor, Markham, ON L6G 0E7",
     description:
-      "Compete with students around the world to pitch a real research idea — no experience needed! Top 3 win mentorship and publication (Dr. Interested covers the $200 DOI cost). All participants receive certificates. Deadline: July 23.",
-    image: "/research-proposal.png",
-    status: "closed",
-    link: "https://forms.gle/cNMth3sUa4d3AhEY8",
-    featured: true,
+      "Free conference with refreshments, prizes, and networking. First-come, first-served for up to 20 people. Event not confirmed yet. Register your interest here (Select Dr. Interested under 'Where did you hear about this event?')",
+    image: "/psych-conference.png",
+    status: "open",
+    link: "https://docs.google.com/forms/d/e/1FAIpQLSfzFeuorRRJIkE3FdGiPjGR2IJARzWLguG_O9Xiiblm1m6fmA/viewform",
   },
   {
     title: "Office Hours",
@@ -58,6 +56,30 @@ export const upcomingEvents: EventType[] = [
     image: "/club-ambassador.png",
     status: "open",
     link: "https://docs.google.com/forms/d/e/1FAIpQLSf3J7k3y32jncOKVkngx2MKC_QvpWCDXY3o8CP6xNRzKvlLog/viewform",
+  },
+    {
+    title: "Dr. Interested Webinar Series: Certificate Stream",
+    date: "August 31st to November 2nd",
+    time: "11AM EST",
+    location: "Virtual",
+    description:
+      "Hear directly from medical students and executive team members on a variety of healthcare topics—from preparing for university and research tips to how to get involved in health policy. Complete all sections to register and track your progress throughout the series.",
+    image: "/webinar-cert.png",
+    status: "closed",
+    link: "https://forms.gle/gdr9VHdcPs21tNTM8",
+    featured: true,
+  },
+    {
+    title: "Research Proposal Competition",
+    date: "July 1 to September 1",
+    time: "Independent",
+    location: "Virtual",
+    description:
+      "Compete with students around the world to pitch a real research idea — no experience needed! Top 3 win mentorship and publication (Dr. Interested covers the $200 DOI cost). All participants receive certificates. Deadline: July 23.",
+    image: "/research-proposal.png",
+    status: "closed",
+    link: "https://forms.gle/cNMth3sUa4d3AhEY8",
+    featured: true,
   },
 ]
 

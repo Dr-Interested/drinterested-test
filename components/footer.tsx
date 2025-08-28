@@ -139,7 +139,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="dr-interested-impact-report-2025.pdf"
+                  href="dr-interested-impact-report-2025 (1).pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-white/80 hover:text-[#4ecdc4] transition-colors"
