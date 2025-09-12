@@ -532,23 +532,13 @@ export const departments: DepartmentType[] = [
       "The Finance Department secures funding through grants and sponsorships to support our initiatives and expand our impact.",
     director: {
       id: "grants-dir",
-      name: "Sai Raghav Ganesh",
+      name: "Liam Lacey",
       role: "Director of Finance",
       image: "/logo.png", 
       bio: "Leading our Finance Department, Sai Raghav Ganesh is a dedicated student and he has a strong interest in finance and economics. Sai Raghav has been involved in various extracurricular activities, including volunteering for community service projects and participating in school clubs. His leadership skills and commitment to excellence make him an invaluable asset to our team.",
       socialLinks: {},
     },
     members: [
-      {
-        id: "grants-mem7",
-        name: "Ishanth Shantmoorthy",
-        role: "Deputy Director of Finance",
-        image: "/logo.png",
-        bio: "I’m Ishanth Shantmoorthy, a Grade 12 student at an IB school in Arizona with a strong passion for biomedical engineering and the intersection of healthcare and technology. My academic interests motivate me to explore how innovation can improve medical care and patient outcomes. To support this passion, I currently serve as Deputy Director of Finance for Dr. Interested, where I manage the club’s finances and contribute to STEM outreach initiatives. I also serve as treasurer of the National Honor Society, which has helped me develop valuable skills in budgeting and leadership.In addition to these roles, I’m co-captain of my school’s robotics team and the sub-team lead for engineering. These leadership positions allow me to guide design projects and organize technical outreach efforts, combining my interests in engineering and community engagement. I also compete in FBLA, where I placed 2nd in Coding & Programming at Regionals, ranked in the Top 10 for Accounting at States, and qualified for Nationals. Alongside these experiences, I have published two biomedical research papers and gained real-world insight by shadowing professionals in biomedical engineering. Outside of academics and leadership, I volunteer at Banner Health in both the supply chain department and the laboratory, where I assist with essential operations that support patient care. I also co-host a student-run medical podcast and have developed Money Plant, a personal finance app designed to help students build strong money management skills. My current coursework reflects my diverse interests and includes HL Biology, SL Psychology, HL History, HL Language & Literature, SL Spanish, HL Math, and Anatomy and Physiology.",
-        socialLinks: {
-          linkedin:"https://www.linkedin.com/in/ishanth-shantmoorthy-baab73359/ ",
-        },
-      },
       {
         id: "grants-mem1",
         name: "Akeer Kuol Malual Nyok",
@@ -579,14 +569,6 @@ export const departments: DepartmentType[] = [
         role: "Finance Member",
         image: "/logo.png",
         bio: "Ensuring financial transparency through regular reporting.",
-        socialLinks: {},
-      },
-      {
-        id: "grants-mem5",
-        name: "Liam Lacey",
-        role: "Finance Member",
-        image: "/logo.png",
-        bio: "Identifying cost-saving opportunities across departments.",
         socialLinks: {},
       },
       {
