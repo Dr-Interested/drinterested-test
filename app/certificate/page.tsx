@@ -4,8 +4,6 @@ import { useState } from "react";
 import jsPDF from "jspdf";
 
 const templateMap: Record<string, string> = {
-  "abc123": "/certificate-test.png",
-  "xyz789": "/certificate-test2.png",
   "RPC2025participation.a9s": "/certificate-rpc.png",
 };
 
@@ -46,7 +44,7 @@ function CertificateForm() {
       
       pdf.setFontSize(32);
       pdf.setFont("helvetica", "bold");
-      pdf.text(name, pdfWidth / 2, pdfHeight / 2 + 60, {
+      pdf.text(name, pdfWidth / 2, pdfHeight / 2, {
         align: "center",
       });
 
