@@ -44,10 +44,9 @@ function CertificateForm() {
       
       pdf.setFontSize(32);
       pdf.setFont("helvetica", "bold");
-      pdf.text(name, pdfWidth / 2, pdfHeight / 2, {
+      pdf.text(name, pdfWidth / 2, pdfHeight / 2 + 40, {
         align: "center",
       });
-
       pdf.save(`${name}-certificate.pdf`);
     };
   };
@@ -88,7 +87,7 @@ function CertificateForm() {
               backgroundPosition: "center",
             }}
           >
-            <span className="absolute top-80 bottom-8 left-1/2 transform -translate-x-1/2 text-3xl font-bold text-black">
+            <span className="absolute top-64 left-1/2 transform -translate-x-1/2 text-3xl font-bold text-black">
               {name}
             </span>
           </div>
