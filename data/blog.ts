@@ -108,7 +108,7 @@ export const authors: Record<string, Author> = {
 },
   "avika-tyagi": {
   name: "Avika Tyagi",
-  image: "/avika.jpg",
+  image: "/logo.png",
   bio: "Avika is a rising sophomore in Maryland passionate about neuroscience, pediatrics, and pursuing a future in medicine and research."
 },
 }
