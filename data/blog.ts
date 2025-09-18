@@ -228,7 +228,7 @@ Therefore, it is important for teens to **develop healthy sleep habits**.
 - Johns Hopkins Medicine. *The Effects of Sleep Deprivation.* Johns Hopkins Medicine Health Library.  
 
   `,
-  coverImage: "/sleep-deprivation.jpg",
+  coverImage: "/sleep-deprivation.png",
   date: "September 17, 2025",
   author: authors["gaeun-lee"],
   topic: "Wellness",
