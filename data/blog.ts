@@ -106,6 +106,11 @@ export const authors: Record<string, Author> = {
   image: "/logo.png",
   bio: "Prithi is a high school junior exploring genomic biochemistry and medicine, passionate about making science accessible through writing."
 },
+  "avika-tyagi": {
+  name: "Avika Tyagi",
+  image: "/logo.png",
+  bio: "Avika is a rising sophomore in Maryland passionate about neuroscience, pediatrics, and pursuing a future in medicine and research."
+},
 }
 
 // Blog Topics
@@ -160,7 +165,131 @@ export const blogTopics: BlogTopic[] = [
 
 // Blog Posts (Ordered from Most Recent to Oldest)
 export const blogPosts: BlogPost[] = [
+  {
+  slug: "sleep-deprivation-affects-stress-and-anxiety",
+  title: "How Sleep Deprivation Affects Teen Stress and Anxiety",
+  excerpt:
+    "Do you sleep well? If you are a teenager, your answer will be no-day. The recommended daily amount of sleep is **8 to 10 hours**. However, teens actually sleep **less than 6 hours**. Would this be a problem if most teens don't get enough sleep? ",
+  content: `
+## Introduction
+Do you sleep well? If you are a teenager, your answer will be no-day. The recommended daily amount of sleep is **8 to 10 hours**. However, teens actually sleep **less than 6 hours**. Would this be a problem if most teens don't get enough sleep?  
+
+The answer is that it's a problem.  
+
+## Problem 1: Increased Stress
+Lack of sleep is one of the biggest reasons for raising stress levels in adolescents. Sleeping properly doubles the pressure on academic achievement and makes them easily sensitive to trivial matters.  
+
+- **53%** of teenagers said they felt lethargic or lazy when they did not get enough sleep.  
+- **42%** said they were annoyed.  
+- **32%** said they were less focused.  
+- **23%** said they were not motivated to fulfill their responsibilities.  
+
+Adolescents who had less stress during the last school year reported more hours of sleep at night than those who had more stress (**7.8 hours vs. 6.9 hours**).  
+
+- **90%** of teenagers who reported low stress levels during the last school year said they got enough sleep.  
+- Less than **48%** of those with higher stress levels reported getting enough sleep.  
+- Adolescents with low stress were more likely to report very good sleep quality (**59% vs. 22%**).  
+
+Teenagers with high stress levels were more likely to report trouble sleeping well.  
+- **43%** said they could not get enough sleep because of a complicated head.  
+- Only **9%** of low-stress teenagers reported the same.  
+
+In short, adolescents who slept less than 8 hours on a school night were found to be more stressed than those who slept at least 8 hours.  
+
+---
+
+## Problem 2: Deepening Anxiety
+Teenagers also experience **greater anxiety** if they don't get enough sleep.  
+
+It is common for students to suffer from greater anxiety in the examination room. Palmer and Dr. Joanne Bower from the University of East Anglia analyzed **154 studies spanning 50 years**. They found that all three types of sleep deprivation increased anxiety symptoms among participants, including:  
+
+- Decreased positive emotions (joy, happiness, satisfaction)  
+- Faster heart rates  
+- Higher anxiety  
+
+> “This has happened even after a short period of sleep, such as staying up an hour or two later than usual or not sleeping for just a few hours,” Palmer said.  
+> “Also, sleep deprivation has been shown to exacerbate anxiety symptoms and slow the arousal of emotional stimuli.”  
+
+Results for depressive symptoms were small and inconsistent, as were outcomes for negative emotions such as sadness, worry, and stress.  
+
+---
+
+## Conclusion
+Lack of sleep can adversely affect both **stress** and **anxiety**.  
+Therefore, it is important for teens to **develop healthy sleep habits**.  
+
+---
+
+## References
+- Columbia University Department of Psychiatry. *How Sleep Deprivation Impacts Mental Health.* Columbia Psychiatry.  
+- British Psychological Society. *Lack of Sleep Causes Anxiety – Don’t Worry About It.* BPS Research Digest.  
+- Banner Health. *How Sleep Can Affect Stress.* Banner Health Blog.  
+- American Psychological Association. *Stress in America: Are Teens Adopting Adults’ Stress Habits?* APA News Release, 2013.  
+- Johns Hopkins Medicine. *The Effects of Sleep Deprivation.* Johns Hopkins Medicine Health Library.  
+
+  `,
+  coverImage: "/sleep-deprivation.png",
+  date: "September 17, 2025",
+  author: authors["gaeun-lee"],
+  topic: "Wellness",
+  readingTime: "6 min read",
+  featured: false
+},
  {
+  slug: "exercise-hobbies-teens-wellness",
+  title: "How Exercise and Hobbies Boost Teen’s Wellness",
+  excerpt:
+    "Balancing school with hobbies and exercise isn’t just fun—it’s essential. Discover how physical activity and creative outlets can reduce stress, boost mood, and improve teen mental health.",
+  content: `
+## How Exercise and Hobbies Boost Teen’s Wellness
+
+As teenagers, we often get told that “Academics Come First,” which usually means that everything else we’re passionate about has to take a backseat. With each grade, responsibilities pile up, and it can get harder to find time for the things we love. Being a teen comes with so much stress—that’s why it’s vital to have relaxing hobbies and make time for exercise!
+
+## How Does Exercise Affect Mental Wellness?
+
+Exercise isn’t just about fitness—it’s also fuel for your brain. Running, walking, lifting weights, or playing sports releases **endorphins**, the chemicals that boost your mood and relieve stress. With less stress, teens often sleep better, stay focused, and feel more motivated.
+
+
+## How Do Hobbies Affect Mental Wellness?
+
+Hobbies give students a productive outlet to relax and express themselves. Whether it’s art, music, sports, or cooking, hobbies build confidence, discipline, and joy. They also help teens detach from school pressures, making life feel more balanced.
+
+## What Happens Without Exercise or Hobbies?
+
+Without physical or mentally engaging activities, teens risk poor mental health. Burnout, anxiety, and depression become more likely when academics are the only focus. Hobbies and exercise refresh both mind and body, protecting against these risks.
+
+## The Social Benefits
+
+Exercising or pursuing hobbies connects you with others who share your interests. Friendships formed through gyms, sports teams, art clubs, or even cooking groups can become powerful support systems.
+
+Examples include:
+
+- Staying active (gym, running, walking)  
+- Playing sports  
+- Singing or songwriting  
+- Cooking or baking  
+- Drawing or painting  
+- Solving puzzles  
+
+These shared passions foster belonging and happiness.
+## Final Thoughts
+
+Taking breaks to exercise and explore hobbies isn’t a distraction—it’s self-care. Whether it’s music, biking, or painting, dedicating time to what makes you happy can transform your well-being and open doors you never imagined.
+## Sources
+
+- Parkhurst, Emma. *How Hobbies Improve Mental Health.* Mental Health Education, USU Extension, 25 Oct. 2021. [extension.usu.edu/mentalhealth/articles/how-hobbies-improve-mental-health](https://extension.usu.edu/mentalhealth/articles/how-hobbies-improve-mental-health)  
+- Mayo Clinic Staff. *Exercise and Stress: Get Moving to Manage Stress.* Mayo Clinic, 3 July 2025. [www.mayoclinic.org/healthy-lifestyle/stress-management/in-depth/exercise-and-stress/art-20044469](https://www.mayoclinic.org/healthy-lifestyle/stress-management/in-depth/exercise-and-stress/art-20044469)
+  `,
+  coverImage: "/exercise_hobbies_cover.jpg",
+  date: "September 17, 2025",
+  author: authors["avika-tyagi"],
+  topic: "Wellness",
+  readingTime: "6 min read",
+  featured: false
+},
+
+  {
+   
   slug: "who-are-operational-nurses",
   title: "Who Are Operational Nurses and Why They Matter",
   excerpt:
