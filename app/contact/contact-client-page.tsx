@@ -15,11 +15,13 @@ import {
   Linkedin,
   ArrowRight,
   Youtube,
-  Music2 as Spotify,
+  Music2, // Spotify
+  Video, // TikTok
   MessageSquare,
   Facebook,
   AtSign as Threads,
-  Cloud,
+  Cloud, // Mastodon
+  Layers, // Bluesky
   Twitter
 } from "lucide-react"
 import SeoSchema from "@/components/seo-schema"
@@ -181,6 +183,14 @@ export default function ContactClientPage() {
                         <Linkedin className="h-5 w-5" />
                       </a>
                       <a
+                        href="https://www.facebook.com/profile.php?id=61572438387454"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#405862]/80 hover:text-[#4ecdc4] transition-colors hover:scale-110 duration-200"
+                      >
+                        <Facebook className="h-5 w-5" />
+                      </a>
+                      <a
                         href="https://www.youtube.com/@Dr.Interested"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -194,7 +204,15 @@ export default function ContactClientPage() {
                         rel="noopener noreferrer"
                         className="text-[#405862]/80 hover:text-[#4ecdc4] transition-colors hover:scale-110 duration-200"
                       >
-                        <Spotify className="h-5 w-5" />
+                        <Music2 className="h-5 w-5" />
+                      </a>
+                      <a
+                        href="https://www.tiktok.com/@dr.interested"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#405862]/80 hover:text-[#4ecdc4] transition-colors hover:scale-110 duration-200"
+                      >
+                        <Video className="h-5 w-5" />
                       </a>
                       <a
                         href="https://discord.gg/pzbGRgsGXY"
@@ -203,14 +221,6 @@ export default function ContactClientPage() {
                         className="text-[#405862]/80 hover:text-[#4ecdc4] transition-colors hover:scale-110 duration-200"
                       >
                         <MessageSquare className="h-5 w-5" />
-                      </a>
-                      <a
-                        href="https://www.facebook.com/profile.php?id=61572438387454"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[#405862]/80 hover:text-[#4ecdc4] transition-colors hover:scale-110 duration-200"
-                      >
-                        <Facebook className="h-5 w-5" />
                       </a>
                       <a
                         href="https://www.threads.com/@dr.interested"
@@ -222,6 +232,14 @@ export default function ContactClientPage() {
                       </a>
                       <a
                         href="https://bsky.app/profile/drinterested.org"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#405862]/80 hover:text-[#4ecdc4] transition-colors hover:scale-110 duration-200"
+                      >
+                        <Layers className="h-5 w-5" />
+                      </a>
+                      <a
+                        href="https://mastodon.social/@drinterested"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-[#405862]/80 hover:text-[#4ecdc4] transition-colors hover:scale-110 duration-200"

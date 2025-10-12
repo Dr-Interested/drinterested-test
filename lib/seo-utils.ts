@@ -103,6 +103,8 @@ export function generateOrganizationSchema() {
       "https://www.threads.com/@dr.interested",
       "https://bsky.app/profile/drinterested.org",
       "https://x.com/Dr_Interested_",
+      "https://www.tiktok.com/@dr.interested",
+      "https://mastodon.social/@drinterested",
       "https://news.drinterested.org/",
       "https://impact2025.drinterested.org/",
     ],
