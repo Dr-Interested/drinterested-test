@@ -14,8 +14,7 @@ export function DomainAnnouncementPopup({ onClose, isMainPage = false }: DomainA
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
-    // Check if user has already seen the announcement
-    const hasSeenAnnouncement = localStorage.getItem("hasSeenDomainAnnouncement")
+    const hasSeenAnnouncement = localStorage.getItem("hasSeenDomainAnnouncement_v2")
 
     if (!hasSeenAnnouncement) {
       const timer = setTimeout(
@@ -31,7 +30,7 @@ export function DomainAnnouncementPopup({ onClose, isMainPage = false }: DomainA
 
   const handleClose = () => {
     setIsVisible(false)
-    localStorage.setItem("hasSeenDomainAnnouncement", "true")
+    localStorage.setItem("hasSeenDomainAnnouncement_v2", "true")
     setTimeout(() => {
       onClose?.()
     }, 300)
