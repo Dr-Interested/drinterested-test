@@ -213,7 +213,6 @@ export default function EventsClientPage() {
       {/* Stay Updated */}
       <section className="py-10 bg-[#405862] text-white">
         <div className="container max-w-4xl">
-          <NewsletterForm darkMode={true} showFirstName={false} />
         </div>
       </section>
     </div>

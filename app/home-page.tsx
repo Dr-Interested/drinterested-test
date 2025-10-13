@@ -943,7 +943,6 @@ export default function HomePage() {
       {/* Stay Updated Section */}
       <section className="py-12 bg-[#405862] text-white">
         <div className="container max-w-4xl">
-          <NewsletterForm darkMode={true} />
         </div>
       </section>
     </div>

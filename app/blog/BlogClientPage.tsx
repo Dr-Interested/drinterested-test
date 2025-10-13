@@ -277,7 +277,6 @@ export default function BlogClientPage() {
       {/* Newsletter */}
       <section className="py-16 bg-[#405862] text-white">
         <div className="container">
-          <NewsletterForm darkMode={true} />
         </div>
       </section>
     </div>
