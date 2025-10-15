@@ -29,8 +29,8 @@ export const webinars: Webinar[] = [
     date: "October 10, 2025",
     views: 19,
     duration: "25:25",
-    videoPath: "/drint research webinar.mp4", // UPDATE THIS PATH
-    thumbnailPath: "/drint thumbnail demistifiying reasearch.png", // UPDATE THIS PATH
+    videoPath: "/drintresearchwebinar.mp4", // UPDATE THIS PATH
+    thumbnailPath: "/drintthumbnaildemistifiyingreasearch.png", // UPDATE THIS PATH
     youtubeUrl: "https://youtu.be/8G57EJFUZzE?si=JInq2f-H9BpM1_vb",
     spotifyUrl: "https://open.spotify.com/episode/4Z4UkUTF7AldXtoyujxzdK?si=86b5ed24a7194b10",
     tags: ["ResearchPaper", "MedicalResearch", "ScienceEducation", "AcademicWriting", "Publication"],
@@ -48,8 +48,8 @@ export const webinars: Webinar[] = [
     date: "October 6, 2025",
     views: 31,
     duration: "32:31",
-    videoPath: "/drint pathways to med webinar.mp4", // UPDATE THIS PATH
-    thumbnailPath: "/drint thumbnail pathways to med.png", // UPDATE THIS PATH
+    videoPath: "/drintpathwaystomedwebinar.mp4", // UPDATE THIS PATH
+    thumbnailPath: "/drintthumbnailpathwaystomed.png", // UPDATE THIS PATH
     youtubeUrl: "https://youtu.be/dZj0Oi0aKPw?si=7nOnJz1coLZG5356",
     spotifyUrl: "https://open.spotify.com/episode/5ru345a1LG0AUHKYonqqvM?si=cc04b6676d1e4efe",
     tags: ["PreMed", "Education", "StudentSuccess", "MedicalSchool", "GapYear", "GraduateSchool"],
@@ -67,8 +67,8 @@ export const webinars: Webinar[] = [
     date: "September 14, 2025",
     views: 28,
     duration: "29:48",
-    videoPath: "/drint premed comp webinar.mp4", // UPDATE THIS PATH
-    thumbnailPath: "/drint thumbnail premed comps.png", // UPDATE THIS PATH
+    videoPath: "/drintpremedcompwebinar.mp4", // UPDATE THIS PATH
+    thumbnailPath: "/drintthumbnailpremedcomps.png", // UPDATE THIS PATH
     youtubeUrl: "https://youtu.be/3YPxHLOdsOU?si=giCeC-MCk0R7JlOK",
     spotifyUrl: "https://open.spotify.com/episode/2ZajhQT5piThDtwZgdk1dX?si=9550ca993e8d4c8c",
     tags: ["Premed", "MedicalSchool", "FutureDoctors", "Competitions", "ScienceFair"],
@@ -85,8 +85,8 @@ export const webinars: Webinar[] = [
     date: "September 7, 2025",
     views: 109,
     duration: "28:55",
-    videoPath: "/drint policy webinar.mp4", // UPDATE THIS PATH
-    thumbnailPath: "/drint thumbnail policy.png", // UPDATE THIS PATH
+    videoPath: "/drintpolicywebinar.mp4", // UPDATE THIS PATH
+    thumbnailPath: "/drintthumbnailpolicy.png", // UPDATE THIS PATH
     youtubeUrl: "https://youtu.be/8Mp9ulR7L4Y?si=eyAZF1DVFzO9uscQ",
     spotifyUrl: "https://open.spotify.com/episode/4CwnZwJufNXRcB7iGzrObO?si=2e5148b845e94246",
     tags: ["YouthLeadership", "HealthPolicy", "DrInterested", "Advocacy", "Healthcare", "Adil Mukhi"],
@@ -104,8 +104,8 @@ export const webinars: Webinar[] = [
     date: "August 31, 2025",
     views: 44,
     duration: "29:56",
-    videoPath: "/drint explore med - chosse major webinar.mp4", // UPDATE THIS PATH
-    thumbnailPath: "/drint thumbnail med early - majors.png", // UPDATE THIS PATH
+    videoPath: "/drintexploremed-chossemajorwebinar.mp4", // UPDATE THIS PATH
+    thumbnailPath: "/drintthumbnailmedearly-majors.png", // UPDATE THIS PATH
     youtubeUrl: "https://youtu.be/al1ybYrlMi4?si=ZJHEYbNNyA4td7ss",
     spotifyUrl: "https://open.spotify.com/episode/5cmZdrgxarbyCci9DeBdzD?si=c8d6f3256a5e41d3",
     tags: ["PreMed", "MedicalSchool", "CollegeMajor", "CareerPlanning", "HighSchool"],

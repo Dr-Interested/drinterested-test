@@ -38,14 +38,19 @@ export default function WatchPageClient({ webinar }: WatchPageClientProps) {
     }
   }, [])
 
-  const togglePlay = () => {
-    if (videoRef.current) {
+  const togglePlay = async () => {
+    const video = videoRef.current
+    if (!video) return
+
+    try {
       if (isPlaying) {
-        videoRef.current.pause()
+        video.pause()
       } else {
-        videoRef.current.play()
+        await video.play()
       }
       setIsPlaying(!isPlaying)
+    } catch (err) {
+      console.error("Playback failed:", err)
     }
   }
 
@@ -128,8 +133,18 @@ export default function WatchPageClient({ webinar }: WatchPageClientProps) {
                 poster={webinar.thumbnailPath}
                 onClick={togglePlay}
                 playsInline
-              >
-                <source src={webinar.videoPath} type="video/mp4" />
+                preload="metadata"
+                // optional but helps ensure browser allows playback after click
+                muted={isMuted}
+              />
+                <source
+                  src={
+                    webinar.videoPath.startsWith("http")
+                      ? webinar.videoPath
+                      : `https://www.drinterested.org${webinar.videoPath}`
+                  }
+                  type="video/mp4"
+                />
                 <track kind="captions" src={webinar.transcript} srcLang="en" label="English" />
                 Your browser does not support the video tag.
               </video>
@@ -223,12 +238,12 @@ export default function WatchPageClient({ webinar }: WatchPageClientProps) {
                     <p className="text-[#405862]/60 text-sm leading-relaxed">{webinar.longDescription}</p>
                     {webinar.speaker && (
                       <p className="text-[#405862]/60 text-sm mt-4">
-                        <span className="text-white font-semibold">Speaker:</span> {webinar.speaker}
+                        <span className="text-[#4ecdc4] font-semibold">Speaker:</span> {webinar.speaker}
                       </p>
                     )}
                     {webinar.host && (
                       <p className="text-[#405862]/60 text-sm">
-                        <span className="text-white font-semibold">Hosted by:</span> {webinar.host}
+                        <span className="text-[#4ecdc4] font-semibold">Hosted by:</span> {webinar.host}
                       </p>
                     )}
                   </CardContent>
