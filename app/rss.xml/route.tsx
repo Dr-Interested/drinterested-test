@@ -3,6 +3,16 @@ import { webinars } from "@/data/webinars"
 import { executiveDirector, deputyexecdir, advisors, departments, MemberType } from "@/data/members"
 import { upcomingEvents, pastEvents, EventType } from "@/data/events"
 
+// Helper function to escape XML special characters
+function escapeXml(unsafe: string): string {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;")
+}
+
 export async function GET() {
   const baseUrl = "https://www.drinterested.org"
 
@@ -206,22 +216,22 @@ export async function GET() {
     items.push(`
     <item>
       <title><![CDATA[${post.title}]]></title>
-      <link>${postUrl}</link>
-      <guid isPermaLink="true">${postUrl}</guid>
+      <link>${escapeXml(postUrl)}</link>
+      <guid isPermaLink="true">${escapeXml(postUrl)}</guid>
       <description><![CDATA[${post.excerpt}]]></description>
       <pubDate>${pubDate}</pubDate>
       <author><![CDATA[${post.author.name}]]></author>
-      <category>${post.topic}</category>
-      <media:content url="${imageUrl}" medium="image" type="image/jpeg">
+      <category>${escapeXml(post.topic)}</category>
+      <media:content url="${escapeXml(imageUrl)}" medium="image" type="image/jpeg">
         <media:title><![CDATA[${post.title} - Cover Image]]></media:title>
         <media:description><![CDATA[${imageDescriptions[post.coverImage] || `Cover image for ${post.title} - ${post.excerpt}`}]]></media:description>
       </media:content>
-      <media:content url="${authorImageUrl}" medium="image" type="image/jpeg">
+      <media:content url="${escapeXml(authorImageUrl)}" medium="image" type="image/jpeg">
         <media:title><![CDATA[${post.author.name} - Author Photo]]></media:title>
         <media:description><![CDATA[${imageDescriptions[post.author.image] || `${post.author.name} - ${post.author.bio}`}]]></media:description>
       </media:content>
       <content:encoded><![CDATA[
-        <img src="${imageUrl}" alt="${post.title}" />
+        <img src="${escapeXml(imageUrl)}" alt="${escapeXml(post.title)}" />
         ${post.content}
       ]]></content:encoded>
     </item>`)
@@ -235,35 +245,35 @@ export async function GET() {
     items.push(`
     <item>
       <title><![CDATA[${webinar.title}]]></title>
-      <link>${webinarUrl}</link>
-      <guid isPermaLink="true">${webinarUrl}</guid>
+      <link>${escapeXml(webinarUrl)}</link>
+      <guid isPermaLink="true">${escapeXml(webinarUrl)}</guid>
       <description><![CDATA[${webinar.description}]]></description>
       <pubDate>${pubDate}</pubDate>
       <category>Webinar</category>
       <category>Medical Education</category>
-      ${webinar.tags.map((tag) => `<category>${tag}</category>`).join("\n      ")}
+      ${webinar.tags.map((tag) => `<category>${escapeXml(tag)}</category>`).join("\n      ")}
       ${webinar.speaker ? `<author><![CDATA[${webinar.speaker}]]></author>` : ""}
-      <media:content url="${thumbnailUrl}" medium="image" type="image/jpeg">
+      <media:content url="${escapeXml(thumbnailUrl)}" medium="image" type="image/jpeg">
         <media:title><![CDATA[${webinar.title} - Thumbnail]]></media:title>
         <media:description><![CDATA[${imageDescriptions[webinar.thumbnailPath] || webinar.description}]]></media:description>
       </media:content>
-      <media:content url="${webinar.youtubeUrl}" medium="video" type="video/mp4" duration="${webinar.duration}">
+      <media:content url="${escapeXml(webinar.youtubeUrl)}" medium="video" type="video/mp4" duration="${escapeXml(webinar.duration)}">
         <media:title><![CDATA[${webinar.title}]]></media:title>
         <media:description><![CDATA[${webinar.longDescription}]]></media:description>
       </media:content>
       <content:encoded><![CDATA[
-        <img src="${thumbnailUrl}" alt="${webinar.title}" />
+        <img src="${escapeXml(thumbnailUrl)}" alt="${escapeXml(webinar.title)}" />
         <p>${webinar.longDescription}</p>
-        <p><strong>Duration:</strong> ${webinar.duration}</p>
+        <p><strong>Duration:</strong> ${escapeXml(webinar.duration)}</p>
         <p><strong>Views:</strong> ${webinar.views}</p>
-        ${webinar.speaker ? `<p><strong>Speaker:</strong> ${webinar.speaker}</p>` : ""}
-        <p><a href="${webinar.youtubeUrl}" target="_blank">Watch on YouTube</a></p>
-        ${webinar.spotifyUrl ? `<p><a href="${webinar.spotifyUrl}" target="_blank">Listen on Spotify</a></p>` : ""}
+        ${webinar.speaker ? `<p><strong>Speaker:</strong> ${escapeXml(webinar.speaker)}</p>` : ""}
+        <p><a href="${escapeXml(webinar.youtubeUrl)}" target="_blank">Watch on YouTube</a></p>
+        ${webinar.spotifyUrl ? `<p><a href="${escapeXml(webinar.spotifyUrl)}" target="_blank">Listen on Spotify</a></p>` : ""}
       ]]></content:encoded>
     </item>`)
   })
 
-  // ===== Add Members =====
+// ===== Add Members =====
   const allMembers: MemberType[] = [
     executiveDirector,
     ...deputyexecdir,
@@ -277,30 +287,31 @@ export async function GET() {
   allMembers.forEach((member) => {
     const memberUrl = `${baseUrl}/team/${member.id}`
     const imageUrl = `${baseUrl}${member.image}`
-    const pubDate = new Date().toUTCString()
+    // Use a fixed valid date for team members instead of current date
+    const pubDate = new Date("2025-01-01T00:00:00Z").toUTCString()
 
     items.push(`
     <item>
       <title><![CDATA[${member.name} - ${member.role}]]></title>
-      <link>${memberUrl}</link>
-      <guid isPermaLink="true">${memberUrl}</guid>
+      <link>${escapeXml(memberUrl)}</link>
+      <guid isPermaLink="true">${escapeXml(memberUrl)}</guid>
       <description><![CDATA[${member.bio}]]></description>
       <pubDate>${pubDate}</pubDate>
       <category>Team Member</category>
-      <media:content url="${imageUrl}" medium="image" type="image/jpeg">
+      <media:content url="${escapeXml(imageUrl)}" medium="image" type="image/jpeg">
         <media:title><![CDATA[${member.name} - Headshot]]></media:title>
-        <media:description><![CDATA[${imageDescriptions[member.image] || `${member.name}, ${member.role}` }]]></media:description>
+        <media:description><![CDATA[${imageDescriptions[member.image] || `${member.name}, ${member.role}`}]]></media:description>
       </media:content>
       <content:encoded><![CDATA[
-        <img src="${imageUrl}" alt="${member.name}" />
-        <p><strong>${member.role}</strong></p>
+        <img src="${escapeXml(imageUrl)}" alt="${escapeXml(member.name)}" />
+        <p><strong>${escapeXml(member.role)}</strong></p>
         <p>${member.bio}</p>
         ${
           member.socialLinks
             ? Object.entries(member.socialLinks)
                 .map(([key, url]) =>
                   url
-                    ? `<p><a href="${url}" target="_blank">${key}</a></p>`
+                    ? `<p><a href="${escapeXml(url)}" target="_blank">${escapeXml(key)}</a></p>`
                     : ""
                 )
                 .join("")
@@ -310,35 +321,56 @@ export async function GET() {
     </item>`)
   })
 
-    // ===== Add Events =====
-    const events: EventType[] = [...upcomingEvents, ...pastEvents]
+  // ===== Add Events =====
+  const events: EventType[] = [...upcomingEvents, ...pastEvents]
 
-    events.forEach((event: EventType) => {
-      const eventUrl = `${baseUrl}${event.link}`
-      const imageUrl = `${baseUrl}${event.image}`
-      const pubDate = new Date(event.date).toUTCString()
+  events.forEach((event: EventType) => {
+    // Check if the link is already an absolute URL
+    const isExternalLink = event.link.startsWith('http://') || event.link.startsWith('https://')
+    const eventUrl = isExternalLink ? event.link : `${baseUrl}${event.link}`
+    
+    // Skip external links to comply with sitemap/RSS feed standards
+    // External URLs (from different domains) should not be in sitemaps
+    if (isExternalLink) {
+      return
+    }
+    
+    const imageUrl = `${baseUrl}${event.image}`
+    // Ensure event.date is a valid date string
+    let pubDate: string
+    try {
+      const eventDate = new Date(event.date)
+      // Check if date is valid
+      if (isNaN(eventDate.getTime())) {
+        pubDate = new Date("2025-01-01T00:00:00Z").toUTCString()
+      } else {
+        pubDate = eventDate.toUTCString()
+      }
+    } catch {
+      pubDate = new Date("2025-01-01T00:00:00Z").toUTCString()
+    }
 
-      items.push(`
-      <item>
-        <title><![CDATA[${event.title}]]></title>
-        <link>${eventUrl}</link>
-        <guid isPermaLink="true">${eventUrl}</guid>
-        <description><![CDATA[${event.description}]]></description>
-        <pubDate>${pubDate}</pubDate>
-        <category>Event</category>
-        <media:content url="${imageUrl}" medium="image" type="image/jpeg">
-          <media:title><![CDATA[${event.title} - Event Image]]></media:title>
-          <media:description><![CDATA[${imageDescriptions[event.image] || event.description}]]></media:description>
-        </media:content>
-        <content:encoded><![CDATA[
-          <img src="${imageUrl}" alt="${event.title}" />
-          <p>${event.description}</p>
-          <p><strong>Date:</strong> ${event.date}</p>
-          <p><strong>Location:</strong> ${event.location}</p>
-          <p><a href="${eventUrl}" target="_blank">Learn more</a></p>
-        ]]></content:encoded>
-      </item>`)
-    })
+    items.push(`
+    <item>
+      <title><![CDATA[${event.title}]]></title>
+      <link>${escapeXml(eventUrl)}</link>
+      <guid isPermaLink="true">${escapeXml(eventUrl)}</guid>
+      <description><![CDATA[${event.description}]]></description>
+      <pubDate>${pubDate}</pubDate>
+      <category>Event</category>
+      <media:content url="${escapeXml(imageUrl)}" medium="image" type="image/jpeg">
+        <media:title><![CDATA[${event.title} - Event Image]]></media:title>
+        <media:description><![CDATA[${imageDescriptions[event.image] || event.description}]]></media:description>
+      </media:content>
+      <content:encoded><![CDATA[
+        <img src="${escapeXml(imageUrl)}" alt="${escapeXml(event.title)}" />
+        <p>${event.description}</p>
+        <p><strong>Date:</strong> ${escapeXml(event.date)}</p>
+        <p><strong>Location:</strong> ${escapeXml(event.location)}</p>
+        <p><a href="${escapeXml(eventUrl)}" target="_blank">Learn more</a></p>
+      ]]></content:encoded>
+    </item>`)
+  })
 
   Object.entries(imageDescriptions).forEach(([imagePath, description]) => {
     const imageUrl = `${baseUrl}${imagePath}`
@@ -355,18 +387,18 @@ export async function GET() {
     items.push(`
     <item>
       <title><![CDATA[${title} - Dr. Interested]]></title>
-      <link>${imageUrl}</link>
-      <guid isPermaLink="true">${imageUrl}</guid>
+      <link>${escapeXml(imageUrl)}</link>
+      <guid isPermaLink="true">${escapeXml(imageUrl)}</guid>
       <description><![CDATA[${description}]]></description>
       <pubDate>${new Date().toUTCString()}</pubDate>
       <category>Image</category>
       <category>Medical Education</category>
-      <media:content url="${imageUrl}" medium="image">
+      <media:content url="${escapeXml(imageUrl)}" medium="image">
         <media:title><![CDATA[${title}]]></media:title>
         <media:description><![CDATA[${description}]]></media:description>
       </media:content>
       <content:encoded><![CDATA[
-        <img src="${imageUrl}" alt="${title}" />
+        <img src="${escapeXml(imageUrl)}" alt="${escapeXml(title)}" />
         <p>${description}</p>
       ]]></content:encoded>
     </item>`)
@@ -380,15 +412,15 @@ export async function GET() {
      xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Dr. Interested - Empowering Youth in Healthcare</title>
-    <link>${baseUrl}</link>
+    <link>${escapeXml(baseUrl)}</link>
     <description>Dr. Interested is a youth-led organization dedicated to inspiring the next generation of healthcare professionals through research, education, and mentorship. Explore medical topics, career guidance, and opportunities in healthcare.</description>
     <language>en-us</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
-    <atom:link href="${baseUrl}/rss.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="${escapeXml(baseUrl)}/rss.xml" rel="self" type="application/rss+xml" />
     <image>
-      <url>${baseUrl}/logo.png</url>
+      <url>${escapeXml(baseUrl)}/logo.png</url>
       <title>Dr. Interested</title>
-      <link>${baseUrl}</link>
+      <link>${escapeXml(baseUrl)}</link>
     </image>
     ${items.join("\n    ")}
   </channel>
