@@ -139,6 +139,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/private/", "/admin/"],
       },
     ],
-    sitemap: "https://www.drinterested.org/sitemap.xml",
+    sitemap: ["https://www.drinterested.org/sitemap.xml", "https://www.drinterested.org/rss.xml"],
   }
 }

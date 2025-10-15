@@ -53,6 +53,9 @@ export const metadata: Metadata = {
     "policy spark",
     "healthcare policy",
     "healthcare events",
+    "medical webinars",
+    "premed webinars",
+    "healthcare webinars",
   ],
   authors: [{ name: "Dr. Interested Team" }],
   creator: "Dr. Interested",
@@ -91,6 +94,9 @@ export const metadata: Metadata = {
     canonical: "https://www.drinterested.org",
     languages: {
       "en-US": "https://www.drinterested.org",
+    },
+    types: {
+      "application/rss+xml": "https://www.drinterested.org/rss.xml",
     },
   },
   icons: [
@@ -145,6 +151,12 @@ export default function RootLayout({
         </Script>
         <Script src="https://f.convertkit.com/ckjs/ck.5.js" strategy="lazyOnload" />
         <link rel="canonical" href="https://www.drinterested.org" />
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Dr. Interested RSS Feed"
+          href="https://www.drinterested.org/rss.xml"
+        />
       </head>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
