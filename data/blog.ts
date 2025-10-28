@@ -173,6 +173,148 @@ export const blogTopics: BlogTopic[] = [
 
 // Blog Posts (Ordered from Most Recent to Oldest)
 export const blogPosts: BlogPost[] = [
+{
+  slug: "dr-galina-gheihman-profile",
+  title: "Dr. Galina Gheihman: Advancing Medical Education in Neurology",
+  excerpt:
+    "Dr. Galina Gheihman, a neurologist at Brigham and Women’s Hospital and advisor at Harvard Medical School, is reshaping how neuroscience and neurology are taught through innovative programs and publications.",
+  content: `
+## Dr. Galina Gheihman: Advancing Medical Education in Neurology
+
+![Dr. Galina Gheihman](/dr_gheihman_cover.jpg)
+
+*Image source: [Brigham and Women’s Hospital Physician Directory](https://physiciandirectory.brighamandwomens.org/details/16852/?pk_vid=e042e8051a5503991760325443ada98c)*
+
+
+## Who Is Dr. Gheihman?
+
+**Dr. Galina Gheihman** is a practicing neurologist and resident supervisor at **Brigham and Women’s Hospital**. She leads the *NeuEJM Medical Journal*, and is a developer of the *Outpatient Neurology Series*, which introduced mental health and well-being surveys and services into medical curricula. 
+
+She serves as a **PCE advisor for Harvard Medical School**, **co-director of a Non-Neurologist CME Course**, and **member of the HMS Taskforce for Teacher Faculty Experience**. Her writing includes academic articles and conference proceedings that explore innovative ways of teaching neuroscience in universities and medical programs.
+
+
+## Education and Early Career
+
+Originally from **Toronto, Ontario**, Dr. Gheihman completed her undergraduate studies at the **University of Toronto** before attending **Harvard Medical School**, where she earned her M.D. She completed her neurology residency at **Brigham and Women’s Hospital**, serving as **chief resident from 2023–2024**.  
+
+She is now a **board-certified neurologist** in Massachusetts and continues to advise and mentor medical students at Harvard Medical School.
+
+
+## Work in Medical Education and Curriculum
+
+Dr. Gheihman has founded and directed multiple initiatives that transform how neurology is taught and practiced.
+
+### Neuroscience Simulation Program
+She founded a **neuroscience simulation program** at Brigham and Women’s Hospital for aspiring neuroscientists and medical students. This program offers early, hands-on exposure to neurology and patient care — promoting active learning before residency.
+
+### BRAINS Program
+Dr. Gheihman co-founded **BRAINS**, a program that encourages **bedside near-peer teaching** among internal medicine residents. Junior students benefit from learning directly from residents who have recently gone through similar academic challenges, helping bridge the gap between theory and practice.
+
+### Educational Leadership
+She is also the **leader and co-founder of NeuFJM**, a monthly medical education journal club, and the creator of **Well-Rounded Wednesdays** within the *Outpatient Neurology Series*. As the director of the **CME (Continuing Medical Education)** program, she focuses on supporting both medical students and faculty through innovative and empathetic curriculum design.
+
+
+## Publications and Articles
+
+Dr. Gheihman is a **prolific author**, publishing numerous works that make medical education more accessible and effective for students and educators alike.  
+
+Some of her most recognized publications include:
+
+- *Teaching Neurology Amid an Ever-Changing Field* (Gheihman, 2024)  
+- *Critical Values and Characteristics in a Successful Neurology Educator* (Gheihman, 2024)  
+
+Her work has been featured in interviews on **YouTube**, and cited by other physicians, neuroscientists, and general practitioners. Beyond education, she has published studies on **post-neurointensive care** and **recovery following major surgeries** — merging clinical practice with academic innovation.
+
+
+## In Summary
+
+Dr. Galina Gheihman continues to **redefine how neuroscience and neurology are taught**, fostering environments where both medical students and educators thrive. Her programs, mentorship, and research are shaping the future of neurology education — blending compassion, innovation, and rigorous science.
+
+
+## Links to Her Work
+
+- [Brigham and Women’s Hospital Physician Directory](https://physiciandirectory.brighamandwomens.org/details/16852/?pk_vid=e042e8051a5503991760325443ada98c)  
+- [NeurologyLive – Dr. Galina Gheihman](https://www.neurologylive.com/authors/galina-gheihman-md)
+  `,
+  coverImage: "/dr_gheihman_cover.jpg",
+  date: "October 12, 2025",
+  author: authors["avika-tyagi"],
+  topic: "Medical Education",
+  readingTime: "6 min read",
+  featured: false
+},
+{
+  slug: "genetic-factors-in-stroke-recovery",
+  title: "How Genetics Influence Stroke Recovery",
+  excerpt:
+    "Stroke recovery isn’t only about age or treatment — genetics play a crucial role too. Learn how genes like BDNF, APOE e4, and PATJ impact neuroplasticity, inflammation, and healing outcomes after a stroke.",
+  content: `
+## How Genetics Influence Stroke Recovery
+
+![Stroke research image](/stroke_research_cover.jpg)
+
+*Image source: [Keck School of Medicine, USC](https://keck.usc.edu/news/usc-researcher-uses-mammal-dna-to-zoom-into-the-human-genome-with-unprecedented-resolution/)*
+
+
+## What Is a Stroke?
+
+A stroke is a condition that affects the arteries within the brain and those leading to it. It occurs when one of the blood vessels ruptures or becomes blocked by a blood clot, preventing oxygen from reaching brain cells — which then begin to die.
+
+There are two main types of stroke: **ischemic** and **hemorrhagic**.
+
+- **Ischemic stroke** is the most common type, accounting for about **90% of all cases**. It happens when a blood vessel is blocked by a clot, cutting off oxygen flow to the brain.  
+- **Hemorrhagic stroke**, on the other hand, occurs when a blood vessel ruptures in the brain, causing bleeding that exerts pressure on surrounding cells and damages them.
+
+
+## Common Treatments for Stroke
+
+The usual treatment for ischemic strokes is **tPA (tissue plasminogen activator)** — a drug that helps dissolve clots and restore blood flow. If tPA is not available, medications such as **clopidogrel** and **blood pressure drugs** are used to reduce vessel strain and prevent new clots.
+
+Rehabilitation also plays a vital role in recovery. This can include **physical therapy, speech therapy, and cognitive training**. Most recovery progress occurs soon after the stroke, so early intervention is key once the patient is medically stable.
+
+
+## How Genetics Affect Stroke Recovery
+
+While age and lifestyle are known predictors of stroke recovery, **genetic factors** also play an important role in how well patients regain function. Genes can influence inflammation, neural repair, and response to medication — making recovery outcomes highly individual.
+
+
+### 1. The BDNF val66met Variant
+
+The **BDNF (Brain-Derived Neurotrophic Factor)** gene supports neuroplasticity and memory formation. However, the **val66met variant** has been linked to poorer recovery outcomes, especially in cognitive and motor functions after a stroke.
+
+
+### 2. The APOE e4 Gene
+
+The **APOE e4** gene, more commonly associated with Alzheimer’s disease, has also been tied to **worse stroke recovery outcomes**. Carriers often show higher inflammation in the brain, which hampers healing and neuroregeneration.
+
+
+### 3. The PATJ Gene
+
+A 2019 study found that the **G allele** in the **PATJ gene** correlates with poorer recovery outcomes. Since PATJ affects **neurovascular repair** in damaged brain areas, the G allele’s reduced activity can slow healing. Genetic screening for this variant could help tailor personalized rehabilitation plans in the future.
+
+
+## Looking Ahead
+
+Understanding how genetics affect stroke recovery opens the door to **personalized medicine** — where treatments and therapies are adjusted based on a patient’s genetic profile. Though research is still evolving, genetic insights may soon allow doctors to predict recovery outcomes more accurately and improve rehabilitation strategies.
+
+
+## References
+
+- American Stroke Association. (n.d.-a). *About stroke.* American Stroke Association. Retrieved from [https://www.stroke.org/en/about-stroke](https://www.stroke.org/en/about-stroke)  
+- National Heart, Lung, and Blood Institute. (n.d.). *Stroke—What is a stroke?* NHLBI, NIH. [https://www.nhlbi.nih.gov/health/stroke](https://www.nhlbi.nih.gov/health/stroke)  
+- American Stroke Association. (n.d.-b). *Effects of stroke.* American Stroke Association. [https://www.stroke.org/en/about-stroke/effects-of-stroke](https://www.stroke.org/en/about-stroke/effects-of-stroke)  
+- The STRONG Study Investigators & Shah, S. C. (2025). *Genetic variation and stroke recovery: The STRONG Study.* *Stroke.* Advance online publication. [https://www.ahajournals.org/doi/10.1161/STROKEAHA.124.047643](https://www.ahajournals.org/doi/10.1161/STROKEAHA.124.047643)  
+- Balkaya, M., & Cho, S. (2019). *Genetics of stroke recovery: BDNF val66met polymorphism in stroke recovery and its interaction with aging.* *Neurobiology of Disease, 126,* 36–46. [https://doi.org/10.1016/j.nbd.2018.08.009](https://doi.org/10.1016/j.nbd.2018.08.009)  
+- Bathina, S., & Das, U. N. (2015). *Brain-derived neurotrophic factor and its clinical implications.* *Archives of Medical Science, 11(6),* 1164–1178. [https://pmc.ncbi.nlm.nih.gov/articles/PMC4697050](https://pmc.ncbi.nlm.nih.gov/articles/PMC4697050)  
+- Mola-Caminal, M., Ni, L., Scott, L., Campbell, H. M., Pan, X., Alsina, K. M., Reynolds, J., Philippen, L. E., Hulsurkar, M., & Williams, S. M. (2019). *PATJ low-frequency variants are associated with worse functional outcome after ischemic stroke.* *Circulation Research, 124(1),* 114–124. [https://doi.org/10.1161/CIRCRESAHA.118.313533](https://doi.org/10.1161/CIRCRESAHA.118.313533) 
+  `,
+  coverImage: "/stroke_research_cover.jpg",
+  date: "October 27, 2025",
+  author: authors["dabosmita-das"],
+  topic: "Genetics & Neurology",
+  readingTime: "6 min read",
+  featured: false
+},
  {
   slug: "social-media-damaging-teen-mental-health",
   title: "How Social Media Is Damaging Teens’ Mental Health",
