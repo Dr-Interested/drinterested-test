@@ -1,91 +1,94 @@
-"use client"
+"use client";
 
-import type React from "react"
-
-import { useEffect, useRef, useState } from "react"
-import Link from "next/link"
-import type { Webinar } from "@/data/webinars"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Play, Pause, Volume2, VolumeX, Maximize, Calendar, Clock, Eye, ChevronRight } from "lucide-react"
-import Script from "next/script"
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import Script from "next/script";
+import type { Webinar } from "@/data/webinars";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+  Maximize,
+  Calendar,
+  Clock,
+  Eye,
+  ChevronRight,
+} from "lucide-react";
 
 interface WatchPageClientProps {
-  webinar: Webinar
+  webinar: Webinar;
 }
 
 export default function WatchPageClient({ webinar }: WatchPageClientProps) {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [isMuted, setIsMuted] = useState(false)
-  const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(0)
-  const [showControls, setShowControls] = useState(true)
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(1);
+  const [showControls, setShowControls] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
 
-  useEffect(() => {
-    const video = videoRef.current
-    if (!video) return
+  // --- Client mount ---
+  useEffect(() => setIsMounted(true), []);
+  if (!isMounted) return null;
 
-    const updateTime = () => setCurrentTime(video.currentTime)
-    const updateDuration = () => setDuration(video.duration)
+  // --- Handlers ---
+  const handleLoadedMetadata = () => {
+    if (videoRef.current) setDuration(videoRef.current.duration);
+  };
 
-    video.addEventListener("timeupdate", updateTime)
-    video.addEventListener("loadedmetadata", updateDuration)
+  const handleTimeUpdate = () => {
+    if (videoRef.current) setCurrentTime(videoRef.current.currentTime);
+  };
 
-    return () => {
-      video.removeEventListener("timeupdate", updateTime)
-      video.removeEventListener("loadedmetadata", updateDuration)
+  const togglePlay = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) {
+      video.play().catch(console.warn);
+      setIsPlaying(true);
+    } else {
+      video.pause();
+      setIsPlaying(false);
     }
-  }, [])
-
-  const togglePlay = async () => {
-    const video = videoRef.current
-    if (!video) return
-
-    try {
-      if (isPlaying) {
-        video.pause()
-      } else {
-        await video.play()
-      }
-      setIsPlaying(!isPlaying)
-    } catch (err) {
-      console.error("Playback failed:", err)
-    }
-  }
+  };
 
   const toggleMute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted
-      setIsMuted(!isMuted)
-    }
-  }
+    if (!videoRef.current) return;
+    videoRef.current.muted = !isMuted;
+    setIsMuted(!isMuted);
+  };
 
-  const toggleFullscreen = () => {
-    if (videoRef.current) {
-      if (document.fullscreenElement) {
-        document.exitFullscreen()
-      } else {
-        videoRef.current.requestFullscreen()
-      }
-    }
-  }
-
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60)
-    const seconds = Math.floor(time % 60)
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`
-  }
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const vol = parseFloat(e.target.value);
+    if (videoRef.current) videoRef.current.volume = vol;
+    setVolume(vol);
+    setIsMuted(vol === 0);
+  };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const time = Number.parseFloat(e.target.value)
-    if (videoRef.current) {
-      videoRef.current.currentTime = time
-      setCurrentTime(time)
-    }
-  }
+    const time = parseFloat(e.target.value);
+    if (videoRef.current) videoRef.current.currentTime = time;
+    setCurrentTime(time);
+  };
 
-  // Generate structured data for SEO
+  const toggleFullscreen = () => {
+    if (!videoRef.current) return;
+    if (document.fullscreenElement) document.exitFullscreen();
+    else videoRef.current.requestFullscreen();
+  };
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
+
+  // --- Structured data for SEO ---
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "VideoObject",
@@ -109,16 +112,21 @@ export default function WatchPageClient({ webinar }: WatchPageClientProps) {
         url: "https://www.drinterested.org/logo.png",
       },
     },
-  }
+  };
 
   return (
     <>
-      <Script id="video-structured-data" type="application/ld+json" strategy="afterInteractive">
+      {/* Hydration-safe structured data */}
+      <Script
+        id="video-structured-data"
+        type="application/ld+json"
+        strategy="afterInteractive"
+      >
         {JSON.stringify(structuredData)}
       </Script>
 
-      <div className="min-h-screen bg-[#ffffff]">
-        {/* Video Player Section */}
+      <div className="min-h-screen bg-white">
+        {/* Video Player */}
         <div className="relative w-full bg-[#f5f1eb]">
           <div className="container mx-auto max-w-7xl">
             <div
@@ -126,72 +134,56 @@ export default function WatchPageClient({ webinar }: WatchPageClientProps) {
               onMouseEnter={() => setShowControls(true)}
               onMouseLeave={() => setShowControls(isPlaying ? false : true)}
             >
-              {/* Video Element */}
               <video
                 ref={videoRef}
                 className="w-full h-full"
                 poster={webinar.thumbnailPath}
-                onClick={togglePlay}
+                onLoadedMetadata={handleLoadedMetadata}
+                onTimeUpdate={handleTimeUpdate}
                 playsInline
                 preload="metadata"
                 muted={isMuted}
               >
-                <source
-                  src={
-                    webinar.videoPath.startsWith("http")
-                      ? webinar.videoPath
-                      : `https://www.drinterested.org${webinar.videoPath}`
-                  }
-                  type="video/mp4"
-                />
-                <track kind="captions" src={webinar.transcript} srcLang="en" label="English" />
+                <source src={webinar.videoPath.startsWith("/") ? webinar.videoPath : `/${webinar.videoPath}`} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
 
-              {/* Custom Video Controls */}
+              {/* Overlay Play/Pause */}
               <div
-                className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4 transition-opacity duration-300 ${
-                  showControls ? "opacity-100" : "opacity-0"
-                }`}
+                onClick={togglePlay}
+                className="absolute inset-0 flex items-center justify-center bg-black/10 cursor-pointer"
               >
-                {/* Progress Bar */}
+                {isPlaying ? (
+                  <Pause className="w-16 h-16 text-teal-400 opacity-50 fill-teal-400" />
+                ) : (
+                  <Play className="w-16 h-16 text-teal-400 opacity-50 fill-teal-400" />
+                )}
+              </div>
+
+              {/* Bottom Controls */}
+              <div
+                className={`absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/60 via-black/30 to-transparent transition-opacity duration-300 ${showControls ? "opacity-100" : "opacity-0"}`}
+              >
                 <input
                   type="range"
-                  min="0"
-                  max={duration}
+                  min={0}
+                  max={duration || 0}
+                  step="any"
                   value={currentTime}
                   onChange={handleSeek}
                   className="w-full h-1 mb-3 bg-white/30 rounded-lg appearance-none cursor-pointer accent-[#4ecdc4]"
                 />
-
-                {/* Control Buttons */}
-                <div className="flex items-center justify-between text-white">
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={togglePlay}
-                      className="hover:text-[#4ecdc4] transition-colors"
-                      aria-label={isPlaying ? "Pause" : "Play"}
-                    >
-                      {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
+                <div className="flex items-center justify-between text-white text-sm">
+                  <span>{formatTime(currentTime)} / {formatTime(duration)}</span>
+                  <div className="flex items-center space-x-2">
+                    <button onClick={toggleMute} aria-label={isMuted ? "Unmute" : "Mute"} className="hover:text-[#4ecdc4] transition-colors">
+                      {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
                     </button>
-                    <button
-                      onClick={toggleMute}
-                      className="hover:text-[#4ecdc4] transition-colors"
-                      aria-label={isMuted ? "Unmute" : "Mute"}
-                    >
-                      {isMuted ? <VolumeX className="h-6 w-6" /> : <Volume2 className="h-6 w-6" />}
+                    <input type="range" min={0} max={1} step={0.05} value={volume} onChange={handleVolumeChange} className="w-20 h-1 bg-white/30 rounded-lg appearance-none cursor-pointer accent-[#4ecdc4]" />
+                    <button onClick={toggleFullscreen} aria-label="Fullscreen" className="hover:text-[#4ecdc4] transition-colors">
+                      <Maximize className="w-5 h-5" />
                     </button>
-                    <span className="text-sm">
-                      {formatTime(currentTime)} / {formatTime(duration)}
-                    </span>
                   </div>
-                  <button
-                    onClick={toggleFullscreen}
-                    className="hover:text-[#4ecdc4] transition-colors"
-                    aria-label="Fullscreen"
-                  >
-                    <Maximize className="h-6 w-6" />
-                  </button>
                 </div>
               </div>
             </div>
@@ -199,7 +191,7 @@ export default function WatchPageClient({ webinar }: WatchPageClientProps) {
         </div>
 
         {/* Content Section */}
-        <div className="mt-8 p-6 bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 rounded-lg text-left">
+         <div className="mt-8 p-6 bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 rounded-lg text-left">
           <div className="container mx-auto max-w-7xl py-8 px-4">
             <div className="grid lg:grid-cols-3 gap-8">
               {/* Main Content */}
