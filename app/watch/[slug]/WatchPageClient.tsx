@@ -144,7 +144,7 @@ export default function WatchPageClient({ webinar }: WatchPageClientProps) {
                 preload="auto"
                 muted={isMuted}
               >
-                <source src={webinar.videoPath.startsWith("/") ? webinar.videoPath : `/${webinar.videoPath}`} type="video/mp4" />
+                <source src={webinar.videoPath.startsWith("") ? webinar.videoPath : `/${webinar.videoPath}`} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
 

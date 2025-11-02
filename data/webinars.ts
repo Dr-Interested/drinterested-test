@@ -85,7 +85,7 @@ export const webinars: Webinar[] = [
     date: "September 7, 2025",
     views: 109,
     duration: "28:55",
-    videoPath: "/drintpolicywebinar.mp4", // UPDATE THIS PATH
+    videoPath: "https://ik.imagekit.io/aqfqfogji/drintpolicywebinar.mp4?updatedAt=1762117648249", // UPDATE THIS PATH
     thumbnailPath: "/drintthumbnailpolicy.png", // UPDATE THIS PATH
     youtubeUrl: "https://youtu.be/8Mp9ulR7L4Y?si=eyAZF1DVFzO9uscQ",
     spotifyUrl: "https://open.spotify.com/episode/4CwnZwJufNXRcB7iGzrObO?si=2e5148b845e94246",
