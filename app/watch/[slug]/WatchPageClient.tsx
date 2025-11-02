@@ -141,7 +141,7 @@ export default function WatchPageClient({ webinar }: WatchPageClientProps) {
                 onLoadedMetadata={handleLoadedMetadata}
                 onTimeUpdate={handleTimeUpdate}
                 playsInline
-                preload="metadata"
+                preload="auto"
                 muted={isMuted}
               >
                 <source src={webinar.videoPath.startsWith("/") ? webinar.videoPath : `/${webinar.videoPath}`} type="video/mp4" />
