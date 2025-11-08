@@ -62,7 +62,18 @@ export const upcomingEvents: EventType[] = [
 
 // Past events data
 export const pastEvents: EventType[] = [
-    {
+   {
+  title: "Dr. Interested Webinar Series Recap",
+  date: "August - November 2025",
+  location: "Virtual",
+  description:
+    "A recap of the Dr. Interested Webinar Series, featuring discussions on research, pre-med pathways, and health policy. Watch full recordings and explore key takeaways from each session.",
+  image: "/drintthumbnailpathwaystomed.png", // add an image in /public
+  status: "completed",
+  link: "/events/webinar-series-recap", // ✅ path to the new page
+  featured: true,
+}, 
+  {
     title: "Research Proposal Competition",
     date: "July 1 to September 1",
     time: "Independent",
