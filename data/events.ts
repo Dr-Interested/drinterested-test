@@ -40,8 +40,7 @@ export const upcomingEvents: EventType[] = [
 
 // Past events data
 export const pastEvents: EventType[] = [
-<<<<<<< HEAD
-    {
+  {
     title: "Culture & Psychology Conference",
     date: "October 11, 2025",
     time: "1:30 PM - 5:30 PM EST",
