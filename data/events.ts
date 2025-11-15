@@ -23,6 +23,7 @@ export const upcomingEvents: EventType[] = [
     image: "/ex3-logo.png",
     status: "open",
     link: "https://docs.google.com/forms/d/e/1FAIpQLSdl8z70fQGVrXVTAuPGXgOsyB0FyqgN94O0AfXn6qWgBRflMg/viewform",
+    featured: true,
   },
   {
     title: "Office Hours",
@@ -35,34 +36,11 @@ export const upcomingEvents: EventType[] = [
     status: "open",
     link: "https://discord.gg/pzbGRgsGXY",
   },
-  {
-    title: "Dr. Interested Webinar Series: Certificate Stream",
-    date: "August 31st to November 2nd",
-    time: "11AM EST",
-    location: "Virtual",
-    description:
-      "Hear directly from medical students and executive team members on a variety of healthcare topics—from preparing for university and research tips to how to get involved in health policy. Complete all sections to register and track your progress throughout the series.",
-    image: "/webinar-cert.png",
-    status: "closed",
-    link: "https://forms.gle/gdr9VHdcPs21tNTM8",
-    featured: true,
-  },
 ]
 
 // Past events data
 export const pastEvents: EventType[] = [
-   {
-  title: "Dr. Interested Webinar Series Recap",
-  date: "August - November 2025",
-  location: "Virtual",
-  description:
-    "A recap of the Dr. Interested Webinar Series, featuring discussions on research, pre-med pathways, and health policy. Watch full recordings and explore key takeaways from each session.",
-  image: "/drintthumbnailpathwaystomed.png", // add an image in /public
-  status: "completed",
-  link: "/events/webinar-series-recap", // ✅ path to the new page
-  featured: true,
-}, 
-{
+  {
     title: "Culture & Psychology Conference",
     date: "October 11, 2025",
     time: "1:30 PM - 5:30 PM EST",
@@ -70,9 +48,20 @@ export const pastEvents: EventType[] = [
     description:
       "Join us for the Culture & Psychology Conference, hosted in partnership with the Bridge of Culture, on October 18, 2025, at York University’s YSpace (Markham Campus). This exciting event brings together experts, students, and professionals for a day of talks, workshops, and discussions exploring the intersection of culture, psychology, and mental health.",
     image: "/psych-conference.png",
-    status: "full",
-    link: "/events/psychology-conference",
+    status: "closed",
+    link: "https://docs.google.com/forms/d/e/1FAIpQLSfzFeuorRRJIkE3FdGiPjGR2IJARzWLguG_O9Xiiblm1m6fmA/viewform",
   },
+  {
+    title: "Dr. Interested Webinar Series Recap",
+    date: "August - November 2025",
+    location: "Virtual",
+    description:
+      "A recap of the Dr. Interested Webinar Series, featuring discussions on research, pre-med pathways, and health policy. Watch full recordings and explore key takeaways from each session.",
+    image: "/drintthumbnailpathwaystomed.png",
+    status: "completed",
+    link: "/events/webinar-series-recap",
+    featured: true,
+  }, 
   {
     title: "Research Proposal Competition",
     date: "July 1 to September 1",
@@ -83,7 +72,6 @@ export const pastEvents: EventType[] = [
     image: "/research-proposal.png",
     status: "closed",
     link: "https://forms.gle/cNMth3sUa4d3AhEY8",
-    featured: true,
   },
   {
     title: "Podcast Collaboration with BioMedizone",
@@ -93,7 +81,6 @@ export const pastEvents: EventType[] = [
     image: "/biomedpodcast.png",
     status: "completed",
     link: "https://forms.gle/2Dxui6bq1Xdgpz5M8",
-    featured: false,
   },
   {
     title: "Healthcare Media Promotion Event",
