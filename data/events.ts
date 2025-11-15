@@ -25,17 +25,6 @@ export const upcomingEvents: EventType[] = [
     link: "https://docs.google.com/forms/d/e/1FAIpQLSdl8z70fQGVrXVTAuPGXgOsyB0FyqgN94O0AfXn6qWgBRflMg/viewform",
   },
   {
-    title: "Culture & Psychology Conference",
-    date: "October 11, 2025",
-    time: "1:30 PM - 5:30 PM EST",
-    location: "York University, 169 Enterprise Blvd 3rd floor, Markham, ON L6G 0E7",
-    description:
-      "Join us for the Culture & Psychology Conference, hosted in partnership with the Bridge of Culture, on October 18, 2025, at York University’s YSpace (Markham Campus). This exciting event brings together experts, students, and professionals for a day of talks, workshops, and discussions exploring the intersection of culture, psychology, and mental health.",
-    image: "/psych-conference.png",
-    status: "full",
-    link: "https://docs.google.com/forms/d/e/1FAIpQLSfzFeuorRRJIkE3FdGiPjGR2IJARzWLguG_O9Xiiblm1m6fmA/viewform",
-  },
-  {
     title: "Office Hours",
     date: "June - Ongoing",
     time: "Whenever you need help",
@@ -73,6 +62,17 @@ export const pastEvents: EventType[] = [
   link: "/events/webinar-series-recap", // ✅ path to the new page
   featured: true,
 }, 
+{
+    title: "Culture & Psychology Conference",
+    date: "October 11, 2025",
+    time: "1:30 PM - 5:30 PM EST",
+    location: "York University, 169 Enterprise Blvd 3rd floor, Markham, ON L6G 0E7",
+    description:
+      "Join us for the Culture & Psychology Conference, hosted in partnership with the Bridge of Culture, on October 18, 2025, at York University’s YSpace (Markham Campus). This exciting event brings together experts, students, and professionals for a day of talks, workshops, and discussions exploring the intersection of culture, psychology, and mental health.",
+    image: "/psych-conference.png",
+    status: "full",
+    link: "/events/psychology-conference",
+  },
   {
     title: "Research Proposal Competition",
     date: "July 1 to September 1",
