@@ -3,16 +3,50 @@ import { Mail, Sparkles, Users, Megaphone, Award, Heart, Info } from "lucide-rea
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "Sponsorships",
+  title: "Sponsorships & Donations",
   description:
-    "Partner with Dr. Interested to support youth healthcare education and leadership. Gain visibility across our global community of 55,000+ engaged students.",
+    "Partner with Dr. Interested to support youth healthcare education. Join our sponsors or donate to help inspire the next generation of healthcare professionals.",
+  keywords: [
+    "sponsorships",
+    "partner with Dr. Interested",
+    "donations",
+    "support healthcare education",
+    "youth healthcare programs",
+    "corporate partnerships",
+    "charitable giving",
+  ],
   openGraph: {
-    title: "Sponsorships | Dr. Interested",
+    title: "Sponsorships & Donations | Dr. Interested",
     description:
-      "Partner with Dr. Interested to support youth healthcare education and leadership. Gain visibility across our global community of 55,000+ engaged students.",
+      "Partner with Dr. Interested to support youth healthcare education. Join our sponsors or donate to help inspire the next generation of healthcare professionals.",
     url: "https://www.drinterested.org/sponsorships",
     siteName: "Dr. Interested",
     type: "website",
+    images: [
+      {
+        url: "/websitebanner.jpg",
+        width: 1920,
+        height: 1080,
+        alt: "Dr. Interested Sponsorships",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sponsorships & Donations | Dr. Interested",
+    description:
+      "Partner with Dr. Interested to support youth healthcare education. Join our sponsors or donate to help inspire the next generation of healthcare professionals.",
+    images: {
+      url: "/websitebanner.jpg",
+      alt: "Dr. Interested Sponsorships",
+    },
+  },
+  alternates: {
+    canonical: "https://www.drinterested.org/sponsorships",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 }
 
@@ -26,10 +60,13 @@ export default function SponsorshipsPage() {
             <Sparkles className="h-4 w-4" />
             Partner With Us
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#405862] mb-6 text-balance">Sponsorships</h1>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#405862] mb-6 text-balance">
+            Sponsorships & Donations
+          </h1>
           <p className="text-lg md:text-xl text-[#405862]/80 max-w-2xl mx-auto text-pretty">
             Support youth healthcare education and leadership while gaining visibility across our global community of
-            60,000+ engaged students.
+            60,000+ engaged students. Join our sponsors or donate to help inspire the next generation of healthcare
+            professionals.
           </p>
         </div>
       </section>

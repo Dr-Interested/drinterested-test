@@ -6,10 +6,34 @@ import type { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "Thank You for Subscribing | Dr. Interested",
-  description: "Thank you for confirming your subscription to the Dr. Interested newsletter.",
+  description:
+    "Thank you for confirming your subscription to the Dr. Interested newsletter. You're now part of our community of healthcare enthusiasts!",
   robots: {
     index: false,
     follow: true,
+  },
+  openGraph: {
+    title: "Thank You for Subscribing | Dr. Interested",
+    description: "Thank you for confirming your subscription to the Dr. Interested newsletter.",
+    url: "https://www.drinterested.org/thank-you",
+    type: "website",
+    images: [
+      {
+        url: "/websitebanner.jpg",
+        width: 1920,
+        height: 1080,
+        alt: "Dr. Interested - Thank You",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Thank You for Subscribing | Dr. Interested",
+    description: "Thank you for confirming your subscription to the Dr. Interested newsletter.",
+    images: {
+      url: "/websitebanner.jpg",
+      alt: "Dr. Interested - Thank You",
+    },
   },
 }
 
@@ -46,7 +70,7 @@ export default function ThankYouPage() {
             <Button
               asChild
               variant="outline"
-              className="w-full border-[#405862] text-[#405862] hover:bg-[#405862] hover:text-white"
+              className="w-full border-[#405862] text-[#405862] hover:bg-[#405862] hover:text-white bg-transparent"
             >
               <Link href="/blog">Read Our Latest Articles</Link>
             </Button>
