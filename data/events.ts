@@ -14,18 +14,6 @@ export type EventType = {
 // Upcoming events data
 export const upcomingEvents: EventType[] = [
   {
-    title: "EXPLORE³ Case Competition",
-    date: "November 22, 2025",
-    time: "9 AM – 4 PM",
-    location: "TMU Ted Rogers School of Business",
-    description:
-      "Tackle real-world innovation challenges, receive mentorship from industry leaders, and present your ideas to expert judges. Includes case package, light refreshments, networking, and early access perks. Fee: $10. Spots are limited! Learn more: https://www.instagram.com/explore3comp/",
-    image: "/ex3-logo.png",
-    status: "full",
-    link: "https://docs.google.com/forms/d/e/1FAIpQLSdl8z70fQGVrXVTAuPGXgOsyB0FyqgN94O0AfXn6qWgBRflMg/viewform",
-    featured: true,
-  },
-  {
     title: "Office Hours",
     date: "June - Ongoing",
     time: "Whenever you need help",
@@ -51,6 +39,17 @@ export const upcomingEvents: EventType[] = [
 
 // Past events data
 export const pastEvents: EventType[] = [
+    {
+    title: "EXPLORE³ Case Competition",
+    date: "November 22, 2025",
+    time: "9 AM – 4 PM",
+    location: "TMU Ted Rogers School of Business",
+    description:
+      "Tackle real-world innovation challenges, receive mentorship from industry leaders, and present your ideas to expert judges. Includes case package, light refreshments, networking, and early access perks. Fee: $10. Spots are limited! Learn more: https://www.instagram.com/explore3comp/",
+    image: "/ex3-logo.png",
+    status: "completed",
+    link: "https://docs.google.com/forms/d/e/1FAIpQLSdl8z70fQGVrXVTAuPGXgOsyB0FyqgN94O0AfXn6qWgBRflMg/viewform",
+  },
   {
     title: "First Chess Against Cancer Tournament Complete!",
     date: "November 2025",
