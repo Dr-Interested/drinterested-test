@@ -575,7 +575,7 @@ export default function MembersClient() {
                           Join our core leadership team and help shape the future of Dr. Interested.
                         </p>
                         <Link
-                          href="https://docs.google.com/forms/d/e/1FAIpQLSdKpENvCsz0w21heZr4nn3UJJ5b46KOs6EQkUEaZ8fvlwqnxQ/viewform"
+                          href="https://forms.gle/e9etoCnFMPhgeujD9"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -586,7 +586,7 @@ export default function MembersClient() {
 
                     <Card className="border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
                       <CardContent className="p-6 text-center">
-                        <h3 className="font-semibold text-[#405862] mb-3">Club Ambassador</h3>
+                        <h3 className="font-semibold text-[#405862] mb-3">Org Ambassador</h3>
                         <p className="text-sm text-[#405862]/80 mb-4">
                           Represent Dr. Interested in your community and help us grow our reach.
                         </p>
