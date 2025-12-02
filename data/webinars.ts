@@ -26,7 +26,7 @@ export const webinars: Webinar[] = [
       "A practical session on supplemental applications — tips, strategies, and the importance of authenticity.",
     longDescription:
       "Learn how to approach supplemental applications with confidence. We’ll cover effective strategies, common pitfalls, and how to present your true self in competitive processes.",
-    date: "November 23, 2025 • 2:00 pm EST",
+    date: "November 23, 2025",
     views: 268,
     duration: "25:25",
     videoPath: "https://hc-cdn.hel1.your-objectstorage.com/s/v3/fe40edc3e5303f47ecc367d2c4db76097d3d4cf8_video1674994875.mp4", // UPDATE THIS PATH
@@ -45,7 +45,7 @@ export const webinars: Webinar[] = [
       "A candid look at the McMaster Health Sci journey from applying to thriving in first year.",
     longDescription:
       "Hear firsthand insights on preparing a strong application, adjusting to university life, and making the most of the Health Sci program at McMaster.",
-    date: "November 16, 2025 • 2:00 pm EST",
+    date: "November 16, 2025",
     views: 337,
     duration: "25:25",
     videoPath: "https://hc-cdn.hel1.your-objectstorage.com/s/v3/a80721f9747dd50b8155530af94c0bb9b7fc5813_video1339333384.mp4", // UPDATE THIS PATH
@@ -64,7 +64,7 @@ export const webinars: Webinar[] = [
       "What first year Biomedical Science is really like — expectations, challenges, and tips.",
     longDescription:
       "Get a transparent overview of the first-year experience in Biomedical Science, including study habits, managing workload, and building a foundation for success.",
-    date: "November 9, 2025 • 2:00 pm EST",
+    date: "November 9, 2025",
     views: 149,
     duration: "25:25",
     videoPath: "https://hc-cdn.hel1.your-objectstorage.com/s/v3/5d02b16c5ccc37bdb2e60503645bae67af875f2f_video1695640159.mp4", // UPDATE THIS PATH
@@ -83,7 +83,7 @@ export const webinars: Webinar[] = [
       "Exploring the intersection of technology, social media, and mental health.",
     longDescription:
       "Dive into how social platforms influence mental health and how tech can be leveraged for care, support, and healthier online habits.",
-    date: "November 2, 2025 • 11:00 am EST",
+    date: "November 2, 2025",
     views: 223,
     duration: "25:25",
     videoPath: "https://hc-cdn.hel1.your-objectstorage.com/s/v3/cf77a8f2d8f71d8d826135604d13a4696a96a4b4_video1146441928.mp4", // UPDATE THIS PATH
@@ -102,7 +102,7 @@ export const webinars: Webinar[] = [
       "An overview of the MD/PhD journey, medical ethics and CASPer, plus research career insights.",
     longDescription:
       "Understand the dual-degree MD/PhD path, prepare for CASPer with an ethics-focused lens, and learn what careers look like for research scientists.",
-    date: "October 26, 2025 • 2:00 pm EST",
+    date: "October 26, 2025",
     views: 314,
     duration: "25:25",
     videoPath: "https://hc-cdn.hel1.your-objectstorage.com/s/v3/562b547b3e612e6439e2fe01b6e30107f136fa64_video1171919166.mp4", // UPDATE THIS PATH
@@ -121,7 +121,7 @@ export const webinars: Webinar[] = [
       "Discover endocrinology from foundational hormone science to real-world career paths.",
     longDescription:
       "Explore the field of endocrinology — what it studies, why it matters, and how to build a career in this specialty.",
-    date: "October 19, 2025 • 2:00 pm EST",
+    date: "October 19, 2025",
     views: 182,
     duration: "25:25",
     videoPath: "https://hc-cdn.hel1.your-objectstorage.com/s/v3/e0528368df72d8d370543862d6dd0523a4e153d7_video1914344293.mp4", // UPDATE THIS PATH
