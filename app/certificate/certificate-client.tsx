@@ -5,6 +5,7 @@ import jsPDF from "jspdf"
 
 const templateMap: Record<string, string> = {
   insetpassword123: "/certificate-rpc.png",
+  webinarsarefun67: "/certificate-webinar.png",
 }
 
 function CertificateForm() {
@@ -41,7 +42,7 @@ function CertificateForm() {
 
       pdf.setFontSize(32)
       pdf.setFont("helvetica", "bold")
-      pdf.text(name, pdfWidth / 2, pdfHeight / 2 + 40, {
+      pdf.text(name, pdfWidth / 2, pdfHeight / 2 + 20, {
         align: "center",
       })
       pdf.save(`${name}-certificate.pdf`)
@@ -103,7 +104,7 @@ function CertificateForm() {
 export default function CertificateBuilderPage() {
   return (
     <div>
-      <h1 className="text-2xl font-bold text-center my-6">Get your certificate here!</h1>
+      <h1 className="text-2xl font-bold text-center my-6"></h1>
       <CertificateForm />
     </div>
   )
