@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { useParams, useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Instagram, Linkedin, Globe, ChevronDown, ChevronUp } from "lucide-react"
@@ -13,6 +14,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 export default function MembersClient() {
   const [expandedBios, setExpandedBios] = useState<Record<string, boolean>>({})
   const [visibleMembers, setVisibleMembers] = useState<Record<string, boolean>>({})
+
+  const params = useParams() // { tab: 'leadership' | 'departments' | 'advisors' | 'join' }
+  const router = useRouter()
+
+  // Ensure URL tab is valid, fallback to 'leadership'
+  const validTabs = ["leadership", "departments", "advisors", "join"]
+  const tabParam = Array.isArray(params?.tab) ? params.tab[0] : params?.tab
+  const initialTab = validTabs.includes(tabParam || "") ? tabParam! : "leadership"
+
+  const [activeTab, setActiveTab] = useState(initialTab)
+
+  // Update URL when active tab changes
+  useEffect(() => {
+    if (activeTab !== initialTab) {
+      router.replace(`/members/${activeTab}`)
+    }
+  }, [activeTab, initialTab, router])
 
   // Scroll to top on page load
   useEffect(() => {
@@ -51,17 +69,25 @@ export default function MembersClient() {
         </div>
       </section>
 
-      {/* Leadership Section */}
       <section className="py-8 bg-white">
         <div className="container">
-          <Tabs defaultValue="leadership" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 mb-6">
-              <TabsTrigger value="leadership">Leadership</TabsTrigger>
-              <TabsTrigger value="departments">Departments</TabsTrigger>
-              <TabsTrigger value="advisors">Advisors</TabsTrigger>
-              <TabsTrigger value="join">Join Us</TabsTrigger>
-            </TabsList>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            {/* Centered Tabs */}
+            <div className="flex justify-center mb-8">
+              <TabsList className="grid grid-cols-4 gap-2 h-12 p-1 max-w-xl">
+                <TabsTrigger value="leadership">Leadership</TabsTrigger>
+                <TabsTrigger value="departments">Departments</TabsTrigger>
+                <TabsTrigger value="advisors">Advisors</TabsTrigger>
+                <TabsTrigger
+                  value="join"
+                  className="bg-[#EDFAF9] text-[#405862] font-semibold px-6 h-10 border border-[#4ecdc4] hover:bg-[#D0F3F0]"
+                >
+                  Join Us
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
+            {/* Leadership */}
             <TabsContent value="leadership" className="space-y-6">
               {/* Executive Director */}
               <div>
@@ -132,15 +158,12 @@ export default function MembersClient() {
                 </div>
               </div>
 
-              {/* Deputy Executive Directors */}
+              {/* Deputy Exec Directors */}
               <div>
                 <h3 className="text-lg font-semibold mb-4 text-center text-[#405862]">Deputy Executive Directors</h3>
                 <div className="grid md:grid-cols-2 gap-4">
                   {deputyexecdir.map((vp) => (
-                    <Card
-                      key={vp.id}
-                      className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
-                    >
+                    <Card key={vp.id} className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
                       <div className="grid md:grid-cols-3">
                         <div className="md:col-span-1 bg-[#f5f1eb] flex items-center justify-center">
                           <div className="relative h-full w-full aspect-square">
@@ -171,32 +194,17 @@ export default function MembersClient() {
                           )}
                           <div className="flex space-x-3">
                             {vp.socialLinks?.linkedin && (
-                              <Link
-                                href={vp.socialLinks.linkedin}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                              >
+                              <Link href={vp.socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
                                 <Linkedin className="h-5 w-5" />
                               </Link>
                             )}
                             {vp.socialLinks?.instagram && (
-                              <Link
-                                href={vp.socialLinks.instagram}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                              >
+                              <Link href={vp.socialLinks.instagram} target="_blank" rel="noopener noreferrer">
                                 <Instagram className="h-5 w-5" />
                               </Link>
                             )}
                             {vp.socialLinks?.website && (
-                              <Link
-                                href={vp.socialLinks.website}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                              >
+                              <Link href={vp.socialLinks.website} target="_blank" rel="noopener noreferrer">
                                 <Globe className="h-5 w-5" />
                               </Link>
                             )}
@@ -206,17 +214,6 @@ export default function MembersClient() {
                     </Card>
                   ))}
                 </div>
-              </div>
-
-              <div className="mt-8 p-6 bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 rounded-lg text-center">
-                <h3 className="text-lg font-semibold text-[#405862] mb-2">Interested in Joining Our Team?</h3>
-                <p className="text-[#405862]/80 mb-3">
-                  Check out the <span className="font-semibold text-[#4ecdc4]">Join Us</span> tab above to learn about
-                  executive opportunities and apply to join our leadership team!
-                </p>
-                <p className="text-sm text-[#405862]/70">
-                  Applications are open year-round and reviewed on an ongoing basis.
-                </p>
               </div>
             </TabsContent>
 

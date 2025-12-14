@@ -5,6 +5,7 @@
       "dom.iterable",
       "esnext"
     ],
+    "baseUrl": ".",
     "allowJs": true,
     "target": "ES6",
     "skipLibCheck": true,
@@ -25,7 +26,8 @@
     "paths": {
       "@/*": [
         "./*"
-      ]
+      ],
+      "@/members/*": ["app/members/*"],
     }
   },
   "include": [
