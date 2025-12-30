@@ -3,37 +3,36 @@ import { notFound } from "next/navigation"
 import { getWebinarBySlug, getAllWebinarSlugs } from "@/data/webinars"
 import WatchPageClient from "./WatchPageClient"
 
-
-export const dynamic = "force-static"
-export const dynamicParams = true
-
 export async function generateStaticParams() {
   const slugs = getAllWebinarSlugs()
-  return slugs.map((slug) => ({
-    slug,
-  }))
+  return slugs.map((slug) => ({ slug }))
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }): Promise<Metadata> {
-  const { slug } = params
+  const { slug } = await params
+
+  if (!slug) {
+    notFound()
+  }
+
   const webinar = getWebinarBySlug(slug)
 
   if (!webinar) {
-    return {
-      title: "Webinar Not Found",
-    }
+    return { title: "Webinar Not Found" }
   }
 
-  const baseUrl = "https://drinterested.org"
+  const baseUrl = "https://www.drinterested.org"
+
   const watchUrl = `${baseUrl}/watch/${webinar.slug}`
 
   return {
     title: webinar.title,
     description: webinar.description,
+
     keywords: [
       ...webinar.tags,
       "Dr. Interested",
@@ -42,6 +41,7 @@ export async function generateMetadata({
       "premed",
       "healthcare careers",
     ],
+
     authors: [{ name: "Dr. Interested" }],
     creator: "Dr. Interested",
     publisher: "Dr. Interested",
@@ -96,9 +96,10 @@ export async function generateMetadata({
 export default async function WatchPage({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }) {
-  const { slug } = params
+  const { slug } = await params
+
   const webinar = getWebinarBySlug(slug)
 
   if (!webinar) {

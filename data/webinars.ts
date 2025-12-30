@@ -227,8 +227,10 @@ export const webinars: Webinar[] = [
   },
 ]
 
-export function getWebinarBySlug(slug: string): Webinar | undefined {
-  return webinars.find((webinar) => webinar.slug === slug)
+export function getWebinarBySlug(slug: string) {
+  return webinars.find(
+    (webinar) => webinar.slug.trim() === slug.trim()
+  )
 }
 
 export function getAllWebinarSlugs(): string[] {
