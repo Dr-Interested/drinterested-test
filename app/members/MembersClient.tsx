@@ -572,7 +572,7 @@ export default function MembersClient() {
                           Join our core leadership team and help shape the future of Dr. Interested.
                         </p>
                         <Link
-                          href="https://forms.gle/e9etoCnFMPhgeujD9"
+                          href="https://forms.gle/TrkdUpn2TtDrRAAH6"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
