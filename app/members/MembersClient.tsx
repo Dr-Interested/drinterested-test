@@ -587,7 +587,7 @@ export default function MembersClient() {
                         <p className="text-sm text-[#405862]/80 mb-4">
                           Represent Dr. Interested in your community and help us grow our reach.
                         </p>
-                        <Link href="https://forms.gle/89v6zXtrdfGvMUBJ8" target="_blank" rel="noopener noreferrer">
+                        <Link href="https://forms.gle/H5jZkekPubdtwcTS6" target="_blank" rel="noopener noreferrer">
                           <Button className="w-full bg-[#405862] hover:bg-[#334852] text-white">Apply Now</Button>
                         </Link>
                       </CardContent>
@@ -599,7 +599,7 @@ export default function MembersClient() {
                         <p className="text-sm text-[#405862]/80 mb-4">
                           Help create engaging podcast content and share healthcare stories.
                         </p>
-                        <Link href="https://forms.gle/WX7P4Vypq4ZHMEEDA" target="_blank" rel="noopener noreferrer">
+                        <Link href="https://forms.gle/fH2equ2mCwDX9PpH6" target="_blank" rel="noopener noreferrer">
                           <Button className="w-full bg-[#405862] hover:bg-[#334852] text-white">Apply Now</Button>
                         </Link>
                       </CardContent>
