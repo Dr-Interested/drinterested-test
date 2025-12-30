@@ -1,77 +1,98 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { useParams, useRouter } from "next/navigation"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Instagram, Linkedin, Globe, ChevronDown, ChevronUp } from "lucide-react"
-import { departments, advisors, executiveDirector, deputyexecdir } from "@/data/members"
-import ScrollToTop from "@/components/scroll-to-top"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Instagram,
+  Linkedin,
+  Globe,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
+import {
+  departments,
+  advisors,
+  executiveDirector,
+  deputyexecdir,
+} from "@/data/members";
+import ScrollToTop from "@/components/scroll-to-top";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function MembersClient() {
-  const [expandedBios, setExpandedBios] = useState<Record<string, boolean>>({})
-  const [visibleMembers, setVisibleMembers] = useState<Record<string, boolean>>({})
+  const [expandedBios, setExpandedBios] = useState<Record<string, boolean>>({});
+  const [visibleMembers, setVisibleMembers] = useState<Record<string, boolean>>(
+    {}
+  );
 
-  const params = useParams() // { tab: 'leadership' | 'departments' | 'advisors' | 'join' }
-  const router = useRouter()
+  const params = useParams(); // { tab: 'leadership' | 'departments' | 'advisors' | 'join' }
+  const router = useRouter();
 
   // Ensure URL tab is valid, fallback to 'leadership'
-  const validTabs = ["leadership", "departments", "advisors", "join"]
-  const tabParam = Array.isArray(params?.tab) ? params.tab[0] : params?.tab
-  const initialTab = validTabs.includes(tabParam || "") ? tabParam! : "leadership"
+  const validTabs = ["leadership", "departments", "advisors", "join"];
+  const tabParam = Array.isArray(params?.tab) ? params.tab[0] : params?.tab;
+  const initialTab = validTabs.includes(tabParam || "")
+    ? tabParam!
+    : "leadership";
 
-  const [activeTab, setActiveTab] = useState(initialTab)
+  const [activeTab, setActiveTab] = useState(initialTab);
 
   // Update URL when active tab changes
   useEffect(() => {
     if (activeTab !== initialTab) {
-      router.replace(`/members/${activeTab}`)
+      router.replace(`/members/${activeTab}`);
     }
-  }, [activeTab, initialTab, router])
+  }, [activeTab, initialTab, router]);
 
   // Scroll to top on page load
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
+    window.scrollTo(0, 0);
+  }, []);
 
   const toggleBio = (id: string) => {
     setExpandedBios((prev) => ({
       ...prev,
       [id]: !prev[id],
-    }))
-  }
+    }));
+  };
 
   const toggleMembers = (id: string) => {
     setVisibleMembers((prev) => ({
       ...prev,
       [id]: !prev[id],
-    }))
-  }
+    }));
+  };
 
   const truncateBio = (bio: string, maxLength = 150) => {
-    if (bio.length <= maxLength) return bio
-    return bio.substring(0, maxLength) + "..."
-  }
+    if (bio.length <= maxLength) return bio;
+    return bio.substring(0, maxLength) + "...";
+  };
 
   return (
     <div>
       <ScrollToTop />
       <section className="bg-[#f5f1eb] py-10">
         <div className="container">
-          <h1 className="text-3xl font-bold text-center mb-2 text-[#405862]">Our Team</h1>
+          <h1 className="text-3xl font-bold text-center mb-2 text-[#405862]">
+            Our Team
+          </h1>
           <p className="text-center text-[#405862] mb-6 max-w-2xl mx-auto text-sm">
-            Meet the talented team behind Dr. Interested, dedicated to inspiring the next generation of healthcare
-            professionals.
+            Meet the talented team behind Dr. Interested, dedicated to inspiring
+            the next generation of healthcare professionals.
           </p>
         </div>
       </section>
 
       <section className="py-8 bg-white">
         <div className="container">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
             {/* Centered Tabs */}
             <div className="flex justify-center mb-8">
               <TabsList className="grid grid-cols-4 gap-2 h-12 p-1 max-w-xl">
@@ -91,20 +112,33 @@ export default function MembersClient() {
             <TabsContent value="leadership" className="space-y-6">
               {/* Executive Director */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-center text-[#405862]">Executive Director</h3>
+                <h3 className="text-lg font-semibold mb-4 text-center text-[#405862]">
+                  Executive Director
+                </h3>
                 <div className="max-w-2xl mx-auto">
                   <Card className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
                     <div className="grid md:grid-cols-3">
                       <div className="md:col-span-1 bg-[#f5f1eb] flex items-center justify-center">
                         <div className="relative h-full w-full aspect-square">
-                          <Image src="/adil.png" alt={executiveDirector.name} fill className="object-cover" />
+                          <Image
+                            src="/adil.png"
+                            alt={executiveDirector.name}
+                            fill
+                            className="object-cover"
+                          />
                         </div>
                       </div>
                       <CardContent className="md:col-span-2 p-4">
-                        <h4 className="text-lg font-semibold text-[#405862]">{executiveDirector.name}</h4>
-                        <p className="text-sm text-[#405862]/75 mb-2">{executiveDirector.role}</p>
+                        <h4 className="text-lg font-semibold text-[#405862]">
+                          {executiveDirector.name}
+                        </h4>
+                        <p className="text-sm text-[#405862]/75 mb-2">
+                          {executiveDirector.role}
+                        </p>
                         <p className="text-sm text-[#405862] mb-3">
-                          {expandedBios[executiveDirector.id] ? executiveDirector.bio : truncateBio(executiveDirector.bio)}
+                          {expandedBios[executiveDirector.id]
+                            ? executiveDirector.bio
+                            : truncateBio(executiveDirector.bio)}
                         </p>
                         <button
                           onClick={() => toggleBio(executiveDirector.id)}
@@ -160,21 +194,37 @@ export default function MembersClient() {
 
               {/* Deputy Exec Directors */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-center text-[#405862]">Deputy Executive Directors</h3>
+                <h3 className="text-lg font-semibold mb-4 text-center text-[#405862]">
+                  Deputy Executive Directors
+                </h3>
                 <div className="grid md:grid-cols-2 gap-4">
                   {deputyexecdir.map((vp) => (
-                    <Card key={vp.id} className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
+                    <Card
+                      key={vp.id}
+                      className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
+                    >
                       <div className="grid md:grid-cols-3">
                         <div className="md:col-span-1 bg-[#f5f1eb] flex items-center justify-center">
                           <div className="relative h-full w-full aspect-square">
-                            <Image src={vp.image || "/placeholder.svg"} alt={vp.name} fill className="object-cover" />
+                            <Image
+                              src={vp.image || "/placeholder.svg"}
+                              alt={vp.name}
+                              fill
+                              className="object-cover"
+                            />
                           </div>
                         </div>
                         <CardContent className="md:col-span-2 p-4">
-                          <h4 className="text-base font-semibold text-[#405862]">{vp.name}</h4>
-                          <p className="text-sm text-[#405862]/75 mb-2">{vp.role}</p>
+                          <h4 className="text-base font-semibold text-[#405862]">
+                            {vp.name}
+                          </h4>
+                          <p className="text-sm text-[#405862]/75 mb-2">
+                            {vp.role}
+                          </p>
                           <p className="text-sm text-[#405862] mb-3">
-                            {expandedBios[vp.id] ? vp.bio : truncateBio(vp.bio, 120)}
+                            {expandedBios[vp.id]
+                              ? vp.bio
+                              : truncateBio(vp.bio, 120)}
                           </p>
                           {vp.bio.length > 120 && (
                             <button
@@ -183,28 +233,42 @@ export default function MembersClient() {
                             >
                               {expandedBios[vp.id] ? (
                                 <>
-                                  Show Less <ChevronUp className="h-4 w-4 ml-1" />
+                                  Show Less{" "}
+                                  <ChevronUp className="h-4 w-4 ml-1" />
                                 </>
                               ) : (
                                 <>
-                                  See More <ChevronDown className="h-4 w-4 ml-1" />
+                                  See More{" "}
+                                  <ChevronDown className="h-4 w-4 ml-1" />
                                 </>
                               )}
                             </button>
                           )}
                           <div className="flex space-x-3">
                             {vp.socialLinks?.linkedin && (
-                              <Link href={vp.socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
+                              <Link
+                                href={vp.socialLinks.linkedin}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
                                 <Linkedin className="h-5 w-5" />
                               </Link>
                             )}
                             {vp.socialLinks?.instagram && (
-                              <Link href={vp.socialLinks.instagram} target="_blank" rel="noopener noreferrer">
+                              <Link
+                                href={vp.socialLinks.instagram}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
                                 <Instagram className="h-5 w-5" />
                               </Link>
                             )}
                             {vp.socialLinks?.website && (
-                              <Link href={vp.socialLinks.website} target="_blank" rel="noopener noreferrer">
+                              <Link
+                                href={vp.socialLinks.website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
                                 <Globe className="h-5 w-5" />
                               </Link>
                             )}
@@ -224,13 +288,19 @@ export default function MembersClient() {
                   className="border rounded-lg overflow-hidden bg-white border-[#405862]/20 shadow-sm mb-4"
                 >
                   <div className="p-4 border-b bg-[#f5f1eb]/30">
-                    <h3 className="text-lg font-semibold text-[#405862]">{department.name}</h3>
-                    <p className="text-[#405862]/80 text-sm">{department.description}</p>
+                    <h3 className="text-lg font-semibold text-[#405862]">
+                      {department.name}
+                    </h3>
+                    <p className="text-[#405862]/80 text-sm">
+                      {department.description}
+                    </p>
                   </div>
 
                   <div className="p-4 border-b">
                     <div className="flex items-center justify-between mb-3">
-                      <h4 className="text-base font-semibold text-[#405862]">Director</h4>
+                      <h4 className="text-base font-semibold text-[#405862]">
+                        Director
+                      </h4>
                     </div>
                     <div className="grid gap-4 md:grid-cols-2">
                       {Array.isArray(department.director) ? (
@@ -251,10 +321,16 @@ export default function MembersClient() {
                                 </div>
                               </div>
                               <CardContent className="col-span-2 p-3">
-                                <h5 className="font-semibold text-sm text-[#405862]">{director.name}</h5>
-                                <p className="text-xs text-[#405862]/75 mb-1">{director.role}</p>
+                                <h5 className="font-semibold text-sm text-[#405862]">
+                                  {director.name}
+                                </h5>
+                                <p className="text-xs text-[#405862]/75 mb-1">
+                                  {director.role}
+                                </p>
                                 <p className="text-xs text-[#405862] mb-1">
-                                  {expandedBios[director.id] ? director.bio : truncateBio(director.bio, 80)}
+                                  {expandedBios[director.id]
+                                    ? director.bio
+                                    : truncateBio(director.bio, 80)}
                                 </p>
                                 {director.bio.length > 80 && (
                                   <button
@@ -263,11 +339,13 @@ export default function MembersClient() {
                                   >
                                     {expandedBios[director.id] ? (
                                       <>
-                                        Show Less <ChevronUp className="h-3 w-3 ml-1" />
+                                        Show Less{" "}
+                                        <ChevronUp className="h-3 w-3 ml-1" />
                                       </>
                                     ) : (
                                       <>
-                                        See More <ChevronDown className="h-3 w-3 ml-1" />
+                                        See More{" "}
+                                        <ChevronDown className="h-3 w-3 ml-1" />
                                       </>
                                     )}
                                   </button>
@@ -304,7 +382,10 @@ export default function MembersClient() {
                             <div className="col-span-1 bg-[#f5f1eb]">
                               <div className="relative h-full w-full aspect-square">
                                 <Image
-                                  src={department.director.image || "/placeholder.svg"}
+                                  src={
+                                    department.director.image ||
+                                    "/placeholder.svg"
+                                  }
                                   alt={department.director.name}
                                   fill
                                   className="object-cover"
@@ -312,8 +393,12 @@ export default function MembersClient() {
                               </div>
                             </div>
                             <CardContent className="col-span-2 p-3">
-                              <h5 className="font-semibold text-sm text-[#405862]">{department.director.name}</h5>
-                              <p className="text-xs text-[#405862]/75 mb-1">{department.director.role}</p>
+                              <h5 className="font-semibold text-sm text-[#405862]">
+                                {department.director.name}
+                              </h5>
+                              <p className="text-xs text-[#405862]/75 mb-1">
+                                {department.director.role}
+                              </p>
                               <p className="text-xs text-[#405862] mb-1">
                                 {expandedBios[department.director.id]
                                   ? department.director.bio
@@ -321,16 +406,20 @@ export default function MembersClient() {
                               </p>
                               {department.director.bio.length > 80 && (
                                 <button
-                                  onClick={() => toggleBio(department.director.id)}
+                                  onClick={() =>
+                                    toggleBio(department.director.id)
+                                  }
                                   className="text-[#405862] text-xs font-medium hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
                                 >
                                   {expandedBios[department.director.id] ? (
                                     <>
-                                      Show Less <ChevronUp className="h-3 w-3 ml-1" />
+                                      Show Less{" "}
+                                      <ChevronUp className="h-3 w-3 ml-1" />
                                     </>
                                   ) : (
                                     <>
-                                      See More <ChevronDown className="h-3 w-3 ml-1" />
+                                      See More{" "}
+                                      <ChevronDown className="h-3 w-3 ml-1" />
                                     </>
                                   )}
                                 </button>
@@ -338,7 +427,9 @@ export default function MembersClient() {
                               <div className="flex space-x-2">
                                 {department.director.socialLinks?.linkedin && (
                                   <Link
-                                    href={department.director.socialLinks.linkedin}
+                                    href={
+                                      department.director.socialLinks.linkedin
+                                    }
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
@@ -348,7 +439,9 @@ export default function MembersClient() {
                                 )}
                                 {department.director.socialLinks?.instagram && (
                                   <Link
-                                    href={department.director.socialLinks.instagram}
+                                    href={
+                                      department.director.socialLinks.instagram
+                                    }
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
@@ -366,14 +459,18 @@ export default function MembersClient() {
 
                   <div className="p-4">
                     <div className="flex items-center justify-between mb-3">
-                      <h4 className="text-base font-semibold text-[#405862]">Members</h4>
+                      <h4 className="text-base font-semibold text-[#405862]">
+                        Members
+                      </h4>
                       <Button
                         onClick={() => toggleMembers(department.id)}
                         variant="outline"
                         size="sm"
                         className="text-xs h-8"
                       >
-                        {!visibleMembers[department.id] ? "Show Members" : "Hide Members"}
+                        {!visibleMembers[department.id]
+                          ? "Show Members"
+                          : "Hide Members"}
                       </Button>
                     </div>
 
@@ -395,12 +492,18 @@ export default function MembersClient() {
                                   />
                                 </div>
                                 <div>
-                                  <h5 className="font-semibold text-sm text-[#405862]">{member.name}</h5>
-                                  <p className="text-xs text-[#405862]/75">{member.role}</p>
+                                  <h5 className="font-semibold text-sm text-[#405862]">
+                                    {member.name}
+                                  </h5>
+                                  <p className="text-xs text-[#405862]/75">
+                                    {member.role}
+                                  </p>
                                 </div>
                               </div>
                               <p className="text-xs text-[#405862] mb-1">
-                                {expandedBios[member.id] ? member.bio : truncateBio(member.bio, 60)}
+                                {expandedBios[member.id]
+                                  ? member.bio
+                                  : truncateBio(member.bio, 60)}
                               </p>
                               {member.bio.length > 60 && (
                                 <button
@@ -409,11 +512,13 @@ export default function MembersClient() {
                                 >
                                   {expandedBios[member.id] ? (
                                     <>
-                                      Show Less <ChevronUp className="h-3 w-3 ml-1" />
+                                      Show Less{" "}
+                                      <ChevronUp className="h-3 w-3 ml-1" />
                                     </>
                                   ) : (
                                     <>
-                                      See More <ChevronDown className="h-3 w-3 ml-1" />
+                                      See More{" "}
+                                      <ChevronDown className="h-3 w-3 ml-1" />
                                     </>
                                   )}
                                 </button>
@@ -449,23 +554,31 @@ export default function MembersClient() {
                 </div>
               ))}
               <div className="mt-8 p-6 bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 rounded-lg text-center">
-                <h3 className="text-lg font-semibold text-[#405862] mb-2">Interested in Joining Our Team?</h3>
+                <h3 className="text-lg font-semibold text-[#405862] mb-2">
+                  Interested in Joining Our Team?
+                </h3>
                 <p className="text-[#405862]/80 mb-3">
-                  Check out the <span className="font-semibold text-[#4ecdc4]">Join Us</span> tab above to learn about
-                  executive opportunities and apply to join our leadership team!
+                  Check out the{" "}
+                  <span className="font-semibold text-[#4ecdc4]">Join Us</span>{" "}
+                  tab above to learn about executive opportunities and apply to
+                  join our leadership team!
                 </p>
                 <p className="text-sm text-[#405862]/70">
-                  Applications are open year-round and reviewed on an ongoing basis.
+                  Applications are open year-round and reviewed on an ongoing
+                  basis.
                 </p>
               </div>
             </TabsContent>
 
             <TabsContent value="advisors" className="space-y-6">
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-center text-[#405862]">Medical Student Advisors</h3>
+                <h3 className="text-lg font-semibold mb-4 text-center text-[#405862]">
+                  Medical Student Advisors
+                </h3>
                 <p className="text-center text-[#405862]/80 mb-6 max-w-2xl mx-auto text-sm">
-                  Our medical student advisors provide valuable guidance and mentorship, helping bridge the gap between
-                  high school and medical education.
+                  Our medical student advisors provide valuable guidance and
+                  mentorship, helping bridge the gap between high school and
+                  medical education.
                 </p>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {advisors.map((advisor) => (
@@ -484,10 +597,16 @@ export default function MembersClient() {
                         </div>
                       </div>
                       <CardContent className="p-4">
-                        <h4 className="text-base font-semibold text-[#405862]">{advisor.name}</h4>
-                        <p className="text-sm text-[#405862]/75 mb-2">{advisor.role}</p>
+                        <h4 className="text-base font-semibold text-[#405862]">
+                          {advisor.name}
+                        </h4>
+                        <p className="text-sm text-[#405862]/75 mb-2">
+                          {advisor.role}
+                        </p>
                         <p className="text-sm text-[#405862] mb-3">
-                          {expandedBios[advisor.id] ? advisor.bio : truncateBio(advisor.bio, 120)}
+                          {expandedBios[advisor.id]
+                            ? advisor.bio
+                            : truncateBio(advisor.bio, 120)}
                         </p>
                         {advisor.bio.length > 120 && (
                           <button
@@ -500,7 +619,8 @@ export default function MembersClient() {
                               </>
                             ) : (
                               <>
-                                See More <ChevronDown className="h-4 w-4 ml-1" />
+                                See More{" "}
+                                <ChevronDown className="h-4 w-4 ml-1" />
                               </>
                             )}
                           </button>
@@ -543,13 +663,18 @@ export default function MembersClient() {
                 </div>
               </div>
               <div className="mt-8 p-6 bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 rounded-lg text-center">
-                <h3 className="text-lg font-semibold text-[#405862] mb-2">Interested in Joining Our Team?</h3>
+                <h3 className="text-lg font-semibold text-[#405862] mb-2">
+                  Interested in Joining Our Team?
+                </h3>
                 <p className="text-[#405862]/80 mb-3">
-                  Check out the <span className="font-semibold text-[#4ecdc4]">Join Us</span> tab above to learn about
-                  executive opportunities and apply to join our leadership team!
+                  Check out the{" "}
+                  <span className="font-semibold text-[#4ecdc4]">Join Us</span>{" "}
+                  tab above to learn about executive opportunities and apply to
+                  join our leadership team!
                 </p>
                 <p className="text-sm text-[#405862]/70">
-                  Applications are open year-round and reviewed on an ongoing basis.
+                  Applications are open year-round and reviewed on an ongoing
+                  basis.
                 </p>
               </div>
             </TabsContent>
@@ -557,50 +682,168 @@ export default function MembersClient() {
             <TabsContent value="join" className="space-y-6">
               <div className="py-8 bg-[#f5f1eb]/50 rounded-lg text-center">
                 <div className="max-w-3xl mx-auto px-4">
-                  <h2 className="text-2xl font-bold mb-4 text-[#405862]">Join Our Executive Team</h2>
-                  <p className="mb-6 text-[#405862]/90">
-                    Applications are open year-round and reviewed on an ongoing basis. We're looking for passionate,
-                    driven students to join our leadership team and help inspire the next generation of healthcare
-                    professionals.
-                  </p>
+                 <h2 className="text-2xl font-bold mb-4 text-[#405862]">
+  Join Our Executive Team
+</h2>
 
+
+<p className="mb-6 text-[#405862]/90 max-w-3xl">
+  <span className="font-semibold">Dr. Interested</span> is a global youth organization active in
+  <span className="font-semibold"> 70+ countries</span>, reaching
+  <span className="font-semibold"> 60,000+ students</span> worldwide. We operate fully online through
+  Discord, with optional in-person opportunities depending on your city.
+</p>
+
+<p className="mb-6 text-[#405862]/90 max-w-3xl">
+  We’re recruiting across nearly every field right now — Finance, Tech, Coding, Design, Outreach,
+  Events, and Healthcare Careers Education. If you like building things that matter, there’s a seat
+  for you.
+</p>
+
+<p className="mb-6 text-[#405862]/90 max-w-3xl">
+  This isn’t busywork. You’ll be part of a global team that moves fast, leads real projects, and
+  creates impact you can point to proudly.
+</p>
+
+{/* WHAT YOU GET */}
+<div className="mb-6">
+  <h3 className="font-semibold text-[#405862] mb-3">What you get</h3>
+
+  <ul className="max-w-2xl mx-auto pl-4 space-y-2 text-sm text-[#405862]/90 text-left">
+    <li>✨ Experience working with an international organization that strengthens your résumé</li>
+    <li>✨ Letters of recommendation from medical students</li>
+    <li>✨ Free tickets to represent us at conferences (merit-based)</li>
+    <li>✨ Verified volunteer hours</li>
+    <li>
+      ✨ Real skill growth in leadership, collaboration, and execution
+    </li>
+  </ul>
+</div>
+
+{/* CANADA-SPECIFIC */}
+<div className="mb-6 flex flex-col md:flex-row items-start md:items-center gap-6">
+  {/* Text content */}
+  <div className="flex-1">
+    <h3 className="font-semibold text-[#405862] mb-3">
+      Extra opportunities (Canada · Under 18)
+    </h3>
+
+    <ul className="space-y-2 text-sm text-[#405862]/90 pl-4 text-left">
+      <li>
+        ✨ Apply for microgrants or travel grants to grow your ideas and showcase your work
+      </li>
+      <li>
+        ✨ Access 100+ virtual workshops and in-person events every year with civic leaders and mentors
+        across Canada
+      </li>
+      <li>
+        ✨ After 120 service hours, earn a National Service Recognition Certificate signed by the
+        Honourable Patty Hajdu, Minister of Employment, Workforce Development and Official Languages of
+        Canada
+      </li>
+    </ul>
+  </div>
+
+  {/* Image slot */}
+  <div className="flex-shrink-0 w-full md:w-64 rounded-lg overflow-hidden shadow-sm border border-[#405862]/20">
+    <Image
+      src="/glocal.webp" // replace with your image path
+      alt="Canadian youth opportunities"
+      width={256}
+      height={160}
+      className="object-cover w-full h-full"
+    />
+    <p className="text-xs text-center text-[#405862]/70 mt-2 mb-0">
+      With support from the GLOCAL Foundation of Canada
+    </p>
+  </div>
+</div>
+
+{/* NEW SECTION */}
+<div className="mb-8 rounded-lg border border-[#405862]/20 bg-[#405862]/5 p-5">
+  <h3 className="font-semibold text-[#405862] mb-3">
+    NEW: Policy & Global Research Opportunities:
+  </h3>
+
+  <p className="text-sm text-[#405862]/90 max-w-3xl">
+    As an executive, you’ll have the opportunity to contribute directly to our
+    <span className="font-medium"> policy and research reports</span>.
+    One of our current projects is a report for the
+    <span className="font-medium">
+      {" "}
+      United Nations High Commissioner on Human Rights
+    </span>.
+  </p>
+
+  <p className="mt-2 text-sm text-[#405862]/90 max-w-3xl">
+    Executives who contribute will be credited by name, and the final report will be published on
+    the official United Nations Human Rights website.
+  </p>
+</div>
+
+<p className="mb-6 text-[#405862]/80 text-sm">
+  ⏳ <span className="font-medium">Time commitment:</span> 6 months · ~2 hours/week
+</p>
                   <div className="grid md:grid-cols-3 gap-4 mb-6">
                     <Card className="border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
                       <CardContent className="p-6 text-center">
-                        <h3 className="font-semibold text-[#405862] mb-3">General Executive</h3>
+                        <h3 className="font-semibold text-[#405862] mb-3">
+                          General Executive
+                        </h3>
                         <p className="text-sm text-[#405862]/80 mb-4">
-                          Join our core leadership team and help shape the future of Dr. Interested.
+                          Join our core leadership team and help shape the
+                          future of Dr. Interested at a global scale.
                         </p>
                         <Link
                           href="https://forms.gle/TrkdUpn2TtDrRAAH6"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          <Button className="w-full bg-[#405862] hover:bg-[#334852] text-white">Apply Now</Button>
+                          <Button className="w-full bg-[#405862] hover:bg-[#334852] text-white">
+                            Apply Now
+                          </Button>
                         </Link>
                       </CardContent>
                     </Card>
 
                     <Card className="border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
                       <CardContent className="p-6 text-center">
-                        <h3 className="font-semibold text-[#405862] mb-3">Org Ambassador</h3>
+                        <h3 className="font-semibold text-[#405862] mb-3">
+                          Org Ambassador
+                        </h3>
                         <p className="text-sm text-[#405862]/80 mb-4">
-                          Represent Dr. Interested in your community and help us grow our reach.
+                          Represent Dr. Interested in your community and help
+                          expand our impact worldwide.
                         </p>
-                        <Link href="https://forms.gle/H5jZkekPubdtwcTS6" target="_blank" rel="noopener noreferrer">
-                          <Button className="w-full bg-[#405862] hover:bg-[#334852] text-white">Apply Now</Button>
+                        <Link
+                          href="https://forms.gle/H5jZkekPubdtwcTS6"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Button className="w-full bg-[#405862] hover:bg-[#334852] text-white">
+                            Apply Now
+                          </Button>
                         </Link>
                       </CardContent>
                     </Card>
 
                     <Card className="border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
                       <CardContent className="p-6 text-center">
-                        <h3 className="font-semibold text-[#405862] mb-3">Podcast Team</h3>
+                        <h3 className="font-semibold text-[#405862] mb-3">
+                          Podcast Team
+                        </h3>
                         <p className="text-sm text-[#405862]/80 mb-4">
-                          Help create engaging podcast content and share healthcare stories.
+                          Create engaging podcast content and amplify healthcare
+                          stories from around the world.
                         </p>
-                        <Link href="https://forms.gle/fH2equ2mCwDX9PpH6" target="_blank" rel="noopener noreferrer">
-                          <Button className="w-full bg-[#405862] hover:bg-[#334852] text-white">Apply Now</Button>
+                        <Link
+                          href="https://forms.gle/fH2equ2mCwDX9PpH6"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Button className="w-full bg-[#405862] hover:bg-[#334852] text-white">
+                            Apply Now
+                          </Button>
                         </Link>
                       </CardContent>
                     </Card>
@@ -624,5 +867,5 @@ export default function MembersClient() {
         </div>
       </section>
     </div>
-  )
+  );
 }

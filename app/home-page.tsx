@@ -179,8 +179,8 @@ export default function HomePage() {
                   </Link>
                 </div>
               </div>
-              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md w-full">
-  <div className="relative h-30 w-full rounded-lg overflow-hidden shadow-sm ">
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-24 max-w-md w-48">
+  <div className="relative h-14 w-32 rounded-lg overflow-hidden shadow-sm">
     <Image
       src="/imaginecan.png"
       alt="Imagine Canada Member"
@@ -189,7 +189,7 @@ export default function HomePage() {
     />
   </div>
 
-  <div className="relative h-28 w-full rounded-lg overflow-hidden shadow-sm">
+  <div className="relative h-14 w-32 rounded-lg overflow-hidden shadow-sm">
     <Image
       src="/development.png"
       alt="Youth development recognition"
