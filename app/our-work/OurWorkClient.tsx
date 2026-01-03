@@ -210,8 +210,8 @@ export default function OurWorkPage() {
                     <Quote className="w-4 h-4 text-[#4ecdc4] flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="text-[#405862]/80 text-xs italic mb-1">
-                        "This Research Competition for me was a wonderful experience as it helped me with learning
-                        importance of biomedical engineering which something I want to pursue in the future."
+                        "This Research Competition for me was a wonderful experience as it helped me with learning the
+                        importance of biomedical engineering which is something I want to pursue in the future."
                       </p>
                       <p className="text-[#405862]/60 text-xs">— 15 y.o., Low Income, USA</p>
                     </div>
