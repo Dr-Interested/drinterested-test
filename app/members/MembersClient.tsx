@@ -18,14 +18,18 @@ import {
   advisors,
   executiveDirector,
   deputyexecdir,
+  executiveAssistants,
+  ambassadors,
 } from "@/data/members";
 import ScrollToTop from "@/components/scroll-to-top";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function MembersClient() {
   const [expandedBios, setExpandedBios] = useState<Record<string, boolean>>({});
-  const [visibleMembers, setVisibleMembers] = useState<Record<string, boolean>>(
-    {}
+  const departmentDirectors = departments.flatMap((department) =>
+    Array.isArray(department.director)
+      ? department.director
+      : [department.director]
   );
 
   const params = useParams(); // { tab: 'leadership' | 'departments' | 'advisors' | 'join' }
@@ -54,13 +58,6 @@ export default function MembersClient() {
 
   const toggleBio = (id: string) => {
     setExpandedBios((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  };
-
-  const toggleMembers = (id: string) => {
-    setVisibleMembers((prev) => ({
       ...prev,
       [id]: !prev[id],
     }));
@@ -279,6 +276,124 @@ export default function MembersClient() {
                   ))}
                 </div>
               </div>
+
+              {/* Executive Assistants */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4 text-center text-[#405862]">
+                  Executive Assistants
+                </h3>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {executiveAssistants.map((assistant) => (
+                    <Card
+                      key={assistant.id}
+                      className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
+                    >
+                      <div className="grid md:grid-cols-3">
+                        <div className="md:col-span-1 bg-[#f5f1eb] flex items-center justify-center">
+                          <div className="relative h-full w-full aspect-square">
+                            <Image
+                              src={assistant.image || "/placeholder.svg"}
+                              alt={assistant.name}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                        </div>
+                        <CardContent className="md:col-span-2 p-4">
+                          <h4 className="text-base font-semibold text-[#405862]">
+                            {assistant.name}
+                          </h4>
+                          <p className="text-sm text-[#405862]/75 mb-2">
+                            {assistant.role}
+                          </p>
+                          <p className="text-sm text-[#405862] mb-3">
+                            {expandedBios[assistant.id]
+                              ? assistant.bio
+                              : truncateBio(assistant.bio, 100)}
+                          </p>
+                          {assistant.bio.length > 100 && (
+                            <button
+                              onClick={() => toggleBio(assistant.id)}
+                              className="text-[#405862] text-sm font-medium hover:text-[#4ecdc4] transition-colors mb-3 flex items-center"
+                            >
+                              {expandedBios[assistant.id] ? (
+                                <>
+                                  Show Less{" "}
+                                  <ChevronUp className="h-4 w-4 ml-1" />
+                                </>
+                              ) : (
+                                <>
+                                  See More{" "}
+                                  <ChevronDown className="h-4 w-4 ml-1" />
+                                </>
+                              )}
+                            </button>
+                          )}
+                        </CardContent>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+
+              {/* Directors */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4 text-center text-[#405862]">
+                  Directors
+                </h3>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {departmentDirectors.map((director) => (
+                    <Card
+                      key={director.id}
+                      className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
+                    >
+                      <div className="grid md:grid-cols-3">
+                        <div className="md:col-span-1 bg-[#f5f1eb] flex items-center justify-center">
+                          <div className="relative h-full w-full aspect-square">
+                            <Image
+                              src={director.image || "/placeholder.svg"}
+                              alt={director.name}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                        </div>
+                        <CardContent className="md:col-span-2 p-4">
+                          <h4 className="text-base font-semibold text-[#405862]">
+                            {director.name}
+                          </h4>
+                          <p className="text-sm text-[#405862]/75 mb-2">
+                            {director.role}
+                          </p>
+                          <p className="text-sm text-[#405862] mb-3">
+                            {expandedBios[director.id]
+                              ? director.bio
+                              : truncateBio(director.bio, 100)}
+                          </p>
+                          {director.bio.length > 100 && (
+                            <button
+                              onClick={() => toggleBio(director.id)}
+                              className="text-[#405862] text-sm font-medium hover:text-[#4ecdc4] transition-colors mb-3 flex items-center"
+                            >
+                              {expandedBios[director.id] ? (
+                                <>
+                                  Show Less{" "}
+                                  <ChevronUp className="h-4 w-4 ml-1" />
+                                </>
+                              ) : (
+                                <>
+                                  See More{" "}
+                                  <ChevronDown className="h-4 w-4 ml-1" />
+                                </>
+                              )}
+                            </button>
+                          )}
+                        </CardContent>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
             </TabsContent>
 
             <TabsContent value="departments" className="space-y-6">
@@ -320,19 +435,19 @@ export default function MembersClient() {
                                   />
                                 </div>
                               </div>
-                              <CardContent className="col-span-2 p-3">
-                                <h5 className="font-semibold text-sm text-[#405862]">
+                              <CardContent className="col-span-2 p-2">
+                                <h5 className="font-semibold text-base text-[#405862]">
                                   {director.name}
                                 </h5>
-                                <p className="text-xs text-[#405862]/75 mb-1">
+                                <p className="text-sm text-[#405862]/75 mb-1">
                                   {director.role}
                                 </p>
-                                <p className="text-xs text-[#405862] mb-1">
+                                <p className="text-sm text-[#405862] mb-1">
                                   {expandedBios[director.id]
                                     ? director.bio
-                                    : truncateBio(director.bio, 80)}
+                                    : truncateBio(director.bio, 70)}
                                 </p>
-                                {director.bio.length > 80 && (
+                                {director.bio.length > 70 && (
                                   <button
                                     onClick={() => toggleBio(director.id)}
                                     className="text-[#405862] text-xs font-medium hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
@@ -392,19 +507,19 @@ export default function MembersClient() {
                                 />
                               </div>
                             </div>
-                            <CardContent className="col-span-2 p-3">
-                              <h5 className="font-semibold text-sm text-[#405862]">
+                            <CardContent className="col-span-2 p-2">
+                              <h5 className="font-semibold text-base text-[#405862]">
                                 {department.director.name}
                               </h5>
-                              <p className="text-xs text-[#405862]/75 mb-1">
+                              <p className="text-sm text-[#405862]/75 mb-1">
                                 {department.director.role}
                               </p>
-                              <p className="text-xs text-[#405862] mb-1">
+                              <p className="text-sm text-[#405862] mb-1">
                                 {expandedBios[department.director.id]
                                   ? department.director.bio
-                                  : truncateBio(department.director.bio, 80)}
+                                  : truncateBio(department.director.bio, 70)}
                               </p>
-                              {department.director.bio.length > 80 && (
+                              {department.director.bio.length > 70 && (
                                 <button
                                   onClick={() =>
                                     toggleBio(department.director.id)
@@ -457,60 +572,47 @@ export default function MembersClient() {
                     </div>
                   </div>
 
-                  <div className="p-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="text-base font-semibold text-[#405862]">
-                        Members
+                  {department.deputyDirectors?.length ? (
+                    <div className="p-4 border-b">
+                      <h4 className="text-base font-semibold text-[#405862] mb-3">
+                        Deputy Directors
                       </h4>
-                      <Button
-                        onClick={() => toggleMembers(department.id)}
-                        variant="outline"
-                        size="sm"
-                        className="text-xs h-8"
-                      >
-                        {!visibleMembers[department.id]
-                          ? "Show Members"
-                          : "Hide Members"}
-                      </Button>
-                    </div>
-
-                    {visibleMembers[department.id] && (
-                      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-                        {department.members.map((member) => (
+                      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                        {department.deputyDirectors.map((deputy) => (
                           <Card
-                            key={member.id}
+                            key={deputy.id}
                             className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
                           >
-                            <CardContent className="p-3">
-                              <div className="flex items-center gap-2 mb-1">
-                                <div className="relative h-8 w-8 rounded-full overflow-hidden flex-shrink-0">
+                            <CardContent className="p-4">
+                              <div className="flex items-center gap-3 mb-2">
+                                <div className="relative h-12 w-12 rounded-full overflow-hidden flex-shrink-0">
                                   <Image
-                                    src={member.image || "/placeholder.svg"}
-                                    alt={member.name}
+                                    src={deputy.image || "/placeholder.svg"}
+                                    alt={deputy.name}
                                     fill
                                     className="object-cover"
                                   />
                                 </div>
                                 <div>
-                                  <h5 className="font-semibold text-sm text-[#405862]">
-                                    {member.name}
+                                  <h5 className="font-semibold text-base text-[#405862]">
+                                    {deputy.name}
                                   </h5>
-                                  <p className="text-xs text-[#405862]/75">
-                                    {member.role}
+                                  <p className="text-sm text-[#405862]/75">
+                                    {deputy.role}
                                   </p>
                                 </div>
                               </div>
-                              <p className="text-xs text-[#405862] mb-1">
-                                {expandedBios[member.id]
-                                  ? member.bio
-                                  : truncateBio(member.bio, 60)}
+                              <p className="text-sm text-[#405862] mb-1">
+                                {expandedBios[deputy.id]
+                                  ? deputy.bio
+                                  : truncateBio(deputy.bio, 70)}
                               </p>
-                              {member.bio.length > 60 && (
+                              {deputy.bio.length > 70 && (
                                 <button
-                                  onClick={() => toggleBio(member.id)}
+                                  onClick={() => toggleBio(deputy.id)}
                                   className="text-[#405862] text-xs font-medium hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
                                 >
-                                  {expandedBios[member.id] ? (
+                                  {expandedBios[deputy.id] ? (
                                     <>
                                       Show Less{" "}
                                       <ChevronUp className="h-3 w-3 ml-1" />
@@ -524,9 +626,9 @@ export default function MembersClient() {
                                 </button>
                               )}
                               <div className="flex space-x-2 mt-1">
-                                {member.socialLinks?.linkedin && (
+                                {deputy.socialLinks?.linkedin && (
                                   <Link
-                                    href={member.socialLinks.linkedin}
+                                    href={deputy.socialLinks.linkedin}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
@@ -534,9 +636,9 @@ export default function MembersClient() {
                                     <Linkedin className="h-4 w-4" />
                                   </Link>
                                 )}
-                                {member.socialLinks?.instagram && (
+                                {deputy.socialLinks?.instagram && (
                                   <Link
-                                    href={member.socialLinks.instagram}
+                                    href={deputy.socialLinks.instagram}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
@@ -549,10 +651,147 @@ export default function MembersClient() {
                           </Card>
                         ))}
                       </div>
-                    )}
+                    </div>
+                  ) : null}
+
+                  <div className="p-4">
+                    <h4 className="text-base font-semibold text-[#405862] mb-3">
+                      Coordinators
+                    </h4>
+                    <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+                      {department.coordinators.map((coordinator) => (
+                        <Card
+                          key={coordinator.id}
+                          className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
+                        >
+                          <CardContent className="p-3">
+                            <div className="flex items-center gap-2 mb-1">
+                              <div className="relative h-8 w-8 rounded-full overflow-hidden flex-shrink-0">
+                                <Image
+                                  src={coordinator.image || "/placeholder.svg"}
+                                  alt={coordinator.name}
+                                  fill
+                                  className="object-cover"
+                                />
+                              </div>
+                              <div>
+                                <h5 className="font-semibold text-sm text-[#405862]">
+                                  {coordinator.name}
+                                </h5>
+                                <p className="text-xs text-[#405862]/75">
+                                  {coordinator.role}
+                                </p>
+                              </div>
+                            </div>
+                            <p className="text-xs text-[#405862] mb-1">
+                              {expandedBios[coordinator.id]
+                                ? coordinator.bio
+                                : truncateBio(coordinator.bio, 60)}
+                            </p>
+                            {coordinator.bio.length > 60 && (
+                              <button
+                                onClick={() => toggleBio(coordinator.id)}
+                                className="text-[#405862] text-xs font-medium hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
+                              >
+                                {expandedBios[coordinator.id] ? (
+                                  <>
+                                    Show Less{" "}
+                                    <ChevronUp className="h-3 w-3 ml-1" />
+                                  </>
+                                ) : (
+                                  <>
+                                    See More{" "}
+                                    <ChevronDown className="h-3 w-3 ml-1" />
+                                  </>
+                                )}
+                              </button>
+                            )}
+                            <div className="flex space-x-2 mt-1">
+                              {coordinator.socialLinks?.linkedin && (
+                                <Link
+                                  href={coordinator.socialLinks.linkedin}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                                >
+                                  <Linkedin className="h-4 w-4" />
+                                </Link>
+                              )}
+                              {coordinator.socialLinks?.instagram && (
+                                <Link
+                                  href={coordinator.socialLinks.instagram}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                                >
+                                  <Instagram className="h-4 w-4" />
+                                </Link>
+                              )}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold text-center text-[#405862] mb-4">
+                  Ambassadors
+                </h3>
+                <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+                  {ambassadors.map((ambassador) => (
+                    <Card
+                      key={ambassador.id}
+                      className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
+                    >
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="relative h-12 w-12 rounded-full overflow-hidden flex-shrink-0">
+                            <Image
+                              src={ambassador.image || "/placeholder.svg"}
+                              alt={ambassador.name}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                          <div>
+                            <h5 className="font-semibold text-sm text-[#405862]">
+                              {ambassador.name}
+                            </h5>
+                            <p className="text-xs text-[#405862]/75">
+                              {ambassador.role}
+                            </p>
+                          </div>
+                        </div>
+                        <p className="text-xs text-[#405862] mb-1">
+                          {expandedBios[ambassador.id]
+                            ? ambassador.bio
+                            : truncateBio(ambassador.bio, 60)}
+                        </p>
+                        {ambassador.bio.length > 60 && (
+                          <button
+                            onClick={() => toggleBio(ambassador.id)}
+                            className="text-[#405862] text-xs font-medium hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
+                          >
+                            {expandedBios[ambassador.id] ? (
+                              <>
+                                Show Less{" "}
+                                <ChevronUp className="h-3 w-3 ml-1" />
+                              </>
+                            ) : (
+                              <>
+                                See More{" "}
+                                <ChevronDown className="h-3 w-3 ml-1" />
+                              </>
+                            )}
+                          </button>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
               <div className="mt-8 p-6 bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 rounded-lg text-center">
                 <h3 className="text-lg font-semibold text-[#405862] mb-2">
                   Interested in Joining Our Team?

@@ -1,6 +1,14 @@
 import { blogPosts } from "@/data/blog"
 import { webinars } from "@/data/webinars"
-import { executiveDirector, deputyexecdir, advisors, departments, MemberType } from "@/data/members"
+import {
+  executiveDirector,
+  deputyexecdir,
+  executiveAssistants,
+  advisors,
+  departments,
+  ambassadors,
+  MemberType,
+} from "@/data/members"
 import { upcomingEvents, pastEvents, EventType } from "@/data/events"
 
 // Helper function to escape XML special characters
@@ -277,16 +285,23 @@ export async function GET() {
   const allMembers: MemberType[] = [
     executiveDirector,
     ...deputyexecdir,
+    ...executiveAssistants,
     ...advisors,
     ...departments.flatMap((dept) => [
       ...(Array.isArray(dept.director) ? dept.director : [dept.director]),
-      ...dept.members,
+      ...(dept.deputyDirectors ?? []),
+      ...dept.coordinators,
     ]),
+    ...ambassadors,
   ]
 
   allMembers.forEach((member) => {
     const memberUrl = `${baseUrl}/team/${member.id}`
     const imageUrl = `${baseUrl}${member.image}`
+    const memberImageDescription =
+      member.image === "/logo.png"
+        ? `${member.name}, ${member.role}`
+        : imageDescriptions[member.image] || `${member.name}, ${member.role}`
     // Use a fixed valid date for team members instead of current date
     const pubDate = new Date("2025-01-01T00:00:00Z").toUTCString()
 
@@ -300,7 +315,7 @@ export async function GET() {
       <category>Team Member</category>
       <media:content url="${escapeXml(imageUrl)}" medium="image" type="image/jpeg">
         <media:title><![CDATA[${member.name} - Headshot]]></media:title>
-        <media:description><![CDATA[${imageDescriptions[member.image] || `${member.name}, ${member.role}`}]]></media:description>
+        <media:description><![CDATA[${memberImageDescription}]]></media:description>
       </media:content>
       <content:encoded><![CDATA[
         <img src="${escapeXml(imageUrl)}" alt="${escapeXml(member.name)}" />
