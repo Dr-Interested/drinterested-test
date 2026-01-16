@@ -47,7 +47,7 @@ export default function WebinarGalleryPage() {
             {webinars.map((webinar) => (
               <Link
                 key={webinar.id}
-                href={`https://drinterested.org/watch/${webinar.slug}`}
+                href={`/watch/${webinar.slug}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >

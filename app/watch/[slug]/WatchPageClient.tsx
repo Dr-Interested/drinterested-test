@@ -136,7 +136,7 @@ export default function WatchPageClient({ webinar }: WatchPageClientProps) {
             >
               <video
                 ref={videoRef}
-                className="w-full h-full"
+                className="w-full h-full peer"
                 poster={webinar.thumbnailPath}
                 onLoadedMetadata={handleLoadedMetadata}
                 onTimeUpdate={handleTimeUpdate}
@@ -149,16 +149,18 @@ export default function WatchPageClient({ webinar }: WatchPageClientProps) {
               </video>
 
               {/* Overlay Play/Pause */}
-              <div
+              <button
                 onClick={togglePlay}
-                className="absolute inset-0 flex items-center justify-center bg-black/10 cursor-pointer"
+                className={`absolute inset-0 flex items-center justify-center bg-black/10 cursor-pointer transition-opacity duration-300 ${showControls ? "opacity-100" : "opacity-0"
+                  }`}
+                aria-label={isPlaying ? "Pause" : "Play"}
               >
                 {isPlaying ? (
                   <Pause className="w-16 h-16 text-teal-400 opacity-50 fill-teal-400" />
                 ) : (
                   <Play className="w-16 h-16 text-teal-400 opacity-50 fill-teal-400" />
                 )}
-              </div>
+              </button>
 
               {/* Bottom Controls */}
               <div
@@ -191,7 +193,7 @@ export default function WatchPageClient({ webinar }: WatchPageClientProps) {
         </div>
 
         {/* Content Section */}
-         <div className="mt-8 p-6 bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 rounded-lg text-left">
+        <div className="mt-8 p-6 bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 rounded-lg text-left">
           <div className="container mx-auto max-w-7xl py-8 px-4">
             <div className="grid lg:grid-cols-3 gap-8">
               {/* Main Content */}
