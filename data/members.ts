@@ -278,7 +278,7 @@ export const departments: DepartmentType[] = [
       {
         id: "marketing-coordinator-chetna-prabhu",
         name: "Chetna Prabhu",
-        role: "Coordinator - Marketing",
+        role: "Coordinator - Marketing & Ambassador",
         image: "/ChetnaPrabhu_marketing.jpg",
         bio: "Chetna Prabhu is a dedicated grade 11 AP student taking AP French and AP Physics at St. Joseph?Ts Secondary School. She loves content designing and digital creation, researching, learning new languages, and studying both science and mathematics. At school, she is part of the student council as Minister of Public Relations, DECA, HOSA, and the school?Ts newspaper club. To Chetna, the youth has such a powerful role in being able to make change and am so excited to support the next generation of medical students who aspire to find opportunities and programs in medicine. She is a passionate student interested in pursuing biomedical engineering in the future and hopes to gain experience in healthcare, research, and marketing through this amazing opportunity with Dr. Interested as a marketing executive.",
       },
@@ -575,7 +575,7 @@ export const departments: DepartmentType[] = [
       {
         id: "hr-deputy-chloe-young",
         name: "Chloe Young",
-        role: "Deputy Director - Human Resources (Voluntime Management Team)",
+        role: "Deputy Director - Human Resources (Voluntime Management Team) & Ambassador",
         image: "/chloey.png",
         bio: "Hello, I am a grade 11 student in Ontario, Canada and I want to become a surgeon in the future. Some of my hobbies include building model kits, alpine skiing, and creative writing. I joined Dr. Interested because I love what they do and how they help youth along their pathway into medicine.",
       },
@@ -930,7 +930,7 @@ export const departments: DepartmentType[] = [
       {
         id: "finance-coordinator-ayona-jaswal",
         name: "Ayona Jaswal",
-        role: "Coordinator - Finance",
+        role: "Coordinator - Finance & Ambassador",
         image: "/logo.png",
         bio: placeholderBio,
       },
@@ -1017,22 +1017,8 @@ export const ambassadors: MemberType[] = [
     bio: placeholderBio,
   },
   {
-    id: "ambassador-chloe-young",
-    name: "Chloe Young",
-    role: "Ambassador",
-    image: "/chloey.png",
-    bio: placeholderBio,
-  },
-  {
     id: "ambassador-karis-lai",
     name: "Karis Lai",
-    role: "Ambassador",
-    image: "/logo.png",
-    bio: placeholderBio,
-  },
-  {
-    id: "ambassador-ayona-jaswal",
-    name: "Ayona Jaswal",
     role: "Ambassador",
     image: "/logo.png",
     bio: placeholderBio,
@@ -1063,13 +1049,6 @@ export const ambassadors: MemberType[] = [
     name: "Hala Ammoura",
     role: "Ambassador",
     image: "/logo.png",
-    bio: placeholderBio,
-  },
-  {
-    id: "ambassador-chetna-prabhu",
-    name: "Chetna Prabhu",
-    role: "Ambassador",
-    image: "/ChetnaPrabhu_marketing.jpg",
     bio: placeholderBio,
   },
   {

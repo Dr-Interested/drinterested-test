@@ -348,8 +348,8 @@ export default function MembersClient() {
                       className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
                     >
                       <div className="grid md:grid-cols-3">
-                        <div className="md:col-span-1 bg-[#f5f1eb] flex items-center justify-center">
-                          <div className="relative h-full w-full aspect-square">
+                        <div className="md:col-span-1 bg-[#f5f1eb] flex">
+                          <div className="relative w-full aspect-square md:aspect-auto md:h-full">
                             <Image
                               src={director.image || "/placeholder.svg"}
                               alt={director.name}
@@ -358,11 +358,11 @@ export default function MembersClient() {
                             />
                           </div>
                         </div>
-                        <CardContent className="md:col-span-2 p-4">
-                          <h4 className="text-base font-semibold text-[#405862]">
+                        <CardContent className="md:col-span-2 p-4 min-w-0">
+                          <h4 className="text-sm sm:text-base font-semibold text-[#405862] leading-snug break-words">
                             {director.name}
                           </h4>
-                          <p className="text-sm text-[#405862]/75 mb-2">
+                          <p className="text-sm text-[#405862]/75 mb-2 break-words">
                             {director.role}
                           </p>
                           <p className="text-sm text-[#405862] mb-3">
@@ -435,22 +435,22 @@ export default function MembersClient() {
                                   />
                                 </div>
                               </div>
-                              <CardContent className="col-span-2 p-2">
-                                <h5 className="font-semibold text-base text-[#405862]">
+                              <CardContent className="col-span-2 p-1.5">
+                                <h5 className="font-semibold text-sm text-[#405862]">
                                   {director.name}
                                 </h5>
-                                <p className="text-sm text-[#405862]/75 mb-1">
+                                <p className="text-xs text-[#405862]/75 mb-1">
                                   {director.role}
                                 </p>
-                                <p className="text-sm text-[#405862] mb-1">
+                                <p className="text-xs text-[#405862] mb-1">
                                   {expandedBios[director.id]
                                     ? director.bio
-                                    : truncateBio(director.bio, 70)}
+                                    : truncateBio(director.bio, 56)}
                                 </p>
-                                {director.bio.length > 70 && (
+                                {director.bio.length > 56 && (
                                   <button
                                     onClick={() => toggleBio(director.id)}
-                                    className="text-[#405862] text-xs font-medium hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
+                                    className="text-[#405862] text-[11px] font-medium hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
                                   >
                                     {expandedBios[director.id] ? (
                                       <>
@@ -507,24 +507,24 @@ export default function MembersClient() {
                                 />
                               </div>
                             </div>
-                            <CardContent className="col-span-2 p-2">
-                              <h5 className="font-semibold text-base text-[#405862]">
+                            <CardContent className="col-span-2 p-1.5">
+                              <h5 className="font-semibold text-sm text-[#405862]">
                                 {department.director.name}
                               </h5>
-                              <p className="text-sm text-[#405862]/75 mb-1">
+                              <p className="text-xs text-[#405862]/75 mb-1">
                                 {department.director.role}
                               </p>
-                              <p className="text-sm text-[#405862] mb-1">
+                              <p className="text-xs text-[#405862] mb-1">
                                 {expandedBios[department.director.id]
                                   ? department.director.bio
-                                  : truncateBio(department.director.bio, 70)}
+                                  : truncateBio(department.director.bio, 56)}
                               </p>
-                              {department.director.bio.length > 70 && (
+                              {department.director.bio.length > 56 && (
                                 <button
                                   onClick={() =>
                                     toggleBio(department.director.id)
                                   }
-                                  className="text-[#405862] text-xs font-medium hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
+                                  className="text-[#405862] text-[11px] font-medium hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
                                 >
                                   {expandedBios[department.director.id] ? (
                                     <>
