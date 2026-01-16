@@ -16,7 +16,9 @@ import {
   Clock,
   Eye,
   ChevronRight,
+  Forward
 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 interface WatchPageClientProps {
   webinar: Webinar;
@@ -31,6 +33,24 @@ export default function WatchPageClient({ webinar }: WatchPageClientProps) {
   const [volume, setVolume] = useState(1);
   const [showControls, setShowControls] = useState(true);
   const [playbackRate, setPlaybackRate] = useState(1);
+  const [linkModalOpen, setLinkModalOpen] = useState(false);
+  const [copyUrl, setCopyUrl] = useState("");
+
+  useEffect(() => {
+    setCopyUrl(window.location.href);
+  }, []);
+
+  const query = useSearchParams();
+
+  const toggleUseTimestamp = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const useTimestamp = e.target.checked;
+    let url = window.location.href.split("?")[0];
+    if (useTimestamp && videoRef.current) {
+      const time = Math.floor(videoRef.current.currentTime);
+      url += `?t=${time}`;
+    }
+    setCopyUrl(url);
+  }
 
   const togglePlay = useCallback(() => {
     const video = videoRef.current;
@@ -56,9 +76,35 @@ export default function WatchPageClient({ webinar }: WatchPageClientProps) {
     else videoRef.current.requestFullscreen();
   };
 
-  useEffect(() => {
-    // setIsMounted(true);
+  const copyLinkClicked = () => {
+    setLinkModalOpen(true);
+  }
 
+  useEffect(() => {
+    const timeoutRef = { current: null as ReturnType<typeof setTimeout> | null };
+
+    const hide = () => setShowControls(false);
+
+    const activity = () => {
+      console.log("activity detected");
+      setShowControls(true);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(hide, 3000);
+    }
+
+    const leaveVideo = () => hide();
+
+    window.addEventListener("mousemove", activity);
+    window.addEventListener("mouseleave", leaveVideo);
+
+    return () => {
+      window.removeEventListener("mousemove", activity);
+      window.removeEventListener("mouseleave", leaveVideo);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    }
+  }, [])
+
+  useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
@@ -67,9 +113,9 @@ export default function WatchPageClient({ webinar }: WatchPageClientProps) {
         setDuration(video.duration);
       }
 
-      const savedTime = localStorage.getItem(`webinar-${webinar.slug}-time`);
-      if (savedTime) {
-        const time = parseFloat(savedTime);
+      const startTime = query.get('t') || localStorage.getItem(`webinar-${webinar.slug}-time`);
+      if (startTime) {
+        const time = parseFloat(startTime);
         if (!isNaN(time) && time < video.duration) {
           video.currentTime = time;
           setCurrentTime(time);
@@ -101,7 +147,7 @@ export default function WatchPageClient({ webinar }: WatchPageClientProps) {
       window.removeEventListener("beforeunload", leavePage);
       video.removeEventListener("loadedmetadata", setMetadata);
     };
-  }, [webinar.slug]);
+  }, [webinar.slug, query]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -228,7 +274,7 @@ export default function WatchPageClient({ webinar }: WatchPageClientProps) {
               {/* Overlay Play/Pause */}
               <button
                 onClick={togglePlay}
-                className={`absolute inset-0 flex items-center justify-center bg-black/10 cursor-pointer transition-opacity duration-300 ${showControls ? "opacity-100" : "opacity-0"
+                className={`absolute inset-0 flex items-center justify-center bg-black/10 transition-opacity duration-300 ${showControls ? "opacity-100 cursor-pointer" : "opacity-0 pointer-events-none"
                   }`}
                 aria-label={isPlaying ? "Pause" : "Play"}
               >
@@ -283,8 +329,52 @@ export default function WatchPageClient({ webinar }: WatchPageClientProps) {
                 </div>
               </div>
             </div>
+            <div className="flex justify-end py-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={copyLinkClicked}
+              >
+                Share
+                <Forward className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
           </div>
         </div>
+
+        {/*Copy link modal*/}
+        {linkModalOpen && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+            <div className="bg-white rounded-lg p-6 w-11/12 max-w-md">
+              <h2 className="text-lg font-semibold mb-4">Share Webinar Link</h2>
+              <input
+                type="text"
+                readOnly
+                value={copyUrl}
+                className="w-full p-2 border border-gray-300 rounded mb-4"
+              />
+              <div>
+                <input type="checkbox" id="startAtCheckbox" className="mr-2" onChange={toggleUseTimestamp} />
+                <label htmlFor="startAtCheckbox" className="text-sm">
+                  Include current time in link <span className="text-gray-500 text-sm">({formatTime(currentTime)})</span>
+                </label>
+              </div>
+              <div className="flex justify-end space-x-4">
+                <Button variant="outline" onClick={() => setLinkModalOpen(false)}>
+                  Close
+                </Button>
+                <Button
+                  onClick={() => {
+                    navigator.clipboard.writeText(copyUrl);
+                    setLinkModalOpen(false);
+                  }}
+                >
+                  Copy Link
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Content Section */}
         <div className="mt-8 p-6 bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 rounded-lg text-left">
