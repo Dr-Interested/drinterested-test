@@ -27,11 +27,11 @@ export default function EventsClientPage() {
 
   return (
     <div>
-      <section className="bg-[#f5f1eb] py-10">
+      <section className="bg-[#f5f1eb] py-10 md:py-16">
         <div className="container">
           <motion.div className="text-center" initial="hidden" animate="visible" variants={fadeIn}>
-            <h1 className="text-3xl font-bold text-[#405862]">Events & Initiatives</h1>
-            <p className="text-[#405862]/80 mt-3 max-w-2xl mx-auto">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#405862]">Events & Initiatives</h1>
+            <p className="text-lg text-[#405862]/80 mt-3 max-w-2xl mx-auto">
               Join us for engaging events and initiatives designed to educate and inspire the next generation of
               healthcare professionals.
             </p>

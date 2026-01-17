@@ -30,7 +30,7 @@ export const executiveDirector: MemberType = {
   name: "Adil Mukhi",
   role: "Executive Director",
   image: "/adil.png",
-  bio: "I started Dr. Interested after seeing too many youth struggle to navigate med school paths or build core skills like research and public speaking. This platform exists to change thatâby giving students the tools and guidance they need to thrive. Beyond this, Iâm a public speaker, youth advocate & changemaker! I lead initiatives that empower tens of thousands of young people, including founding Dr. Interested and contributing to the Play-to-Heal movement. Iâve supported youth-focused research and policy, including a CIHR grant with SickKids for the OPTIMAL Project and recommendations presented to the Future of Sport in Canada Commission. Passionate about mentorship, research, and leadership, I aim to create opportunities for youth to innovate and lead. If you want to learn more about me, feel free to check out my website, which I am sure is linked somewhere",
+  bio: "I started Dr. Interested after seeing too many youth struggle to navigate med school paths or build core skills like research and public speaking. This platform exists to change that--by giving students the tools and guidance they need to thrive. Beyond this, I'm a public speaker, youth advocate & changemaker! I lead initiatives that empower tens of thousands of young people, including founding Dr. Interested and contributing to the Play-to-Heal movement. I've supported youth-focused research and policy, including a CIHR grant with SickKids for the OPTIMAL Project and recommendations presented to the Future of Sport in Canada Commission. Passionate about mentorship, research, and leadership, I aim to create opportunities for youth to innovate and lead. If you want to learn more about me, feel free to check out my website, which I am sure is linked somewhere",
   socialLinks: {
     website: "https://adilmukhi.vercel.app/",
     linkedin: "https://www.linkedin.com/in/adil-mukhi-6aba27246/",
@@ -42,7 +42,7 @@ export const executiveDirector: MemberType = {
 export const deputyexecdir: MemberType[] = [
   {
     id: "deputyexec1",
-    name: "Velan Mangai Sivakumar",
+    name: "Velan Mangai",
     role: "Deputy Executive Director",
     bio: "Velan Mangai Sivakumar is a Grade 10 student in Glenforest Secondary School. He is extremely passionate about STEM and biological sciences in particular. He has volunteered for many STEM organizations such as the Rosalind Franklin Institute. He is a trainer for HOSA (Health Occupation Students of America). His best result in STEM contests would be getting top 25 nationally and qualifying for the national camp in the Junior Science Olympiad of Canada. He also plays chess and his best results include qualifying for the Canadian Youth Chess Championship U16 twice and getting 4th in the Canadian Chess League Twice.",
     image: "/velan.png",
@@ -52,7 +52,7 @@ export const deputyexecdir: MemberType[] = [
     id: "deputyexec2",
     name: "Kishan Suhirthan",
     role: "Deputy Executive Director",
-    bio: "Kishan Suhirthan is a Grade 11 student in the IB Program at Glenforest Secondary School with a strong passion for engineering and technology. As a Flight Sergeant in the Royal Canadian Air Cadet Program, he has developed strong leadership and organizational skills. His involvement with Innovire and FRC Team 1325 âInverse Paradoxâ highlights his teamwork, creativity, and technical expertise. Proficient in both software development and electrical systems, Kishan is a dedicated and well-rounded individual committed to excellence in every project he undertakes.",
+    bio: "Kishan Suhirthan is a Grade 11 student in the IB Program at Glenforest Secondary School with a strong passion for engineering and technology. As a Flight Sergeant in the Royal Canadian Air Cadet Program, he has developed strong leadership and organizational skills. His involvement with Innovire and FRC Team 1325 \"Inverse Paradox\" highlights his teamwork, creativity, and technical expertise. Proficient in both software development and electrical systems, Kishan is a dedicated and well-rounded individual committed to excellence in every project he undertakes.",
     image: "/kishan-headshot.jpg",
     socialLinks: {
       linkedin: "https://linkedin.com/in/kishansuhirthan",
@@ -92,7 +92,7 @@ export const advisors: MemberType[] = [
     id: "Chinthala-Trisha-goud",
     name: "Chinthala Trisha Goud",
     role: "Medical Student Advisor",
-    bio: "Joined Dr. Interested to help students find clarity and confidence in their journey whether thatâs through research, academics, or figuring out where they belong in the world of medicine. As a medical student at Can Tho University of Medicine and Pharmacy, Iâve taken on leadership roles, mentored peers, and worked on creative and academic projects that fuel both growth and collaboration. Iâm passionate about making things easier for others whether itâs guiding them through research opportunities, academic planning, or just sharing what Iâve learned along the way. If youâre trying to do something meaningful, feel free to reach out Iâm always happy to help.",
+    bio: "Joined Dr. Interested to help students find clarity and confidence in their journey whether that's through research, academics, or figuring out where they belong in the world of medicine. As a medical student at Can Tho University of Medicine and Pharmacy, I've taken on leadership roles, mentored peers, and worked on creative and academic projects that fuel both growth and collaboration. I'm passionate about making things easier for others whether it's guiding them through research opportunities, academic planning, or just sharing what I've learned along the way. If you're trying to do something meaningful, feel free to reach out I'm always happy to help.",
     image: "/chinthala.png",
     socialLinks: {},
   },
@@ -100,7 +100,7 @@ export const advisors: MemberType[] = [
     id: "akeer-kuol-malual",
     name: "Akeer Kuol Malual",
     role: "Medical Student Advisor",
-    bio: "Hi, Iâm Akeer Kuol Malual Nyok, a student at the University of Juba, where Iâm currently pursuing my Bachelor of Medicine and Surgery. Iâm especially passionate about  the human brain and hope to explore fields like neurosurgery, neurology, or even general surgery. I am also a research writer and an advocate for accessible healthcare and education, especially for underrepresented communities. I believe in learning with purpose, leading with compassion, and growing alongside the people I get to support. I also deeply care about making space for others, listening deeply, and showing up with intention in everything I pursue.  Iâm excited to be part of Dr. Interested and look forward to learning, growing, and contributing within such a meaningful community.",
+    bio: "Hi, I'm Akeer Kuol Malual Nyok, a student at the University of Juba, where I'm currently pursuing my Bachelor of Medicine and Surgery. I'm especially passionate about  the human brain and hope to explore fields like neurosurgery, neurology, or even general surgery. I am also a research writer and an advocate for accessible healthcare and education, especially for underrepresented communities. I believe in learning with purpose, leading with compassion, and growing alongside the people I get to support. I also deeply care about making space for others, listening deeply, and showing up with intention in everything I pursue.  I'm excited to be part of Dr. Interested and look forward to learning, growing, and contributing within such a meaningful community.",
     image: "/akeer-med.png",
     socialLinks: {
       linkedin: 'http://linkedin.com/in/akeer-kuol-malual-nyok-94a388272',
@@ -111,7 +111,7 @@ export const advisors: MemberType[] = [
     id: "muhammad-shamoon-umerani",
     name: "Muhammad Shamoon Umerani",
     role: "Medical Student Advisor",
-    bio: "I joined Dr. Interested to help students bridge the gap between ambition and directionâwhether itâs navigating research, understanding medicine, or finding where they fit in this field. Having mentored peers, led academic teams, and worked on multiple research projects, I know how much of a difference the right guidance can make. Outside of this, Iâm a medical student at Al Faisal University, involved in systematic reviews, peer tutoring, and student leadership. Iâm always up to support anyone whoâs trying to do something meaningfulâjust reach out.",
+    bio: "I joined Dr. Interested to help students bridge the gap between ambition and direction--whether it's navigating research, understanding medicine, or finding where they fit in this field. Having mentored peers, led academic teams, and worked on multiple research projects, I know how much of a difference the right guidance can make. Outside of this, I'm a medical student at Al Faisal University, involved in systematic reviews, peer tutoring, and student leadership. I'm always up to support anyone who's trying to do something meaningful--just reach out.",
     image: "/shamoon.png",
     socialLinks: {
       linkedin: 'https://www.linkedin.com/in/muhammad-shamoon-umerani-8593701b3?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app',
@@ -280,14 +280,14 @@ export const departments: DepartmentType[] = [
         name: "Chetna Prabhu",
         role: "Coordinator - Marketing & Ambassador",
         image: "/ChetnaPrabhu_marketing.jpg",
-        bio: "Chetna Prabhu is a dedicated grade 11 AP student taking AP French and AP Physics at St. Joseph?Ts Secondary School. She loves content designing and digital creation, researching, learning new languages, and studying both science and mathematics. At school, she is part of the student council as Minister of Public Relations, DECA, HOSA, and the school?Ts newspaper club. To Chetna, the youth has such a powerful role in being able to make change and am so excited to support the next generation of medical students who aspire to find opportunities and programs in medicine. She is a passionate student interested in pursuing biomedical engineering in the future and hopes to gain experience in healthcare, research, and marketing through this amazing opportunity with Dr. Interested as a marketing executive.",
+        bio: "Chetna Prabhu is a dedicated grade 11 AP student taking AP French and AP Physics at St. Joseph's Secondary School. She loves content designing and digital creation, researching, learning new languages, and studying both science and mathematics. At school, she is part of the student council as Minister of Public Relations, DECA, HOSA, and the school's newspaper club. To Chetna, the youth has such a powerful role in being able to make change and am so excited to support the next generation of medical students who aspire to find opportunities and programs in medicine. She is a passionate student interested in pursuing biomedical engineering in the future and hopes to gain experience in healthcare, research, and marketing through this amazing opportunity with Dr. Interested as a marketing executive.",
       },
       {
         id: "marketing-coordinator-shiwali-gupta",
         name: "Shiwali Gupta",
         role: "Coordinator - Marketing",
         image: "/logo.png",
-        bio: "Hi! I?Tm Shiwali Gupta, a 9th grader in Ohio. I was born in India, and moved to the US at 7 years old. I?Tm really interested in helping people in any way I can. I love to make everyone smile. Outside of school, I am in dance, taekwondo and many clubs for school.",
+        bio: "Hi! I'm Shiwali Gupta, a 9th grader in Ohio. I was born in India, and moved to the US at 7 years old. I'm really interested in helping people in any way I can. I love to make everyone smile. Outside of school, I am in dance, taekwondo and many clubs for school.",
       },
       {
         id: "marketing-coordinator-kevin-dai",
@@ -298,7 +298,7 @@ export const departments: DepartmentType[] = [
       },
       {
         id: "marketing-coordinator-raya-mohammad-ali",
-        name: "Raya Mohammad Ali",
+        name: "Raya Mohammad",
         role: "Coordinator - Marketing",
         image: "/logo.png",
         bio: placeholderBio,
@@ -319,7 +319,7 @@ export const departments: DepartmentType[] = [
       },
       {
         id: "marketing-coordinator-shreya-shobankumar",
-        name: "Shreya Shobankumar",
+        name: "Shreya S.",
         role: "Coordinator - Marketing",
         image: "/logo.png",
         bio: placeholderBio,
@@ -347,7 +347,7 @@ export const departments: DepartmentType[] = [
       },
       {
         id: "marketing-coordinator-kaobichukwuha-kalunta",
-        name: "Kaobichukwuha Kalunta",
+        name: "Kaobichukwuha K.",
         role: "Coordinator - Marketing",
         image: "/logo.png",
         bio: placeholderBio,
@@ -389,7 +389,7 @@ export const departments: DepartmentType[] = [
       },
       {
         id: "marketing-coordinator-rizky-febriyanto-saputra",
-        name: "Rizky Febriyanto Saputra",
+        name: "Rizky Febriyanto",
         role: "Coordinator - Marketing",
         image: "/logo.png",
         bio: placeholderBio,
@@ -413,7 +413,7 @@ export const departments: DepartmentType[] = [
       name: "Muhammad Lari",
       role: "Director - Publications",
       image: "/lari.png",
-      bio: "Hi, I?Tm Muhammad Lari, a future engineer driven by curiosity and a desire to create meaningful change. I love exploring how things work and finding ways to improve them, whether through hands-on problem-solving or leading youth projects. I?Tm constantly looking for opportunities to learn, innovate, and build ideas that matter.",
+      bio: "Hi, I'm Muhammad Lari, a future engineer driven by curiosity and a desire to create meaningful change. I love exploring how things work and finding ways to improve them, whether through hands-on problem-solving or leading youth projects. I'm constantly looking for opportunities to learn, innovate, and build ideas that matter.",
       socialLinks: {
         linkedin: "https://www.linkedin.com/in/muhammad-ibrahim-lari-67564230a/",
       },
@@ -447,14 +447,14 @@ export const departments: DepartmentType[] = [
         name: "Dabosmita Parial",
         role: "Coordinator - Publications",
         image: "/Dabosmita.png",
-        bio: "Hi, I?Tm Dabosmita! A student who loves psychology and medicine, I hope to pursue a career in either one of those or maybe both combined! Other than that, I am an avid public speaker who loves to partake in debates especially those involving ethics and childhood. In addition to all of this, I am always looking forward to opportunities to research and volunteer as I aspire to improve my skills over the next few years.",
+        bio: "Hi, I'm Dabosmita! A student who loves psychology and medicine, I hope to pursue a career in either one of those or maybe both combined! Other than that, I am an avid public speaker who loves to partake in debates especially those involving ethics and childhood. In addition to all of this, I am always looking forward to opportunities to research and volunteer as I aspire to improve my skills over the next few years.",
       },
       {
         id: "publications-coordinator-nastaho-mohamed",
         name: "Nastaho Mohamed",
         role: "Coordinator - Publications",
         image: "/nashto.png",
-        bio: "Hi, my name is Nastaho Mohamed. I?Tm passionate about health science and aspiring to become a pediatrician. I?Tve always been interested in understanding how the body works and how medical care can change someone?Ts life, especially for children. Helping my community is important to me, and I want to use my future career to support families, improve access to care, and make a positive difference. I?Tm motivated to keep learning, gaining experience, and building the skills I need to reach my goals.",
+        bio: "Hi, my name is Nastaho Mohamed. I'm passionate about health science and aspiring to become a pediatrician. I've always been interested in understanding how the body works and how medical care can change someone's life, especially for children. Helping my community is important to me, and I want to use my future career to support families, improve access to care, and make a positive difference. I'm motivated to keep learning, gaining experience, and building the skills I need to reach my goals.",
       },
       {
         id: "publications-coordinator-manha-atiq",
@@ -468,7 +468,7 @@ export const departments: DepartmentType[] = [
         name: "Aiza Rasheed",
         role: "Coordinator - Publications",
         image: "/aiza.png",
-        bio: " Hi, I?Tm Aiza! I'm a student looking to pursue Psychology and Philosophy in university as I have an immense passion for both subjects. I?Tm hoping to become a psychologist when I am older and eventually teach as a professor! Additionally, I absolutely love reading, mostly I read classics, philosophy, psychology and medical papers.",
+        bio: " Hi, I'm Aiza! I'm a student looking to pursue Psychology and Philosophy in university as I have an immense passion for both subjects. I'm hoping to become a psychologist when I am older and eventually teach as a professor! Additionally, I absolutely love reading, mostly I read classics, philosophy, psychology and medical papers.",
       },
       {
         id: "publications-coordinator-shaan-sharma",
@@ -486,14 +486,14 @@ export const departments: DepartmentType[] = [
       },
       {
         id: "publications-coordinator-maqhawe-bonginkosi-larona-qame",
-        name: "Maqhawe Bonginkosi Larona Qame",
+        name: "Maqhawe Bonginkosi",
         role: "Coordinator - Publications",
         image: "/logo.png",
         bio: placeholderBio,
       },
       {
         id: "publications-coordinator-chloe-jhazmynne-t-co",
-        name: "Chloe Jhazmynne T. Co",
+        name: "Chloe Jhazmynne",
         role: "Coordinator - Publications",
         image: "/logo.png",
         bio: placeholderBio,
@@ -570,7 +570,7 @@ export const departments: DepartmentType[] = [
         name: "Vicky Shi",
         role: "Deputy Director - Human Resources (Ambassadors Team)",
         image: "/logo.png",
-        bio: "Hi! I?Tm a Grade 10 Pre-IB student at St.Roberts CHS. I?Tm passionate about creating inclusive, supportive environments where people can truly grow. Outside of work, I love reading, curating playlists that match every mood, and finding new ways to express myself creatively. I care deeply about personal development, mental wellness, and building real, meaningful connections with the people around me. Whether I?Tm helping someone navigate a tough situation or just being a sounding board, I try to bring thoughtfulness and intention to everything I do. I?Tm always looking for new ways to grow, learn, and make a positive impact, both in my work and in my everyday life.",
+        bio: "Hi! I'm a Grade 10 Pre-IB student at St.Roberts CHS. I'm passionate about creating inclusive, supportive environments where people can truly grow. Outside of work, I love reading, curating playlists that match every mood, and finding new ways to express myself creatively. I care deeply about personal development, mental wellness, and building real, meaningful connections with the people around me. Whether I'm helping someone navigate a tough situation or just being a sounding board, I try to bring thoughtfulness and intention to everything I do. I'm always looking for new ways to grow, learn, and make a positive impact, both in my work and in my everyday life.",
       },
       {
         id: "hr-deputy-chloe-young",
@@ -584,7 +584,7 @@ export const departments: DepartmentType[] = [
         name: "Grasen Menns",
         role: "Deputy Director - Human Resources (Culture & Recognition Team)",
         image: "/grasen.png",
-        bio: "Hello there, my name is Grasen, but everyone calls me Gray. I?Tm a Grade 9 RAP Student in Ontario, Canada. I am super excited to be part of the Dr. Interested team and learn from youth across the world. I have always been interested in medicine and Healthcare. And believe this will be a wonderful experience. My interests are Music, Writing, and Nature. I hope to work in Law or Trauma Medicine. I hope to meet everyone here as a part of Dr Interested and get to know everyone's experiences!",
+        bio: "Hello there, my name is Grasen, but everyone calls me Gray. I'm a Grade 9 RAP Student in Ontario, Canada. I am super excited to be part of the Dr. Interested team and learn from youth across the world. I have always been interested in medicine and Healthcare. And believe this will be a wonderful experience. My interests are Music, Writing, and Nature. I hope to work in Law or Trauma Medicine. I hope to meet everyone here as a part of Dr Interested and get to know everyone's experiences!",
         socialLinks: {
           linkedin: "http://www.linkedin.com/in/grasen-menns-8980aa358",
           instagram: "https://www.instagram.com/grasen2025/",
@@ -615,7 +615,7 @@ export const departments: DepartmentType[] = [
       },
       {
         id: "hr-coordinator-chinthala-trisha-goud",
-        name: "Chinthala Trisha Goud",
+        name: "Chinthala Trisha",
         role: "Coordinator - Human Resources",
         image: "/chinthala.png",
         bio: placeholderBio,
@@ -625,7 +625,7 @@ export const departments: DepartmentType[] = [
         name: "Maliha Metla",
         role: "Coordinator - Human Resources",
         image: "/maliha.png",
-        bio: "Hi! I?Tm Maliha Metla, a junior in high school passionate about medicine, community service, and creating meaningful change. Whether through my nonprofit work, medical internships, or local volunteering, I strive to help others and inspire hope in the communities I serve.",
+        bio: "Hi! I'm Maliha Metla, a junior in high school passionate about medicine, community service, and creating meaningful change. Whether through my nonprofit work, medical internships, or local volunteering, I strive to help others and inspire hope in the communities I serve.",
       },
       {
         id: "hr-coordinator-gayathri-sriramula",
@@ -643,7 +643,7 @@ export const departments: DepartmentType[] = [
       },
       {
         id: "hr-coordinator-nevin-rosario-baskar",
-        name: "Nevin Rosario Baskar",
+        name: "Nevin Rosario",
         role: "Coordinator - Human Resources",
         image: "/logo.png",
         bio: placeholderBio,
@@ -706,7 +706,7 @@ export const departments: DepartmentType[] = [
       },
       {
         id: "hr-coordinator-shivani-ramesh-kanna",
-        name: "Shivani Ramesh Kanna",
+        name: "Shivani Ramesh",
         role: "Coordinator - Human Resources",
         image: "/logo.png",
         bio: placeholderBio,
@@ -769,7 +769,7 @@ export const departments: DepartmentType[] = [
         name: "Jawwad Ahmad",
         role: "Deputy Director - Events (Planning Team)",
         image: "/Jawwad_marketing.png",
-        bio: "Hi, my name is Jawwad. I?Tm a Grade 11 IB student who has an interest in Engineering, Robotics and STEM. I have participated in many volunteering activities like Peer Helpers and at the YMCA. I have also participated in clubs like DECA and Peer Helpers. I look forward to collaborating on cutting edge ideas that push the boundaries of what's possible.",
+        bio: "Hi, my name is Jawwad. I'm a Grade 11 IB student who has an interest in Engineering, Robotics and STEM. I have participated in many volunteering activities like Peer Helpers and at the YMCA. I have also participated in clubs like DECA and Peer Helpers. I look forward to collaborating on cutting edge ideas that push the boundaries of what's possible.",
         socialLinks: {
           linkedin: "https://www.linkedin.com/in/jawwad-ahmad-15197b32a/",
           instagram: "https://www.instagram.com/jawwad0806/",
@@ -793,7 +793,7 @@ export const departments: DepartmentType[] = [
       },
       {
         id: "events-coordinator-adrina-kaylee-manojhkumar",
-        name: "Adrina Kaylee Manojhkumar",
+        name: "Adrina Kaylee",
         role: "Coordinator - Events",
         image: "/logo.png",
         bio: placeholderBio,
@@ -842,7 +842,7 @@ export const departments: DepartmentType[] = [
       },
       {
         id: "events-coordinator-tarek-osama-mohamed-amin",
-        name: "Tarek Osama Mohamed Amin",
+        name: "Tarek Osama",
         role: "Coordinator - Events",
         image: "/logo.png",
         bio: placeholderBio,
@@ -908,7 +908,7 @@ export const departments: DepartmentType[] = [
       },
       {
         id: "finance-coordinator-candace-hei-lam-hon",
-        name: "Candace Hei Lam Hon",
+        name: "Candace Hei",
         role: "Coordinator - Finance",
         image: "/logo.png",
         bio: placeholderBio,
@@ -971,7 +971,7 @@ export const departments: DepartmentType[] = [
       },
       {
         id: "finance-coordinator-abdulroheem-kehinde-idris",
-        name: "Abdulroheem Kehinde Idris",
+        name: "Abdulroheem Kehinde",
         role: "Coordinator - Finance",
         image: "/logo.png",
         bio: placeholderBio,
@@ -992,7 +992,7 @@ export const departments: DepartmentType[] = [
       },
       {
         id: "finance-coordinator-vishal-venkat-krishnan",
-        name: "Vishal Venkat Krishnan",
+        name: "Vishal Venkat",
         role: "Coordinator - Finance",
         image: "/logo.png",
         bio: placeholderBio,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -26,6 +26,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function MembersClient() {
   const [expandedBios, setExpandedBios] = useState<Record<string, boolean>>({});
+  const [scrolledDepartments, setScrolledDepartments] = useState<
+    Record<string, boolean>
+  >({});
   const departmentDirectors = departments.flatMap((department) =>
     Array.isArray(department.director)
       ? department.director
@@ -68,15 +71,245 @@ export default function MembersClient() {
     return bio.substring(0, maxLength) + "...";
   };
 
+  const markDepartmentComplete = useCallback((id: string) => {
+    setScrolledDepartments((prev) =>
+      prev[id] ? prev : { ...prev, [id]: true }
+    );
+  }, []);
+
+  const CoordinatorScroller = ({
+    departmentId,
+    coordinators,
+  }: {
+    departmentId: string;
+    coordinators: (typeof departments)[number]["coordinators"];
+  }) => {
+    const scrollerRef = useRef<HTMLDivElement | null>(null);
+    const isComplete = scrolledDepartments[departmentId];
+
+    useEffect(() => {
+      const el = scrollerRef.current;
+      if (!el) return;
+      const onScroll = () => {
+        const atEnd =
+          el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
+        if (!isComplete && atEnd) {
+          markDepartmentComplete(departmentId);
+        }
+      };
+
+      el.addEventListener("scroll", onScroll, { passive: true });
+      return () => {
+        el.removeEventListener("scroll", onScroll);
+      };
+    }, [departmentId, isComplete, markDepartmentComplete]);
+
+    return (
+      <div className="space-y-2">
+        <div
+          ref={scrollerRef}
+          onWheel={(event) => {
+            const el = scrollerRef.current;
+            if (!el) return;
+            const hasOverflow = el.scrollWidth > el.clientWidth + 1;
+            if (!hasOverflow) return;
+
+            const delta =
+              Math.abs(event.deltaY) > Math.abs(event.deltaX)
+                ? event.deltaY
+                : event.deltaX;
+
+            if (delta === 0) return;
+            if (event.cancelable) {
+              event.preventDefault();
+            }
+            event.stopPropagation();
+
+            const multiplier =
+              event.deltaMode === 1
+                ? 16
+                : event.deltaMode === 2
+                  ? el.clientWidth
+                  : 1;
+            const deltaPx = delta * multiplier;
+            const maxScroll = el.scrollWidth - el.clientWidth;
+            const next = Math.min(
+              Math.max(0, el.scrollLeft + deltaPx),
+              Math.max(0, maxScroll)
+            );
+            el.scrollLeft = next;
+          }}
+          className="overflow-x-auto overflow-y-hidden overscroll-x-contain overscroll-y-contain"
+        >
+          <div className="flex gap-4 min-w-max pr-4">
+            {coordinators.map((coordinator) => (
+              <Card
+                key={coordinator.id}
+                className="group w-64 shrink-0 border-[#405862]/20 shadow-sm"
+              >
+                <CardContent className="p-4 text-center">
+                  <div className="flex justify-center mb-3">
+                    <div className="relative h-14 w-14 rounded-full overflow-hidden bg-[#f1ece7]">
+                      <Image
+                        src={coordinator.image || "/placeholder.svg"}
+                        alt={coordinator.name}
+                        fill
+                        className="object-cover object-center"
+                      />
+                    </div>
+                  </div>
+                  <h5 className="text-sm md:text-base font-semibold text-[#405862] leading-snug break-words mb-2">
+                    {coordinator.name}
+                  </h5>
+                  <p className="text-xs md:text-sm leading-relaxed text-[#405862]/80 overflow-hidden transition-[max-height] duration-300 ease-in-out max-h-16 group-hover:max-h-64">
+                    {coordinator.bio}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+        {!isComplete && (
+          <p className="text-xs text-[#405862]/70 text-center">
+          </p>
+        )}
+      </div>
+    );
+  };
+
+  const renderDeputy = (
+    deputy: NonNullable<(typeof departments)[number]["deputyDirectors"]>[number]
+  ) => {
+    return (
+      <div
+        key={deputy.id}
+        className="group w-full flex flex-col md:flex-row md:items-start md:justify-between gap-4"
+      >
+        <div className="flex flex-col sm:flex-row items-center sm:items-center gap-4 flex-1">
+          <div className="relative h-24 w-24 rounded-full overflow-hidden bg-white shrink-0">
+            <Image
+              src={deputy.image || "/placeholder.svg"}
+              alt={deputy.name}
+              fill
+              className="object-cover object-center"
+            />
+          </div>
+          <div className="text-center sm:text-left">
+            <h5 className="text-lg font-semibold text-[#405862] leading-snug break-words">
+              {deputy.name}
+            </h5>
+            <p className="text-sm md:text-base text-[#405862]/75 break-words">
+              {deputy.role}
+            </p>
+            <p className="text-sm md:text-base leading-relaxed text-[#405862] mt-2 overflow-hidden transition-[max-height] duration-300 ease-in-out max-h-20 group-hover:max-h-96">
+              {deputy.bio}
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-col items-center md:items-end md:mt-1 gap-2 shrink-0">
+          {deputy.socialLinks?.linkedin && (
+            <Link
+              href={deputy.socialLinks.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+            >
+              <Linkedin className="h-5 w-5" />
+            </Link>
+          )}
+          {deputy.socialLinks?.instagram && (
+            <Link
+              href={deputy.socialLinks.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+            >
+              <Instagram className="h-5 w-5" />
+            </Link>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const DeputyScroller = ({
+    deputies,
+  }: {
+    deputies: NonNullable<(typeof departments)[number]["deputyDirectors"]>;
+  }) => {
+    const scrollerRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+      const el = scrollerRef.current;
+      if (!el) return;
+
+      const onWheel = (event: WheelEvent) => {
+        const hasOverflow = el.scrollWidth > el.clientWidth + 1;
+        if (!hasOverflow) return;
+
+        const delta =
+          Math.abs(event.deltaY) > Math.abs(event.deltaX)
+            ? event.deltaY
+            : event.deltaX;
+
+        if (delta === 0) return;
+        event.preventDefault();
+        event.stopPropagation();
+
+        const multiplier =
+          event.deltaMode === 1
+            ? 16
+            : event.deltaMode === 2
+              ? el.clientWidth
+              : 1;
+        const deltaPx = delta * multiplier;
+        const maxScroll = el.scrollWidth - el.clientWidth;
+        const next = Math.min(
+          Math.max(0, el.scrollLeft + deltaPx),
+          Math.max(0, maxScroll)
+        );
+        el.scrollLeft = next;
+      };
+
+      el.addEventListener("wheel", onWheel, { passive: false });
+      return () => {
+        el.removeEventListener("wheel", onWheel);
+      };
+    }, []);
+
+    if (deputies.length <= 1) {
+      return (
+        <div className="grid gap-10 md:grid-cols-2 max-w-5xl mx-auto">
+          {deputies.map((deputy) => renderDeputy(deputy))}
+        </div>
+      );
+    }
+
+    return (
+      <div
+        ref={scrollerRef}
+        className="max-w-5xl mx-auto overflow-x-auto overflow-y-hidden overscroll-x-contain overscroll-y-contain pb-7"
+      >
+        <div className="flex gap-10 min-w-max pr-4">
+          {deputies.map((deputy) => (
+            <div key={deputy.id} className="w-[80vw] max-w-[520px] shrink-0">
+              {renderDeputy(deputy)}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div>
       <ScrollToTop />
-      <section className="bg-[#f5f1eb] py-10">
+      <section className="py-8 md:py-10 bg-[#f5f1eb]">
         <div className="container">
-          <h1 className="text-3xl font-bold text-center mb-2 text-[#405862]">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-2 text-[#405862]">
             Our Team
           </h1>
-          <p className="text-center text-[#405862] mb-6 max-w-2xl mx-auto text-sm">
+          <p className="text-center text-base md:text-lg mb-4 max-w-2xl mx-auto text-[#405862]/80">
             Meet the talented team behind Dr. Interested, dedicated to inspiring
             the next generation of healthcare professionals.
           </p>
@@ -109,7 +342,7 @@ export default function MembersClient() {
             <TabsContent value="leadership" className="space-y-6">
               {/* Executive Director */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-center text-[#405862]">
+                <h3 className="text-xl md:text-2xl font-semibold mb-4 text-center text-[#405862]">
                   Executive Director
                 </h3>
                 <div className="max-w-2xl mx-auto">
@@ -126,13 +359,13 @@ export default function MembersClient() {
                         </div>
                       </div>
                       <CardContent className="md:col-span-2 p-4">
-                        <h4 className="text-lg font-semibold text-[#405862]">
+                        <h4 className="text-xl font-semibold text-[#405862]">
                           {executiveDirector.name}
                         </h4>
-                        <p className="text-sm text-[#405862]/75 mb-2">
+                        <p className="text-sm md:text-base text-[#405862]/75 mb-2">
                           {executiveDirector.role}
                         </p>
-                        <p className="text-sm text-[#405862] mb-3">
+                        <p className="text-sm md:text-base leading-relaxed text-[#405862] mb-3">
                           {expandedBios[executiveDirector.id]
                             ? executiveDirector.bio
                             : truncateBio(executiveDirector.bio)}
@@ -191,7 +424,7 @@ export default function MembersClient() {
 
               {/* Deputy Exec Directors */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-center text-[#405862]">
+                <h3 className="text-xl md:text-2xl font-semibold mb-4 text-center text-[#405862]">
                   Deputy Executive Directors
                 </h3>
                 <div className="grid md:grid-cols-2 gap-4">
@@ -212,13 +445,13 @@ export default function MembersClient() {
                           </div>
                         </div>
                         <CardContent className="md:col-span-2 p-4">
-                          <h4 className="text-base font-semibold text-[#405862]">
+                          <h4 className="text-lg font-semibold text-[#405862]">
                             {vp.name}
                           </h4>
-                          <p className="text-sm text-[#405862]/75 mb-2">
+                          <p className="text-sm md:text-base text-[#405862]/75 mb-2">
                             {vp.role}
                           </p>
-                          <p className="text-sm text-[#405862] mb-3">
+                          <p className="text-sm md:text-base leading-relaxed text-[#405862] mb-3">
                             {expandedBios[vp.id]
                               ? vp.bio
                               : truncateBio(vp.bio, 120)}
@@ -279,7 +512,7 @@ export default function MembersClient() {
 
               {/* Executive Assistants */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-center text-[#405862]">
+                <h3 className="text-xl md:text-2xl font-semibold mb-4 text-center text-[#405862]">
                   Executive Assistants
                 </h3>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -300,13 +533,13 @@ export default function MembersClient() {
                           </div>
                         </div>
                         <CardContent className="md:col-span-2 p-4">
-                          <h4 className="text-base font-semibold text-[#405862]">
+                          <h4 className="text-lg font-semibold text-[#405862]">
                             {assistant.name}
                           </h4>
-                          <p className="text-sm text-[#405862]/75 mb-2">
+                          <p className="text-sm md:text-base text-[#405862]/75 mb-2">
                             {assistant.role}
                           </p>
-                          <p className="text-sm text-[#405862] mb-3">
+                          <p className="text-sm md:text-base leading-relaxed text-[#405862] mb-3">
                             {expandedBios[assistant.id]
                               ? assistant.bio
                               : truncateBio(assistant.bio, 100)}
@@ -338,7 +571,7 @@ export default function MembersClient() {
 
               {/* Directors */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-center text-[#405862]">
+                <h3 className="text-xl md:text-2xl font-semibold mb-4 text-center text-[#405862]">
                   Directors
                 </h3>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -359,13 +592,13 @@ export default function MembersClient() {
                           </div>
                         </div>
                         <CardContent className="md:col-span-2 p-4 min-w-0">
-                          <h4 className="text-sm sm:text-base font-semibold text-[#405862] leading-snug break-words">
+                          <h4 className="text-base md:text-lg font-semibold text-[#405862] leading-snug break-words">
                             {director.name}
                           </h4>
-                          <p className="text-sm text-[#405862]/75 mb-2 break-words">
+                          <p className="text-sm md:text-base text-[#405862]/75 mb-2 break-words">
                             {director.role}
                           </p>
-                          <p className="text-sm text-[#405862] mb-3">
+                          <p className="text-sm md:text-base leading-relaxed text-[#405862] mb-3">
                             {expandedBios[director.id]
                               ? director.bio
                               : truncateBio(director.bio, 100)}
@@ -396,76 +629,49 @@ export default function MembersClient() {
               </div>
             </TabsContent>
 
-            <TabsContent value="departments" className="space-y-6">
-              {departments.map((department) => (
-                <div
-                  key={department.id}
-                  className="border rounded-lg overflow-hidden bg-white border-[#405862]/20 shadow-sm mb-4"
-                >
-                  <div className="p-4 border-b bg-[#f5f1eb]/30">
-                    <h3 className="text-lg font-semibold text-[#405862]">
-                      {department.name}
-                    </h3>
-                    <p className="text-[#405862]/80 text-sm">
-                      {department.description}
-                    </p>
-                  </div>
+            <TabsContent value="departments" className="space-y-8">
+              {departments.map((department) => {
+                const directorList = Array.isArray(department.director)
+                  ? department.director
+                  : [department.director];
 
-                  <div className="p-4 border-b">
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="text-base font-semibold text-[#405862]">
-                        Director
-                      </h4>
+                return (
+                  <section key={department.id} className="space-y-6">
+                    <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-[#4ecdc4] py-4 md:py-5">
+                      <div className="container text-center">
+                        <h3 className="text-xl md:text-2xl font-semibold text-white">
+                          {department.name}
+                        </h3>
+                        <p className="text-base md:text-lg text-white/90 max-w-3xl mx-auto">
+                          {department.description}
+                        </p>
+                      </div>
                     </div>
-                    <div className="grid gap-4 md:grid-cols-2">
-                      {Array.isArray(department.director) ? (
-                        department.director.map((director) => (
-                          <Card
-                            key={director.id}
-                            className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
-                          >
-                            <div className="grid grid-cols-3">
-                              <div className="col-span-1 bg-[#f5f1eb]">
-                                <div className="relative h-full w-full aspect-square">
-                                  <Image
-                                    src={director.image || "/placeholder.svg"}
-                                    alt={director.name}
-                                    fill
-                                    className="object-cover"
-                                  />
-                                </div>
+
+                    <div className="space-y-6">
+                      <div className="space-y-3">
+                        <div className="flex flex-col items-center gap-6 max-w-5xl mx-auto">
+                          {directorList.map((director) => (
+                            <div
+                              key={director.id}
+                              className="w-full flex flex-col items-center text-center gap-5"
+                            >
+                              <div className="relative h-28 w-28 sm:h-32 sm:w-32 rounded-full overflow-hidden bg-white shrink-0">
+                                <Image
+                                  src={director.image || "/placeholder.svg"}
+                                  alt={director.name}
+                                  fill
+                                  className="object-cover object-center"
+                                />
                               </div>
-                              <CardContent className="col-span-2 p-1.5">
-                                <h5 className="font-semibold text-sm text-[#405862]">
+                              <div className="max-w-3xl">
+                                <h5 className="text-xl font-semibold text-[#405862] leading-snug break-words">
                                   {director.name}
                                 </h5>
-                                <p className="text-xs text-[#405862]/75 mb-1">
+                                <p className="text-sm md:text-base text-[#405862]/75 break-words">
                                   {director.role}
                                 </p>
-                                <p className="text-xs text-[#405862] mb-1">
-                                  {expandedBios[director.id]
-                                    ? director.bio
-                                    : truncateBio(director.bio, 56)}
-                                </p>
-                                {director.bio.length > 56 && (
-                                  <button
-                                    onClick={() => toggleBio(director.id)}
-                                    className="text-[#405862] text-[11px] font-medium hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
-                                  >
-                                    {expandedBios[director.id] ? (
-                                      <>
-                                        Show Less{" "}
-                                        <ChevronUp className="h-3 w-3 ml-1" />
-                                      </>
-                                    ) : (
-                                      <>
-                                        See More{" "}
-                                        <ChevronDown className="h-3 w-3 ml-1" />
-                                      </>
-                                    )}
-                                  </button>
-                                )}
-                                <div className="flex space-x-2">
+                                <div className="flex items-center justify-center gap-3 mt-2">
                                   {director.socialLinks?.linkedin && (
                                     <Link
                                       href={director.socialLinks.linkedin}
@@ -473,7 +679,7 @@ export default function MembersClient() {
                                       rel="noopener noreferrer"
                                       className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
                                     >
-                                      <Linkedin className="h-4 w-4" />
+                                      <Linkedin className="h-5 w-5" />
                                     </Link>
                                   )}
                                   {director.socialLinks?.instagram && (
@@ -483,338 +689,113 @@ export default function MembersClient() {
                                       rel="noopener noreferrer"
                                       className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
                                     >
-                                      <Instagram className="h-4 w-4" />
+                                      <Instagram className="h-5 w-5" />
                                     </Link>
                                   )}
                                 </div>
-                              </CardContent>
-                            </div>
-                          </Card>
-                        ))
-                      ) : (
-                        <Card className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
-                          <div className="grid grid-cols-3">
-                            <div className="col-span-1 bg-[#f5f1eb]">
-                              <div className="relative h-full w-full aspect-square">
-                                <Image
-                                  src={
-                                    department.director.image ||
-                                    "/placeholder.svg"
-                                  }
-                                  alt={department.director.name}
-                                  fill
-                                  className="object-cover"
-                                />
-                              </div>
-                            </div>
-                            <CardContent className="col-span-2 p-1.5">
-                              <h5 className="font-semibold text-sm text-[#405862]">
-                                {department.director.name}
-                              </h5>
-                              <p className="text-xs text-[#405862]/75 mb-1">
-                                {department.director.role}
-                              </p>
-                              <p className="text-xs text-[#405862] mb-1">
-                                {expandedBios[department.director.id]
-                                  ? department.director.bio
-                                  : truncateBio(department.director.bio, 56)}
-                              </p>
-                              {department.director.bio.length > 56 && (
-                                <button
-                                  onClick={() =>
-                                    toggleBio(department.director.id)
-                                  }
-                                  className="text-[#405862] text-[11px] font-medium hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
-                                >
-                                  {expandedBios[department.director.id] ? (
-                                    <>
-                                      Show Less{" "}
-                                      <ChevronUp className="h-3 w-3 ml-1" />
-                                    </>
-                                  ) : (
-                                    <>
-                                      See More{" "}
-                                      <ChevronDown className="h-3 w-3 ml-1" />
-                                    </>
-                                  )}
-                                </button>
-                              )}
-                              <div className="flex space-x-2">
-                                {department.director.socialLinks?.linkedin && (
-                                  <Link
-                                    href={
-                                      department.director.socialLinks.linkedin
-                                    }
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                                  >
-                                    <Linkedin className="h-4 w-4" />
-                                  </Link>
-                                )}
-                                {department.director.socialLinks?.instagram && (
-                                  <Link
-                                    href={
-                                      department.director.socialLinks.instagram
-                                    }
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                                  >
-                                    <Instagram className="h-4 w-4" />
-                                  </Link>
-                                )}
-                              </div>
-                            </CardContent>
-                          </div>
-                        </Card>
-                      )}
-                    </div>
-                  </div>
-
-                  {department.deputyDirectors?.length ? (
-                    <div className="p-4 border-b">
-                      <h4 className="text-base font-semibold text-[#405862] mb-3">
-                        Deputy Directors
-                      </h4>
-                      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                        {department.deputyDirectors.map((deputy) => (
-                          <Card
-                            key={deputy.id}
-                            className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
-                          >
-                            <CardContent className="p-4">
-                              <div className="flex items-center gap-3 mb-2">
-                                <div className="relative h-12 w-12 rounded-full overflow-hidden flex-shrink-0">
-                                  <Image
-                                    src={deputy.image || "/placeholder.svg"}
-                                    alt={deputy.name}
-                                    fill
-                                    className="object-cover"
-                                  />
-                                </div>
-                                <div>
-                                  <h5 className="font-semibold text-base text-[#405862]">
-                                    {deputy.name}
-                                  </h5>
-                                  <p className="text-sm text-[#405862]/75">
-                                    {deputy.role}
-                                  </p>
-                                </div>
-                              </div>
-                              <p className="text-sm text-[#405862] mb-1">
-                                {expandedBios[deputy.id]
-                                  ? deputy.bio
-                                  : truncateBio(deputy.bio, 70)}
-                              </p>
-                              {deputy.bio.length > 70 && (
-                                <button
-                                  onClick={() => toggleBio(deputy.id)}
-                                  className="text-[#405862] text-xs font-medium hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
-                                >
-                                  {expandedBios[deputy.id] ? (
-                                    <>
-                                      Show Less{" "}
-                                      <ChevronUp className="h-3 w-3 ml-1" />
-                                    </>
-                                  ) : (
-                                    <>
-                                      See More{" "}
-                                      <ChevronDown className="h-3 w-3 ml-1" />
-                                    </>
-                                  )}
-                                </button>
-                              )}
-                              <div className="flex space-x-2 mt-1">
-                                {deputy.socialLinks?.linkedin && (
-                                  <Link
-                                    href={deputy.socialLinks.linkedin}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                                  >
-                                    <Linkedin className="h-4 w-4" />
-                                  </Link>
-                                )}
-                                {deputy.socialLinks?.instagram && (
-                                  <Link
-                                    href={deputy.socialLinks.instagram}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                                  >
-                                    <Instagram className="h-4 w-4" />
-                                  </Link>
-                                )}
-                              </div>
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </div>
-                    </div>
-                  ) : null}
-
-                  <div className="p-4">
-                    <h4 className="text-base font-semibold text-[#405862] mb-3">
-                      Coordinators
-                    </h4>
-                    <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-                      {department.coordinators.map((coordinator) => (
-                        <Card
-                          key={coordinator.id}
-                          className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
-                        >
-                          <CardContent className="p-3">
-                            <div className="flex items-center gap-2 mb-1">
-                              <div className="relative h-8 w-8 rounded-full overflow-hidden flex-shrink-0">
-                                <Image
-                                  src={coordinator.image || "/placeholder.svg"}
-                                  alt={coordinator.name}
-                                  fill
-                                  className="object-cover"
-                                />
-                              </div>
-                              <div>
-                                <h5 className="font-semibold text-sm text-[#405862]">
-                                  {coordinator.name}
-                                </h5>
-                                <p className="text-xs text-[#405862]/75">
-                                  {coordinator.role}
+                                <p className="text-sm md:text-base leading-relaxed text-[#405862] mt-2">
+                                  {director.bio}
                                 </p>
                               </div>
                             </div>
-                            <p className="text-xs text-[#405862] mb-1">
-                              {expandedBios[coordinator.id]
-                                ? coordinator.bio
-                                : truncateBio(coordinator.bio, 60)}
-                            </p>
-                            {coordinator.bio.length > 60 && (
-                              <button
-                                onClick={() => toggleBio(coordinator.id)}
-                                className="text-[#405862] text-xs font-medium hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
-                              >
-                                {expandedBios[coordinator.id] ? (
-                                  <>
-                                    Show Less{" "}
-                                    <ChevronUp className="h-3 w-3 ml-1" />
-                                  </>
-                                ) : (
-                                  <>
-                                    See More{" "}
-                                    <ChevronDown className="h-3 w-3 ml-1" />
-                                  </>
-                                )}
-                              </button>
-                            )}
-                            <div className="flex space-x-2 mt-1">
-                              {coordinator.socialLinks?.linkedin && (
-                                <Link
-                                  href={coordinator.socialLinks.linkedin}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                                >
-                                  <Linkedin className="h-4 w-4" />
-                                </Link>
-                              )}
-                              {coordinator.socialLinks?.instagram && (
-                                <Link
-                                  href={coordinator.socialLinks.instagram}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                                >
-                                  <Instagram className="h-4 w-4" />
-                                </Link>
-                              )}
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
+                          ))}
+                        </div>
+                      </div>
+
+                      {department.deputyDirectors?.length ? (
+                        <div className="flex justify-center">
+                          <span className="h-0.5 w-16 rounded-full bg-[#4ecdc4]" />
+                        </div>
+                      ) : null}
+
+                      {department.deputyDirectors?.length ? (
+                        <div className="space-y-3">
+                          <DeputyScroller deputies={department.deputyDirectors} />
+                        </div>
+                      ) : null}
+
+                      <div className="space-y-3">
+                        <h4 className="text-lg md:text-xl font-semibold text-center text-[#405862]">
+                          Coordinators
+                        </h4>
+                        <div className="bg-[#f1ece7] rounded-lg px-4 py-2 md:px-6">
+                          <div className="max-w-5xl mx-auto">
+                            <CoordinatorScroller
+                              departmentId={department.id}
+                              coordinators={department.coordinators}
+                            />
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ))}
-              <div className="mt-8">
-                <h3 className="text-lg font-semibold text-center text-[#405862] mb-4">
+                  </section>
+                );
+              })}
+
+              <div className="pt-2">
+                <h3 className="text-xl md:text-2xl font-semibold mb-4 text-center text-[#405862]">
                   Ambassadors
                 </h3>
-                <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+                <p className="text-center text-[#405862]/80 mb-6 max-w-2xl mx-auto text-sm md:text-base">
+                  Meet the ambassadors representing Dr. Interested around the
+                  world.
+                </p>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {ambassadors.map((ambassador) => (
                     <Card
                       key={ambassador.id}
-                      className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
+                      className={`border-[#405862]/20 shadow-sm relative ${
+                        ambassador.name === "Mannat Sulan"
+                          ? "sm:col-span-2 sm:justify-self-center sm:w-full sm:max-w-[calc((100%-1rem)/2)] lg:col-span-1 lg:col-start-2 lg:max-w-none"
+                          : ""
+                      }`}
                     >
+                      <div className="absolute top-3 right-3 text-[#405862]/70">
+                        {ambassador.socialLinks?.linkedin ? (
+                          <Link
+                            href={ambassador.socialLinks.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-[#4ecdc4] transition-colors"
+                          >
+                            <Linkedin className="h-4 w-4" />
+                          </Link>
+                        ) : (
+                          <Linkedin className="h-4 w-4" />
+                        )}
+                      </div>
                       <CardContent className="p-4">
-                        <div className="flex items-center gap-3 mb-2">
-                          <div className="relative h-12 w-12 rounded-full overflow-hidden flex-shrink-0">
+                        <div className="flex items-center gap-3">
+                          <div className="relative h-12 w-12 rounded-full overflow-hidden bg-[#f5f1eb]">
                             <Image
                               src={ambassador.image || "/placeholder.svg"}
                               alt={ambassador.name}
                               fill
-                              className="object-cover"
+                              className="object-cover object-center"
                             />
                           </div>
-                          <div>
-                            <h5 className="font-semibold text-sm text-[#405862]">
+                          <div className="min-w-0">
+                            <h5 className="text-base font-semibold text-[#405862] leading-snug break-words">
                               {ambassador.name}
                             </h5>
-                            <p className="text-xs text-[#405862]/75">
+                            <p className="text-sm text-[#405862]/70 break-words">
                               {ambassador.role}
                             </p>
                           </div>
                         </div>
-                        <p className="text-xs text-[#405862] mb-1">
-                          {expandedBios[ambassador.id]
-                            ? ambassador.bio
-                            : truncateBio(ambassador.bio, 60)}
-                        </p>
-                        {ambassador.bio.length > 60 && (
-                          <button
-                            onClick={() => toggleBio(ambassador.id)}
-                            className="text-[#405862] text-xs font-medium hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
-                          >
-                            {expandedBios[ambassador.id] ? (
-                              <>
-                                Show Less{" "}
-                                <ChevronUp className="h-3 w-3 ml-1" />
-                              </>
-                            ) : (
-                              <>
-                                See More{" "}
-                                <ChevronDown className="h-3 w-3 ml-1" />
-                              </>
-                            )}
-                          </button>
-                        )}
                       </CardContent>
                     </Card>
                   ))}
                 </div>
               </div>
-              <div className="mt-8 p-6 bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 rounded-lg text-center">
-                <h3 className="text-lg font-semibold text-[#405862] mb-2">
-                  Interested in Joining Our Team?
-                </h3>
-                <p className="text-[#405862]/80 mb-3">
-                  Check out the{" "}
-                  <span className="font-semibold text-[#4ecdc4]">Join Us</span>{" "}
-                  tab above to learn about executive opportunities and apply to
-                  join our leadership team!
-                </p>
-                <p className="text-sm text-[#405862]/70">
-                  Applications are open year-round and reviewed on an ongoing
-                  basis.
-                </p>
-              </div>
             </TabsContent>
 
             <TabsContent value="advisors" className="space-y-6">
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-center text-[#405862]">
+                <h3 className="text-xl md:text-2xl font-semibold mb-4 text-center text-[#405862]">
                   Medical Student Advisors
                 </h3>
-                <p className="text-center text-[#405862]/80 mb-6 max-w-2xl mx-auto text-sm">
+                <p className="text-center text-[#405862]/80 mb-6 max-w-2xl mx-auto text-sm md:text-base">
                   Our medical student advisors provide valuable guidance and
                   mentorship, helping bridge the gap between high school and
                   medical education.
@@ -836,13 +817,13 @@ export default function MembersClient() {
                         </div>
                       </div>
                       <CardContent className="p-4">
-                        <h4 className="text-base font-semibold text-[#405862]">
+                        <h4 className="text-lg font-semibold text-[#405862]">
                           {advisor.name}
                         </h4>
-                        <p className="text-sm text-[#405862]/75 mb-2">
+                        <p className="text-sm md:text-base text-[#405862]/75 mb-2">
                           {advisor.role}
                         </p>
-                        <p className="text-sm text-[#405862] mb-3">
+                        <p className="text-sm md:text-base leading-relaxed text-[#405862] mb-3">
                           {expandedBios[advisor.id]
                             ? advisor.bio
                             : truncateBio(advisor.bio, 120)}
@@ -902,16 +883,16 @@ export default function MembersClient() {
                 </div>
               </div>
               <div className="mt-8 p-6 bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 rounded-lg text-center">
-                <h3 className="text-lg font-semibold text-[#405862] mb-2">
+                <h3 className="text-xl md:text-2xl font-semibold text-[#405862] mb-2">
                   Interested in Joining Our Team?
                 </h3>
-                <p className="text-[#405862]/80 mb-3">
+                <p className="text-[#405862]/80 mb-3 text-sm md:text-base">
                   Check out the{" "}
                   <span className="font-semibold text-[#4ecdc4]">Join Us</span>{" "}
                   tab above to learn about executive opportunities and apply to
                   join our leadership team!
                 </p>
-                <p className="text-sm text-[#405862]/70">
+                <p className="text-sm md:text-base text-[#405862]/70">
                   Applications are open year-round and reviewed on an ongoing
                   basis.
                 </p>
@@ -921,34 +902,34 @@ export default function MembersClient() {
             <TabsContent value="join" className="space-y-6">
               <div className="py-8 bg-[#f5f1eb]/50 rounded-lg text-center">
                 <div className="max-w-3xl mx-auto px-4">
-                 <h2 className="text-2xl font-bold mb-4 text-[#405862]">
+                 <h2 className="text-2xl md:text-3xl font-bold mb-4 text-[#405862]">
   Join Our Executive Team
 </h2>
 
 
-<p className="mb-6 text-[#405862]/90 max-w-3xl">
+<p className="mb-6 text-base md:text-lg text-[#405862]/90 max-w-3xl">
   <span className="font-semibold">Dr. Interested</span> is a global youth organization active in
   <span className="font-semibold"> 70+ countries</span>, reaching
   <span className="font-semibold"> 60,000+ students</span> worldwide. We operate fully online through
   Discord, with optional in-person opportunities depending on your city.
 </p>
 
-<p className="mb-6 text-[#405862]/90 max-w-3xl">
+<p className="mb-6 text-base md:text-lg text-[#405862]/90 max-w-3xl">
   We’re recruiting across nearly every field right now — Finance, Tech, Coding, Design, Outreach,
   Events, and Healthcare Careers Education. If you like building things that matter, there’s a seat
   for you.
 </p>
 
-<p className="mb-6 text-[#405862]/90 max-w-3xl">
+<p className="mb-6 text-base md:text-lg text-[#405862]/90 max-w-3xl">
   This isn’t busywork. You’ll be part of a global team that moves fast, leads real projects, and
   creates impact you can point to proudly.
 </p>
 
 {/* WHAT YOU GET */}
 <div className="mb-6">
-  <h3 className="font-semibold text-[#405862] mb-3">What you get</h3>
+  <h3 className="text-lg md:text-xl font-semibold text-[#405862] mb-3">What you get</h3>
 
-  <ul className="max-w-2xl mx-auto pl-4 space-y-2 text-sm text-[#405862]/90 text-left">
+  <ul className="max-w-2xl mx-auto pl-4 space-y-2 text-sm md:text-base text-[#405862]/90 text-left">
     <li>✨ Experience working with an international organization that strengthens your résumé</li>
     <li>✨ Letters of recommendation from medical students</li>
     <li>✨ Free tickets to represent us at conferences (merit-based)</li>
@@ -963,11 +944,11 @@ export default function MembersClient() {
 <div className="mb-6 flex flex-col md:flex-row items-start md:items-center gap-6">
   {/* Text content */}
   <div className="flex-1">
-    <h3 className="font-semibold text-[#405862] mb-3">
+    <h3 className="text-lg md:text-xl font-semibold text-[#405862] mb-3">
       Extra opportunities (Canada · Under 18)
     </h3>
 
-    <ul className="space-y-2 text-sm text-[#405862]/90 pl-4 text-left">
+    <ul className="space-y-2 text-sm md:text-base text-[#405862]/90 pl-4 text-left">
       <li>
         ✨ Apply for microgrants or travel grants to grow your ideas and showcase your work
       </li>
@@ -992,7 +973,7 @@ export default function MembersClient() {
       height={160}
       className="object-cover w-full h-full"
     />
-    <p className="text-xs text-center text-[#405862]/70 mt-2 mb-0">
+    <p className="text-xs md:text-sm text-center text-[#405862]/70 mt-2 mb-0">
       With support from the GLOCAL Foundation of Canada
     </p>
   </div>
@@ -1000,11 +981,11 @@ export default function MembersClient() {
 
 {/* NEW SECTION */}
 <div className="mb-8 rounded-lg border border-[#405862]/20 bg-[#405862]/5 p-5">
-  <h3 className="font-semibold text-[#405862] mb-3">
+  <h3 className="text-lg md:text-xl font-semibold text-[#405862] mb-3">
     NEW: Policy & Global Research Opportunities:
   </h3>
 
-  <p className="text-sm text-[#405862]/90 max-w-3xl">
+  <p className="text-sm md:text-base text-[#405862]/90 max-w-3xl">
     As an executive, you’ll have the opportunity to contribute directly to our
     <span className="font-medium"> policy and research reports</span>.
     One of our current projects is a report for the
@@ -1014,22 +995,22 @@ export default function MembersClient() {
     </span>.
   </p>
 
-  <p className="mt-2 text-sm text-[#405862]/90 max-w-3xl">
+  <p className="mt-2 text-sm md:text-base text-[#405862]/90 max-w-3xl">
     Executives who contribute will be credited by name, and the final report will be published on
     the official United Nations Human Rights website.
   </p>
 </div>
 
-<p className="mb-6 text-[#405862]/80 text-sm">
+<p className="mb-6 text-[#405862]/80 text-sm md:text-base">
   ⏳ <span className="font-medium">Time commitment:</span> 6 months · ~2 hours/week
 </p>
                   <div className="grid md:grid-cols-3 gap-4 mb-6">
                     <Card className="border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
                       <CardContent className="p-6 text-center">
-                        <h3 className="font-semibold text-[#405862] mb-3">
+                        <h3 className="text-base md:text-lg font-semibold text-[#405862] mb-3">
                           General Executive
                         </h3>
-                        <p className="text-sm text-[#405862]/80 mb-4">
+                        <p className="text-sm md:text-base text-[#405862]/80 mb-4">
                           Join our core leadership team and help shape the
                           future of Dr. Interested at a global scale.
                         </p>
@@ -1047,10 +1028,10 @@ export default function MembersClient() {
 
                     <Card className="border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
                       <CardContent className="p-6 text-center">
-                        <h3 className="font-semibold text-[#405862] mb-3">
+                        <h3 className="text-base md:text-lg font-semibold text-[#405862] mb-3">
                           Org Ambassador
                         </h3>
-                        <p className="text-sm text-[#405862]/80 mb-4">
+                        <p className="text-sm md:text-base text-[#405862]/80 mb-4">
                           Represent Dr. Interested in your community and help
                           expand our impact worldwide.
                         </p>
@@ -1068,10 +1049,10 @@ export default function MembersClient() {
 
                     <Card className="border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
                       <CardContent className="p-6 text-center">
-                        <h3 className="font-semibold text-[#405862] mb-3">
+                        <h3 className="text-base md:text-lg font-semibold text-[#405862] mb-3">
                           Podcast Team
                         </h3>
-                        <p className="text-sm text-[#405862]/80 mb-4">
+                        <p className="text-sm md:text-base text-[#405862]/80 mb-4">
                           Create engaging podcast content and amplify healthcare
                           stories from around the world.
                         </p>
@@ -1089,7 +1070,7 @@ export default function MembersClient() {
                   </div>
 
                   <div className="text-center">
-                    <p className="text-sm text-[#405862]/80">
+                    <p className="text-sm md:text-base text-[#405862]/80">
                       Have questions about joining our team?{" "}
                       <Link
                         href="mailto:hr@drinterested.org"

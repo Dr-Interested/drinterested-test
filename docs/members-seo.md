@@ -1,10 +1,11 @@
 # Members SEO
 
-This repo indexes members in two places: structured data on the members page and the RSS feed. Update both by editing `data/members.ts` (the data source) and, if needed, `app/rss.xml/route.tsx` (image descriptions).
+This repo indexes members in three places: structured data on the members page, the RSS feed, and dedicated `/team/:id` profile pages. Update all by editing `data/members.ts` (the data source) and, if needed, `app/rss.xml/route.tsx` (image descriptions).
 
 ## How member SEO works
 - `app/members/page.tsx` builds a JSON-LD graph from `data/members.ts`. Each member becomes a `Person` with `name`, `jobTitle`, `image`, and `sameAs` links.
 - `app/rss.xml/route.tsx` publishes each member as an RSS item with their role, bio, and image. This is used for indexing and rich previews.
+- `app/team/[id]/page.tsx` renders the member profile page used by RSS URLs and the sitemap.
 
 ## Adding or updating members
 1. Update `data/members.ts` with the new member(s). Every entry must include:

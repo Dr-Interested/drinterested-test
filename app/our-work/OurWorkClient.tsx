@@ -38,7 +38,7 @@ export default function OurWorkPage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-[#f5f1eb] py-16 relative overflow-hidden">
+      <section className="bg-[#f5f1eb] py-10 md:py-16 relative overflow-hidden">
         <div className="container relative z-10 max-w-5xl mx-auto">
           <motion.div className="text-center" initial="hidden" animate="visible" variants={fadeIn}>
             <motion.a
@@ -51,7 +51,7 @@ export default function OurWorkPage() {
               <Sparkles className="w-4 h-4" />
               <span>Check out the First Half of 2025 Impact Report</span>
             </motion.a>
-            <h1 className="text-4xl md:text-5xl font-bold text-[#405862] mb-4">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#405862] mb-4">
               Empowering the Next Generation of Healthcare Leaders
             </h1>
             <p className="text-[#405862]/80 text-lg mb-6 leading-relaxed max-w-3xl mx-auto">

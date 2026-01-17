@@ -67,10 +67,12 @@ export default function BlogClientPage() {
       <SeoSchema schema={blogListingSchema} />
 
       {/* Hero Section */}
-      <section className="bg-[#f5f1eb] py-16">
+      <section className="bg-[#f5f1eb] py-10 md:py-16">
         <div className="container">
-          <h1 className="text-4xl font-bold text-center text-[#405862] mb-4">Dr. Interested Blog</h1>
-          <p className="text-center text-[#405862] max-w-2xl mx-auto mb-8">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center text-[#405862] mb-4">
+            Dr. Interested Blog
+          </h1>
+          <p className="text-center text-lg text-[#405862]/80 max-w-2xl mx-auto mb-8">
             Explore the latest insights, research, and information about healthcare careers, medical advancements, and
             educational opportunities.
           </p>

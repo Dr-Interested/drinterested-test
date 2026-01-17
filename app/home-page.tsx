@@ -112,9 +112,6 @@ export default function HomePage() {
                 </Link>
 
                 <div className="flex items-center gap-3 flex-wrap mt-1">
-                  <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md">
-  
-</div>
                   <Link
                     href="https://discord.gg/pzbGRgsGXY"
                     target="_blank"
