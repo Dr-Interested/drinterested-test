@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useLayoutEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -29,6 +29,8 @@ export default function MembersClient() {
   const [scrolledDepartments, setScrolledDepartments] = useState<
     Record<string, boolean>
   >({});
+  const coordinatorScrollPositions = useRef<Record<string, number>>({});
+  const deputyScrollPositions = useRef<Record<string, number>>({});
   const departmentDirectors = departments.flatMap((department) =>
     Array.isArray(department.director)
       ? department.director
@@ -86,11 +88,22 @@ export default function MembersClient() {
   }) => {
     const scrollerRef = useRef<HTMLDivElement | null>(null);
     const isComplete = scrolledDepartments[departmentId];
+    const scrollPositions = coordinatorScrollPositions.current;
+
+    useLayoutEffect(() => {
+      const el = scrollerRef.current;
+      if (!el) return;
+      const stored = scrollPositions[departmentId];
+      if (typeof stored === "number") {
+        el.scrollLeft = stored;
+      }
+    }, [departmentId, coordinators.length, scrollPositions]);
 
     useEffect(() => {
       const el = scrollerRef.current;
       if (!el) return;
       const onScroll = () => {
+        scrollPositions[departmentId] = el.scrollLeft;
         const atEnd =
           el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
         if (!isComplete && atEnd) {
@@ -140,12 +153,13 @@ export default function MembersClient() {
             el.scrollLeft = next;
           }}
           className="overflow-x-auto overflow-y-hidden overscroll-x-contain overscroll-y-contain"
+          style={{ scrollbarGutter: "stable" }}
         >
           <div className="flex gap-4 min-w-max pr-4">
             {coordinators.map((coordinator) => (
               <Card
                 key={coordinator.id}
-                className="group w-64 shrink-0 border-[#405862]/20 shadow-sm"
+                className="w-64 shrink-0 border-[#405862]/20 shadow-sm"
               >
                 <CardContent className="p-4 text-center">
                   <div className="flex justify-center mb-3">
@@ -161,12 +175,67 @@ export default function MembersClient() {
                   <h5 className="text-sm md:text-base font-semibold text-[#405862] leading-snug break-words mb-2">
                     {coordinator.name}
                   </h5>
-                  <p className="text-xs md:text-sm leading-relaxed text-[#405862]/80 overflow-hidden transition-[max-height] duration-300 ease-in-out max-h-16 group-hover:max-h-64">
-                    {coordinator.bio}
+                  {(coordinator.socialLinks?.linkedin ||
+                    coordinator.socialLinks?.instagram ||
+                    coordinator.socialLinks?.website) && (
+                    <div className="flex items-center justify-center gap-3 mb-2">
+                      {coordinator.socialLinks?.linkedin && (
+                        <Link
+                          href={coordinator.socialLinks.linkedin}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                        >
+                          <Linkedin className="h-4 w-4" />
+                        </Link>
+                      )}
+                      {coordinator.socialLinks?.instagram && (
+                        <Link
+                          href={coordinator.socialLinks.instagram}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                        >
+                          <Instagram className="h-4 w-4" />
+                        </Link>
+                      )}
+                      {coordinator.socialLinks?.website && (
+                        <Link
+                          href={coordinator.socialLinks.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                        >
+                          <Globe className="h-4 w-4" />
+                        </Link>
+                      )}
+                    </div>
+                  )}
+                  <p className="text-xs md:text-sm leading-relaxed text-[#405862]/80">
+                    {expandedBios[coordinator.id]
+                      ? coordinator.bio
+                      : truncateBio(coordinator.bio, 120)}
                   </p>
+                  {coordinator.bio.length > 120 && (
+                    <button
+                      onClick={() => toggleBio(coordinator.id)}
+                      className="text-[#405862] text-xs md:text-sm font-medium hover:text-[#4ecdc4] transition-colors mt-2 flex items-center justify-center"
+                    >
+                      {expandedBios[coordinator.id] ? (
+                        <>
+                          Show Less <ChevronUp className="h-3 w-3 ml-1" />
+                        </>
+                      ) : (
+                        <>
+                          See More <ChevronDown className="h-3 w-3 ml-1" />
+                        </>
+                      )}
+                    </button>
+                  )}
                 </CardContent>
               </Card>
             ))}
+            <div aria-hidden="true" className="w-4 shrink-0" />
           </div>
         </div>
         {!isComplete && (
@@ -180,10 +249,19 @@ export default function MembersClient() {
   const renderDeputy = (
     deputy: NonNullable<(typeof departments)[number]["deputyDirectors"]>[number]
   ) => {
+    const showToggle = deputy.bio.length > 180;
+    const clampStyle = expandedBios[deputy.id]
+      ? undefined
+      : {
+          display: "-webkit-box",
+          WebkitLineClamp: 4,
+          WebkitBoxOrient: "vertical" as const,
+          overflow: "hidden",
+        };
     return (
       <div
         key={deputy.id}
-        className="group w-full flex flex-col md:flex-row md:items-start md:justify-between gap-4"
+        className="w-full flex flex-col md:flex-row md:items-start md:justify-between gap-4"
       >
         <div className="flex flex-col sm:flex-row items-center sm:items-center gap-4 flex-1">
           <div className="relative h-24 w-24 rounded-full overflow-hidden bg-white shrink-0">
@@ -201,9 +279,28 @@ export default function MembersClient() {
             <p className="text-sm md:text-base text-[#405862]/75 break-words">
               {deputy.role}
             </p>
-            <p className="text-sm md:text-base leading-relaxed text-[#405862] mt-2 overflow-hidden transition-[max-height] duration-300 ease-in-out max-h-20 group-hover:max-h-96">
+            <p
+              className="text-sm md:text-base leading-relaxed text-[#405862] mt-2"
+              style={clampStyle}
+            >
               {deputy.bio}
             </p>
+            {showToggle && (
+              <button
+                onClick={() => toggleBio(deputy.id)}
+                className="text-[#405862] text-xs md:text-sm font-medium hover:text-[#4ecdc4] transition-colors mt-2 flex items-center"
+              >
+                {expandedBios[deputy.id] ? (
+                  <>
+                    Show Less <ChevronUp className="h-3 w-3 ml-1" />
+                  </>
+                ) : (
+                  <>
+                    See More <ChevronDown className="h-3 w-3 ml-1" />
+                  </>
+                )}
+              </button>
+            )}
           </div>
         </div>
         <div className="flex flex-col items-center md:items-end md:mt-1 gap-2 shrink-0">
@@ -233,11 +330,23 @@ export default function MembersClient() {
   };
 
   const DeputyScroller = ({
+    departmentId,
     deputies,
   }: {
+    departmentId: string;
     deputies: NonNullable<(typeof departments)[number]["deputyDirectors"]>;
   }) => {
     const scrollerRef = useRef<HTMLDivElement | null>(null);
+    const scrollPositions = deputyScrollPositions.current;
+
+    useLayoutEffect(() => {
+      const el = scrollerRef.current;
+      if (!el) return;
+      const stored = scrollPositions[departmentId];
+      if (typeof stored === "number") {
+        el.scrollLeft = stored;
+      }
+    }, [departmentId, deputies.length, scrollPositions]);
 
     useEffect(() => {
       const el = scrollerRef.current;
@@ -269,13 +378,26 @@ export default function MembersClient() {
           Math.max(0, maxScroll)
         );
         el.scrollLeft = next;
+        scrollPositions[departmentId] = next;
       };
 
       el.addEventListener("wheel", onWheel, { passive: false });
       return () => {
         el.removeEventListener("wheel", onWheel);
       };
-    }, []);
+    }, [departmentId, scrollPositions]);
+
+    useEffect(() => {
+      const el = scrollerRef.current;
+      if (!el) return;
+      const onScroll = () => {
+        scrollPositions[departmentId] = el.scrollLeft;
+      };
+      el.addEventListener("scroll", onScroll, { passive: true });
+      return () => {
+        el.removeEventListener("scroll", onScroll);
+      };
+    }, [departmentId, scrollPositions]);
 
     if (deputies.length <= 1) {
       return (
@@ -289,6 +411,7 @@ export default function MembersClient() {
       <div
         ref={scrollerRef}
         className="max-w-5xl mx-auto overflow-x-auto overflow-y-hidden overscroll-x-contain overscroll-y-contain pb-7"
+        style={{ scrollbarGutter: "stable" }}
       >
         <div className="flex gap-10 min-w-max pr-4">
           {deputies.map((deputy) => (
@@ -296,6 +419,7 @@ export default function MembersClient() {
               {renderDeputy(deputy)}
             </div>
           ))}
+          <div aria-hidden="true" className="w-4 shrink-0" />
         </div>
       </div>
     );
@@ -710,7 +834,10 @@ export default function MembersClient() {
 
                       {department.deputyDirectors?.length ? (
                         <div className="space-y-3">
-                          <DeputyScroller deputies={department.deputyDirectors} />
+                          <DeputyScroller
+                            departmentId={department.id}
+                            deputies={department.deputyDirectors}
+                          />
                         </div>
                       ) : null}
 
