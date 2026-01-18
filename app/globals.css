@@ -228,3 +228,48 @@ img.loading {
 .logo-image {
   border-radius: 50%;
 }
+
+/* Hide scrollbars where custom buttons handle navigation */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes scroll-nudge-left {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-3px);
+  }
+}
+
+@keyframes scroll-nudge-right {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+}
+
+.scroll-arrow-left {
+  animation: scroll-nudge-left 1.6s ease-in-out infinite;
+}
+
+.scroll-arrow-right {
+  animation: scroll-nudge-right 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-arrow-left,
+  .scroll-arrow-right {
+    animation: none;
+  }
+}

@@ -12,6 +12,8 @@ import {
   Globe,
   ChevronDown,
   ChevronUp,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import {
   departments,
@@ -87,8 +89,55 @@ export default function MembersClient() {
     coordinators: (typeof departments)[number]["coordinators"];
   }) => {
     const scrollerRef = useRef<HTMLDivElement | null>(null);
+    const [scrollState, setScrollState] = useState({
+      canLeft: false,
+      canRight: false,
+      hasOverflow: false,
+    });
     const isComplete = scrolledDepartments[departmentId];
     const scrollPositions = coordinatorScrollPositions.current;
+
+    const updateScrollState = useCallback(() => {
+      const el = scrollerRef.current;
+      if (!el) return;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      const canLeft = el.scrollLeft > 0;
+      const canRight = el.scrollLeft < maxScroll - 1;
+      const hasOverflow = maxScroll > 1;
+      setScrollState((prev) =>
+        prev.canLeft === canLeft &&
+        prev.canRight === canRight &&
+        prev.hasOverflow === hasOverflow
+          ? prev
+          : { canLeft, canRight, hasOverflow }
+      );
+    }, []);
+
+    const getScrollStep = useCallback(() => {
+      const el = scrollerRef.current;
+      if (!el) return 0;
+      const track = el.querySelector<HTMLElement>("[data-scroll-track]");
+      const item = el.querySelector<HTMLElement>("[data-scroll-item]");
+      if (!track || !item) return el.clientWidth;
+      const styles = getComputedStyle(track);
+      const gapValue = parseFloat(styles.columnGap || styles.gap || "0");
+      const itemWidth = item.getBoundingClientRect().width;
+      const gap = Number.isNaN(gapValue) ? 0 : gapValue;
+      return itemWidth + gap;
+    }, []);
+
+    const scrollByStep = (direction: "left" | "right") => {
+      const el = scrollerRef.current;
+      if (!el) return;
+      const step = getScrollStep();
+      if (step <= 0) return;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      const next =
+        direction === "left"
+          ? Math.max(0, el.scrollLeft - step)
+          : Math.min(maxScroll, el.scrollLeft + step);
+      el.scrollTo({ left: next, behavior: "smooth" });
+    };
 
     useLayoutEffect(() => {
       const el = scrollerRef.current;
@@ -97,7 +146,8 @@ export default function MembersClient() {
       if (typeof stored === "number") {
         el.scrollLeft = stored;
       }
-    }, [departmentId, coordinators.length, scrollPositions]);
+      updateScrollState();
+    }, [departmentId, coordinators.length, scrollPositions, updateScrollState]);
 
     useEffect(() => {
       const el = scrollerRef.current;
@@ -109,133 +159,175 @@ export default function MembersClient() {
         if (!isComplete && atEnd) {
           markDepartmentComplete(departmentId);
         }
+        updateScrollState();
       };
 
+      onScroll();
       el.addEventListener("scroll", onScroll, { passive: true });
+      const onResize = () => updateScrollState();
+      const resizeObserver = new ResizeObserver(onResize);
+      resizeObserver.observe(el);
+      const track = el.querySelector<HTMLElement>("[data-scroll-track]");
+      if (track) resizeObserver.observe(track);
+      window.addEventListener("resize", onResize);
       return () => {
         el.removeEventListener("scroll", onScroll);
+        resizeObserver.disconnect();
+        window.removeEventListener("resize", onResize);
       };
-    }, [departmentId, isComplete, markDepartmentComplete]);
+    }, [
+      departmentId,
+      isComplete,
+      scrollPositions,
+      updateScrollState,
+    ]);
 
     return (
       <div className="space-y-2">
-        <div
-          ref={scrollerRef}
-          onWheel={(event) => {
-            const el = scrollerRef.current;
-            if (!el) return;
-            const hasOverflow = el.scrollWidth > el.clientWidth + 1;
-            if (!hasOverflow) return;
-
-            const delta =
-              Math.abs(event.deltaY) > Math.abs(event.deltaX)
-                ? event.deltaY
-                : event.deltaX;
-
-            if (delta === 0) return;
-            if (event.cancelable) {
-              event.preventDefault();
-            }
-            event.stopPropagation();
-
-            const multiplier =
-              event.deltaMode === 1
-                ? 16
-                : event.deltaMode === 2
-                  ? el.clientWidth
-                  : 1;
-            const deltaPx = delta * multiplier;
-            const maxScroll = el.scrollWidth - el.clientWidth;
-            const next = Math.min(
-              Math.max(0, el.scrollLeft + deltaPx),
-              Math.max(0, maxScroll)
-            );
-            el.scrollLeft = next;
-          }}
-          className="overflow-x-auto overflow-y-hidden overscroll-x-contain overscroll-y-contain"
-          style={{ scrollbarGutter: "stable" }}
-        >
-          <div className="flex gap-4 min-w-max pr-4">
-            {coordinators.map((coordinator) => (
-              <Card
-                key={coordinator.id}
-                className="w-64 shrink-0 border-[#405862]/20 shadow-sm"
+        <div className="relative">
+          {scrollState.hasOverflow && (
+            <>
+              <button
+                type="button"
+                onClick={() => scrollByStep("left")}
+                disabled={!scrollState.canLeft}
+                aria-label="Scroll coordinators left"
+                className="absolute -left-8 top-1/2 z-10 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center text-[#405862] transition hover:text-[#4ecdc4] disabled:cursor-not-allowed disabled:opacity-30"
               >
-                <CardContent className="p-4 text-center">
-                  <div className="flex justify-center mb-3">
-                    <div className="relative h-14 w-14 rounded-full overflow-hidden bg-[#f1ece7]">
-                      <Image
-                        src={coordinator.image || "/placeholder.svg"}
-                        alt={coordinator.name}
-                        fill
-                        className="object-cover object-center"
-                      />
+                <ChevronLeft className="h-6 w-6 scroll-arrow-left" />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollByStep("right")}
+                disabled={!scrollState.canRight}
+                aria-label="Scroll coordinators right"
+                className="absolute -right-8 top-1/2 z-10 flex h-12 w-12 translate-x-1/2 -translate-y-1/2 items-center justify-center text-[#405862] transition hover:text-[#4ecdc4] disabled:cursor-not-allowed disabled:opacity-30"
+              >
+                <ChevronRight className="h-6 w-6 scroll-arrow-right" />
+              </button>
+            </>
+          )}
+          <div
+            ref={scrollerRef}
+            onWheel={(event) => {
+              const el = scrollerRef.current;
+              if (!el) return;
+              const hasOverflow = el.scrollWidth > el.clientWidth + 1;
+              if (!hasOverflow) return;
+
+              const delta =
+                Math.abs(event.deltaY) > Math.abs(event.deltaX)
+                  ? event.deltaY
+                  : event.deltaX;
+
+              if (delta === 0) return;
+              if (event.cancelable) {
+                event.preventDefault();
+              }
+              event.stopPropagation();
+
+              const multiplier =
+                event.deltaMode === 1
+                  ? 16
+                  : event.deltaMode === 2
+                    ? el.clientWidth
+                    : 1;
+              const deltaPx = delta * multiplier;
+              const maxScroll = el.scrollWidth - el.clientWidth;
+              const next = Math.min(
+                Math.max(0, el.scrollLeft + deltaPx),
+                Math.max(0, maxScroll)
+              );
+              el.scrollLeft = next;
+            }}
+            className="scrollbar-none overflow-x-auto overflow-y-hidden overscroll-x-contain overscroll-y-contain"
+          >
+            <div
+              className="flex gap-4 min-w-max pr-4"
+              data-scroll-track
+            >
+              {coordinators.map((coordinator) => (
+                <Card
+                  key={coordinator.id}
+                  data-scroll-item
+                  className="w-64 shrink-0 border-[#405862]/20 shadow-sm"
+                >
+                  <CardContent className="p-4 text-center">
+                    <div className="flex justify-center mb-3">
+                      <div className="relative h-14 w-14 rounded-full overflow-hidden bg-[#f1ece7]">
+                        <Image
+                          src={coordinator.image || "/placeholder.svg"}
+                          alt={coordinator.name}
+                          fill
+                          className="object-cover object-center"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <h5 className="text-sm md:text-base font-semibold text-[#405862] leading-snug break-words mb-2">
-                    {coordinator.name}
-                  </h5>
-                  {(coordinator.socialLinks?.linkedin ||
-                    coordinator.socialLinks?.instagram ||
-                    coordinator.socialLinks?.website) && (
-                    <div className="flex items-center justify-center gap-3 mb-2">
-                      {coordinator.socialLinks?.linkedin && (
-                        <Link
-                          href={coordinator.socialLinks.linkedin}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                        >
-                          <Linkedin className="h-4 w-4" />
-                        </Link>
-                      )}
-                      {coordinator.socialLinks?.instagram && (
-                        <Link
-                          href={coordinator.socialLinks.instagram}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                        >
-                          <Instagram className="h-4 w-4" />
-                        </Link>
-                      )}
-                      {coordinator.socialLinks?.website && (
-                        <Link
-                          href={coordinator.socialLinks.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                        >
-                          <Globe className="h-4 w-4" />
-                        </Link>
-                      )}
-                    </div>
-                  )}
-                  <p className="text-xs md:text-sm leading-relaxed text-[#405862]/80">
-                    {expandedBios[coordinator.id]
-                      ? coordinator.bio
-                      : truncateBio(coordinator.bio, 120)}
-                  </p>
-                  {coordinator.bio.length > 120 && (
-                    <button
-                      onClick={() => toggleBio(coordinator.id)}
-                      className="text-[#405862] text-xs md:text-sm font-medium hover:text-[#4ecdc4] transition-colors mt-2 flex items-center justify-center"
-                    >
-                      {expandedBios[coordinator.id] ? (
-                        <>
-                          Show Less <ChevronUp className="h-3 w-3 ml-1" />
-                        </>
-                      ) : (
-                        <>
-                          See More <ChevronDown className="h-3 w-3 ml-1" />
-                        </>
-                      )}
-                    </button>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-            <div aria-hidden="true" className="w-4 shrink-0" />
+                    <h5 className="text-sm md:text-base font-semibold text-[#405862] leading-snug break-words mb-2">
+                      {coordinator.name}
+                    </h5>
+                    {(coordinator.socialLinks?.linkedin ||
+                      coordinator.socialLinks?.instagram ||
+                      coordinator.socialLinks?.website) && (
+                      <div className="flex items-center justify-center gap-3 mb-2">
+                        {coordinator.socialLinks?.linkedin && (
+                          <Link
+                            href={coordinator.socialLinks.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                          >
+                            <Linkedin className="h-4 w-4" />
+                          </Link>
+                        )}
+                        {coordinator.socialLinks?.instagram && (
+                          <Link
+                            href={coordinator.socialLinks.instagram}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                          >
+                            <Instagram className="h-4 w-4" />
+                          </Link>
+                        )}
+                        {coordinator.socialLinks?.website && (
+                          <Link
+                            href={coordinator.socialLinks.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                          >
+                            <Globe className="h-4 w-4" />
+                          </Link>
+                        )}
+                      </div>
+                    )}
+                    <p className="text-xs md:text-sm leading-relaxed text-[#405862]/80">
+                      {expandedBios[coordinator.id]
+                        ? coordinator.bio
+                        : truncateBio(coordinator.bio, 120)}
+                    </p>
+                    {coordinator.bio.length > 120 && (
+                      <button
+                        onClick={() => toggleBio(coordinator.id)}
+                        className="text-[#405862] text-xs md:text-sm font-medium hover:text-[#4ecdc4] transition-colors mt-2 flex items-center justify-center"
+                      >
+                        {expandedBios[coordinator.id] ? (
+                          <>
+                            Show Less <ChevronUp className="h-3 w-3 ml-1" />
+                          </>
+                        ) : (
+                          <>
+                            See More <ChevronDown className="h-3 w-3 ml-1" />
+                          </>
+                        )}
+                      </button>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+              <div aria-hidden="true" className="w-4 shrink-0" />
+            </div>
           </div>
         </div>
         {!isComplete && (
@@ -337,7 +429,54 @@ export default function MembersClient() {
     deputies: NonNullable<(typeof departments)[number]["deputyDirectors"]>;
   }) => {
     const scrollerRef = useRef<HTMLDivElement | null>(null);
+    const [scrollState, setScrollState] = useState({
+      canLeft: false,
+      canRight: false,
+      hasOverflow: false,
+    });
     const scrollPositions = deputyScrollPositions.current;
+
+    const updateScrollState = useCallback(() => {
+      const el = scrollerRef.current;
+      if (!el) return;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      const canLeft = el.scrollLeft > 0;
+      const canRight = el.scrollLeft < maxScroll - 1;
+      const hasOverflow = maxScroll > 1;
+      setScrollState((prev) =>
+        prev.canLeft === canLeft &&
+        prev.canRight === canRight &&
+        prev.hasOverflow === hasOverflow
+          ? prev
+          : { canLeft, canRight, hasOverflow }
+      );
+    }, []);
+
+    const getScrollStep = useCallback(() => {
+      const el = scrollerRef.current;
+      if (!el) return 0;
+      const track = el.querySelector<HTMLElement>("[data-scroll-track]");
+      const item = el.querySelector<HTMLElement>("[data-scroll-item]");
+      if (!track || !item) return el.clientWidth;
+      const styles = getComputedStyle(track);
+      const gapValue = parseFloat(styles.columnGap || styles.gap || "0");
+      const itemWidth = item.getBoundingClientRect().width;
+      const gap = Number.isNaN(gapValue) ? 0 : gapValue;
+      return itemWidth + gap;
+    }, []);
+
+    const scrollByStep = (direction: "left" | "right") => {
+      const el = scrollerRef.current;
+      if (!el) return;
+      const step = getScrollStep();
+      if (step <= 0) return;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      const next =
+        direction === "left"
+          ? Math.max(0, el.scrollLeft - step)
+          : Math.min(maxScroll, el.scrollLeft + step);
+      el.scrollTo({ left: next, behavior: "smooth" });
+    };
 
     useLayoutEffect(() => {
       const el = scrollerRef.current;
@@ -346,7 +485,8 @@ export default function MembersClient() {
       if (typeof stored === "number") {
         el.scrollLeft = stored;
       }
-    }, [departmentId, deputies.length, scrollPositions]);
+      updateScrollState();
+    }, [departmentId, deputies.length, scrollPositions, updateScrollState]);
 
     useEffect(() => {
       const el = scrollerRef.current;
@@ -379,25 +519,36 @@ export default function MembersClient() {
         );
         el.scrollLeft = next;
         scrollPositions[departmentId] = next;
+        updateScrollState();
       };
 
       el.addEventListener("wheel", onWheel, { passive: false });
       return () => {
         el.removeEventListener("wheel", onWheel);
       };
-    }, [departmentId, scrollPositions]);
+    }, [departmentId, scrollPositions, updateScrollState]);
 
     useEffect(() => {
       const el = scrollerRef.current;
       if (!el) return;
       const onScroll = () => {
         scrollPositions[departmentId] = el.scrollLeft;
+        updateScrollState();
       };
+      onScroll();
       el.addEventListener("scroll", onScroll, { passive: true });
+      const onResize = () => updateScrollState();
+      const resizeObserver = new ResizeObserver(onResize);
+      resizeObserver.observe(el);
+      const track = el.querySelector<HTMLElement>("[data-scroll-track]");
+      if (track) resizeObserver.observe(track);
+      window.addEventListener("resize", onResize);
       return () => {
         el.removeEventListener("scroll", onScroll);
+        resizeObserver.disconnect();
+        window.removeEventListener("resize", onResize);
       };
-    }, [departmentId, scrollPositions]);
+    }, [departmentId, scrollPositions, updateScrollState]);
 
     if (deputies.length <= 1) {
       return (
@@ -408,18 +559,45 @@ export default function MembersClient() {
     }
 
     return (
-      <div
-        ref={scrollerRef}
-        className="max-w-5xl mx-auto overflow-x-auto overflow-y-hidden overscroll-x-contain overscroll-y-contain pb-7"
-        style={{ scrollbarGutter: "stable" }}
-      >
-        <div className="flex gap-10 min-w-max pr-4">
-          {deputies.map((deputy) => (
-            <div key={deputy.id} className="w-[80vw] max-w-[520px] shrink-0">
-              {renderDeputy(deputy)}
-            </div>
-          ))}
-          <div aria-hidden="true" className="w-4 shrink-0" />
+      <div className="relative max-w-5xl mx-auto">
+        {scrollState.hasOverflow && (
+          <>
+            <button
+              type="button"
+              onClick={() => scrollByStep("left")}
+              disabled={!scrollState.canLeft}
+              aria-label="Scroll deputy directors left"
+              className="absolute -left-8 top-1/2 z-10 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center text-[#405862] transition hover:text-[#4ecdc4] disabled:cursor-not-allowed disabled:opacity-30"
+            >
+              <ChevronLeft className="h-6 w-6 scroll-arrow-left" />
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollByStep("right")}
+              disabled={!scrollState.canRight}
+              aria-label="Scroll deputy directors right"
+              className="absolute -right-8 top-1/2 z-10 flex h-12 w-12 translate-x-1/2 -translate-y-1/2 items-center justify-center text-[#405862] transition hover:text-[#4ecdc4] disabled:cursor-not-allowed disabled:opacity-30"
+            >
+              <ChevronRight className="h-6 w-6 scroll-arrow-right" />
+            </button>
+          </>
+        )}
+        <div
+          ref={scrollerRef}
+          className="scrollbar-none overflow-x-auto overflow-y-hidden overscroll-x-contain overscroll-y-contain pb-7"
+        >
+          <div className="flex gap-10 min-w-max pr-4" data-scroll-track>
+            {deputies.map((deputy) => (
+              <div
+                key={deputy.id}
+                data-scroll-item
+                className="w-[80vw] max-w-[520px] shrink-0"
+              >
+                {renderDeputy(deputy)}
+              </div>
+            ))}
+            <div aria-hidden="true" className="w-4 shrink-0" />
+          </div>
         </div>
       </div>
     );
