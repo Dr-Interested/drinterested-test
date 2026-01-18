@@ -1,3 +1,4 @@
+import AccessibilityWidget from "@/components/AccessibilityWidget";
 import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
@@ -159,6 +160,9 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
+         <AccessibilityWidget />
+
+         
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <SeoSchema schema={generateOrganizationSchema()} />
           <Suspense fallback={null}>
