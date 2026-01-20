@@ -174,10 +174,10 @@ const AccessibilityWidget = () => {
   useEffect(() => {
     if (!isMounted) return;
 
-    if (isSmallScreen && settings.textSize !== 100) {
-      setSettings(prev => ({ ...prev, textSize: 100 }));
+    if (isSmallScreen && (settings.textSize !== 100 || settings.cursorSize !== 100)) {
+      setSettings(prev => ({ ...prev, textSize: 100, cursorSize: 100 }));
     }
-  }, [isMounted, isSmallScreen, settings.textSize]);
+  }, [isMounted, isSmallScreen, settings.textSize, settings.cursorSize]);
 
   useEffect(() => {
     if (!isMounted || !resolvedTheme) return;
@@ -334,8 +334,8 @@ const AccessibilityWidget = () => {
               position: 'absolute',
               bottom: '70px',
               right: 0,
-              width: '380px',
-              maxHeight: '600px',
+              width: 'min(380px, calc(100vw - 24px))',
+              maxHeight: 'min(600px, calc(100vh - 120px))',
               overflowY: 'auto',
               backgroundColor: settings.darkMode ? '#f1ece7' : 'white',
               color: settings.darkMode ? '#0b0b0b' : undefined,
@@ -383,12 +383,16 @@ const AccessibilityWidget = () => {
                 </button>
                 <button
                   onClick={() => {
+                    if (isSmallScreen) return;
                     if (settings.cursorSize === 100) adjustValue('cursorSize', 125);
                     else if (settings.cursorSize === 125) adjustValue('cursorSize', 150);
                     else adjustValue('cursorSize', 100);
                   }}
-                  className={`p-4 rounded-lg border-2 transition-all w-full flex flex-col items-center justify-center text-center gap-2 min-h-[108px] leading-tight ${settings.cursorSize > 100 ? 'bg-[#405862] text-[#f1ece7] border-[#405862]' : 'bg-gray-50 border-gray-200 hover:border-[#405862]'}`}
-                  style={settings.cursorSize > 100 ? { backgroundColor: '#405862', borderColor: '#405862' } : {}}
+                  disabled={isSmallScreen}
+                  aria-disabled={isSmallScreen}
+                  title={isSmallScreen ? "Bigger Cursor is disabled on tablet and mobile." : undefined}
+                  className={`p-4 rounded-lg border-2 transition-all w-full flex flex-col items-center justify-center text-center gap-2 min-h-[108px] leading-tight ${settings.cursorSize > 100 && !isSmallScreen ? 'bg-[#405862] text-[#f1ece7] border-[#405862]' : 'bg-gray-50 border-gray-200'} ${isSmallScreen ? 'cursor-not-allowed opacity-50' : 'hover:border-[#405862]'}`}
+                  style={settings.cursorSize > 100 && !isSmallScreen ? { backgroundColor: '#405862', borderColor: '#405862' } : {}}
                 >
                   <MousePointer className="mx-auto mb-2" size={24} />
                   <div className="text-sm font-medium mb-2">Bigger Cursor</div>

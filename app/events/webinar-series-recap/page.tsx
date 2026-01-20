@@ -18,7 +18,7 @@ export default function WebinarGalleryPage() {
     <div>
       <ScrollToTop />
       {/* Header Section */}
-      <section className="bg-[#f5f1eb] py-12">
+      <section className="hero-section bg-[#f5f1eb] py-12">
         <div className="container">
           <div className="flex items-center gap-2 mb-6">
             <Link

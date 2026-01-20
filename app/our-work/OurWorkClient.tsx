@@ -38,7 +38,7 @@ export default function OurWorkPage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-[#f5f1eb] py-10 md:py-16 relative overflow-hidden">
+      <section className="hero-section bg-[#f5f1eb] py-10 md:py-16 relative overflow-hidden">
         <div className="container relative z-10 max-w-5xl mx-auto">
           <motion.div className="text-center" initial="hidden" animate="visible" variants={fadeIn}>
             <motion.a

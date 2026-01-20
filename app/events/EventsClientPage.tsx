@@ -27,7 +27,7 @@ export default function EventsClientPage() {
 
   return (
     <div>
-      <section className="bg-[#f5f1eb] py-10 md:py-16">
+      <section className="hero-section bg-[#f5f1eb] py-10 md:py-16">
         <div className="container">
           <motion.div className="text-center" initial="hidden" animate="visible" variants={fadeIn}>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#405862]">Events & Initiatives</h1>

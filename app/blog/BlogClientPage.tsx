@@ -67,7 +67,7 @@ export default function BlogClientPage() {
       <SeoSchema schema={blogListingSchema} />
 
       {/* Hero Section */}
-      <section className="bg-[#f5f1eb] py-10 md:py-16">
+      <section className="hero-section bg-[#f5f1eb] py-10 md:py-16">
         <div className="container">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center text-[#405862] mb-4">
             Dr. Interested Blog

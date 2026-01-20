@@ -54,7 +54,7 @@ export default function SponsorshipsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-[#f5f1eb]/30">
       {/* Hero Section */}
-      <section className="bg-[#f5f1eb] dark:bg-[#0b0b0b] py-10 md:py-16">
+      <section className="hero-section bg-[#f5f1eb] dark:bg-[#0b0b0b] py-10 md:py-16">
         <div className="container max-w-4xl mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 bg-[#4ecdc4]/10 text-[#405862] px-4 py-2 rounded-full text-sm font-medium mb-6">
             <Sparkles className="h-4 w-4" />

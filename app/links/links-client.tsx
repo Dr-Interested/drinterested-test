@@ -131,7 +131,7 @@ export default function LinksPageClient() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#f5f1eb] to-white py-10 px-4">
+    <div className="hero-section min-h-screen bg-gradient-to-b from-[#f5f1eb] to-white py-10 px-4">
       <div className="max-w-md mx-auto">
         <motion.div
           className="flex flex-col items-center mb-8"

@@ -76,7 +76,7 @@ export default function HomePage() {
       <DomainAnnouncementPopup />
 
       {/* Hero Section */}
-      <section className="relative py-10 md:py-16 overflow-hidden bg-gradient-to-b from-[#f5f1eb] to-white">
+      <section className="hero-section relative py-10 md:py-16 overflow-hidden bg-gradient-to-b from-[#f5f1eb] to-white">
         <div className="absolute inset-0 bg-[url('/pattern-bg.png')] opacity-5"></div>
         <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-[#4ecdc4]/5 via-transparent to-[#405862]/5 opacity-70"></div>
 

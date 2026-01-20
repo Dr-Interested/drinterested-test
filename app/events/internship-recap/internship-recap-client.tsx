@@ -93,7 +93,7 @@ export default function InternshipRecapClientPage() {
   return (
     <div>
       <ScrollToTop />
-      <section className="bg-[#f5f1eb] py-12">
+      <section className="hero-section bg-[#f5f1eb] py-12">
         <div className="container">
           <div className="flex items-center gap-2 mb-6">
             <Link href="/events" className="text-[#405862] hover:text-[#4ecdc4] transition-colors flex items-center">

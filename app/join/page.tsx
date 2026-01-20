@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 
 export default function JoinPage() {
   return (
-    <section className="py-8 bg-white">
+    <section className="hero-section py-8 bg-white">
       <div className="container justify-center">
         {/* Tabs header */}
         <div className="flex justify-center  mt-4 mb-8">

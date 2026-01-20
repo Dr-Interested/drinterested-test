@@ -39,7 +39,7 @@ export const metadata: Metadata = {
 
 export default function ThankYouPage() {
   return (
-    <div className="container flex flex-col items-center justify-center min-h-[70vh] py-16 text-center">
+    <div className="hero-section container flex flex-col items-center justify-center min-h-[70vh] py-16 text-center">
       <div className="max-w-md mx-auto">
         <div className="mb-6 flex justify-center">
           <div className="relative h-24 w-24">

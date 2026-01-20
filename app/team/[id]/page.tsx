@@ -88,7 +88,7 @@ export default function MemberPage({ params }: { params: { id: string } }) {
 
   return (
     <div>
-      <section className="bg-[#f5f1eb] py-10 md:py-16">
+      <section className="hero-section bg-[#f5f1eb] py-10 md:py-16">
         <div className="container">
           <div className="grid gap-6 md:grid-cols-3 items-center">
             <div className="md:col-span-1 flex justify-center">

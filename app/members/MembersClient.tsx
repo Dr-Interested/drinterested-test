@@ -192,7 +192,7 @@ export default function MembersClient() {
                 onClick={() => scrollByStep("left")}
                 disabled={!scrollState.canLeft}
                 aria-label="Scroll coordinators left"
-                className="absolute -left-8 top-1/2 z-10 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center text-[#405862] transition hover:text-[#4ecdc4] disabled:cursor-not-allowed disabled:opacity-30"
+                className="absolute -left-2 md:-left-8 top-1/2 z-10 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center text-[#405862] transition hover:text-[#4ecdc4] disabled:cursor-not-allowed disabled:opacity-30"
               >
                 <ChevronLeft className="h-6 w-6 scroll-arrow-left" />
               </button>
@@ -201,7 +201,7 @@ export default function MembersClient() {
                 onClick={() => scrollByStep("right")}
                 disabled={!scrollState.canRight}
                 aria-label="Scroll coordinators right"
-                className="absolute -right-8 top-1/2 z-10 flex h-12 w-12 translate-x-1/2 -translate-y-1/2 items-center justify-center text-[#405862] transition hover:text-[#4ecdc4] disabled:cursor-not-allowed disabled:opacity-30"
+                className="absolute -right-2 md:-right-8 top-1/2 z-10 flex h-12 w-12 translate-x-1/2 -translate-y-1/2 items-center justify-center text-[#405862] transition hover:text-[#4ecdc4] disabled:cursor-not-allowed disabled:opacity-30"
               >
                 <ChevronRight className="h-6 w-6 scroll-arrow-right" />
               </button>
@@ -567,7 +567,7 @@ export default function MembersClient() {
               onClick={() => scrollByStep("left")}
               disabled={!scrollState.canLeft}
               aria-label="Scroll deputy directors left"
-              className="absolute -left-8 top-1/2 z-10 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center text-[#405862] transition hover:text-[#4ecdc4] disabled:cursor-not-allowed disabled:opacity-30"
+              className="absolute -left-2 md:-left-8 top-1/2 z-10 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center text-[#405862] transition hover:text-[#4ecdc4] disabled:cursor-not-allowed disabled:opacity-30"
             >
               <ChevronLeft className="h-6 w-6 scroll-arrow-left" />
             </button>
@@ -576,7 +576,7 @@ export default function MembersClient() {
               onClick={() => scrollByStep("right")}
               disabled={!scrollState.canRight}
               aria-label="Scroll deputy directors right"
-              className="absolute -right-8 top-1/2 z-10 flex h-12 w-12 translate-x-1/2 -translate-y-1/2 items-center justify-center text-[#405862] transition hover:text-[#4ecdc4] disabled:cursor-not-allowed disabled:opacity-30"
+              className="absolute -right-2 md:-right-8 top-1/2 z-10 flex h-12 w-12 translate-x-1/2 -translate-y-1/2 items-center justify-center text-[#405862] transition hover:text-[#4ecdc4] disabled:cursor-not-allowed disabled:opacity-30"
             >
               <ChevronRight className="h-6 w-6 scroll-arrow-right" />
             </button>
@@ -606,7 +606,7 @@ export default function MembersClient() {
   return (
     <div>
       <ScrollToTop />
-      <section className="py-8 md:py-10 bg-[#f5f1eb]">
+      <section className="hero-section py-8 md:py-10 bg-[#f5f1eb]">
         <div className="container">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-2 text-[#405862]">
             Our Team
@@ -939,7 +939,7 @@ export default function MembersClient() {
 
                 return (
                   <section key={department.id} className="space-y-6">
-                    <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-[#4ecdc4] py-4 md:py-5">
+                    <div className="full-bleed w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-[#4ecdc4] py-4 md:py-5">
                       <div className="container text-center">
                         <h3 className="text-xl md:text-2xl font-semibold text-white">
                           {department.name}
