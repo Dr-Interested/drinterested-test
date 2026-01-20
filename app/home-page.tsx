@@ -83,7 +83,7 @@ export default function HomePage() {
         <div className="container relative z-10">
           <div className="grid gap-6 md:grid-cols-2 md:gap-10 items-center">
             <motion.div
-              className="space-y-4"
+              className="space-y-4 hero-fixed-colors"
               initial="hidden"
               animate={isLoaded ? "visible" : "hidden"}
               variants={fadeIn}

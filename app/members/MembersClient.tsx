@@ -633,7 +633,7 @@ export default function MembersClient() {
                 <TabsTrigger value="advisors">Advisors</TabsTrigger>
                 <TabsTrigger
                   value="join"
-                  className="bg-[#EDFAF9] text-[#405862] font-semibold px-6 h-10 border border-[#4ecdc4] hover:bg-[#D0F3F0]"
+                  className="bg-[#EDFAF9] text-[#405862] font-semibold px-6 h-10 border border-[#4ecdc4] hover:bg-[#D0F3F0] keep-light-theme"
                 >
                   Join Us
                 </TabsTrigger>

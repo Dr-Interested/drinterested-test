@@ -1,5 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import { useTheme } from 'next-themes';
+import { usePathname } from 'next/navigation';
 import { X, Globe, RotateCcw, ZoomIn, MousePointer, MessageSquare, ImageOff, Type, Circle, Sun, Moon, Droplet, Minus, Link } from 'lucide-react';
 
 const DEFAULT_SETTINGS = {
@@ -14,16 +16,35 @@ const DEFAULT_SETTINGS = {
   highlightLinks: false
 };
 
+const loadSettings = () => {
+  if (typeof window === 'undefined') {
+    return DEFAULT_SETTINGS;
+  }
+
+  try {
+    const saved = window.localStorage.getItem('accessibilitySettings');
+    return saved ? JSON.parse(saved) : DEFAULT_SETTINGS;
+  } catch {
+    return DEFAULT_SETTINGS;
+  }
+};
+
 const AccessibilityWidget = () => {
+  const { setTheme, resolvedTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [settings, setSettings] = useState(DEFAULT_SETTINGS);
+  const [settings, setSettings] = useState(loadSettings);
+  const pathname = usePathname();
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const isDarkMode = resolvedTheme ? resolvedTheme === 'dark' : settings.darkMode;
 
   // Use useLayoutEffect to set isMounted BEFORE any rendering
   useLayoutEffect(() => {
+    if (typeof window === 'undefined') return;
+
     setIsMounted(true);
     // Set initial position here, before the component fully renders
     setPosition({
@@ -33,17 +54,16 @@ const AccessibilityWidget = () => {
   }, []);
 
   useEffect(() => {
-    if (!isMounted) return;
+    if (!isMounted || typeof window === 'undefined') return;
 
-    const saved = localStorage.getItem('accessibilitySettings');
-    const loadedSettings = saved ? JSON.parse(saved) : DEFAULT_SETTINGS;
+    const loadedSettings = loadSettings();
     setSettings(loadedSettings);
   }, [isMounted]);
 
   useEffect(() => {
-    if (!isMounted) return;
+    if (!isMounted || typeof window === 'undefined') return;
 
-    localStorage.setItem('accessibilitySettings', JSON.stringify(settings));
+    window.localStorage.setItem('accessibilitySettings', JSON.stringify(settings));
 
     const root = document.documentElement;
 
@@ -57,30 +77,34 @@ const AccessibilityWidget = () => {
       root.style.cursor = '';
     }
 
-    const images = document.querySelectorAll('img');
-    images.forEach(img => {
-      img.style.opacity = settings.hideImages ? '0' : '';
-    });
-
-    let filters = [];
+    const filters = [];
     if (settings.invertColors) filters.push('invert(1)');
     if (settings.grayscale) filters.push('grayscale(100%)');
     if (settings.contrast) filters.push('contrast(115%)');
-    
+
     root.style.filter = filters.join(' ');
 
-    const mediaElements = document.querySelectorAll('img, video, iframe');
-    mediaElements.forEach(el => {
-      if (filters.length > 0) {
-        let counterFilters = [];
-        if (settings.invertColors) counterFilters.push('invert(1)');
-        if (settings.grayscale) counterFilters.push('grayscale(0)');
-        if (settings.contrast) counterFilters.push('contrast(87%)');
-        el.style.filter = counterFilters.join(' ');
-      } else {
-        el.style.filter = '';
-      }
-    });
+    const applyImageVisibility = () => {
+      const images = document.querySelectorAll('img');
+      images.forEach(img => {
+        img.style.opacity = settings.hideImages ? '0' : '';
+      });
+    };
+
+    const applyMediaFilters = () => {
+      const mediaElements = document.querySelectorAll('img, video, iframe');
+      mediaElements.forEach(el => {
+        if (filters.length > 0) {
+          const counterFilters = [];
+          if (settings.invertColors) counterFilters.push('invert(1)');
+          if (settings.grayscale) counterFilters.push('grayscale(0)');
+          if (settings.contrast) counterFilters.push('contrast(87%)');
+          el.style.filter = counterFilters.join(' ');
+        } else {
+          el.style.filter = '';
+        }
+      });
+    };
 
     const updateLinks = () => {
       const allLinks = document.querySelectorAll('a');
@@ -103,28 +127,73 @@ const AccessibilityWidget = () => {
       });
     };
 
+    applyImageVisibility();
+    applyMediaFilters();
     updateLinks();
 
     const observer = new MutationObserver(() => {
+      applyImageVisibility();
+      applyMediaFilters();
       updateLinks();
     });
 
     observer.observe(document.body, {
       childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ['class', 'style']
+      subtree: true
     });
 
     return () => {
       observer.disconnect();
     };
-  }, [settings, isMounted]);
+  }, [settings, isMounted, pathname]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const mediaQuery = window.matchMedia('(max-width: 1024px)');
+    const handleChange = (event: MediaQueryListEvent) => {
+      setIsSmallScreen(event.matches);
+    };
+
+    setIsSmallScreen(mediaQuery.matches);
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleChange);
+    } else {
+      mediaQuery.addListener(handleChange);
+    }
+
+    return () => {
+      if (mediaQuery.addEventListener) {
+        mediaQuery.removeEventListener('change', handleChange);
+      } else {
+        mediaQuery.removeListener(handleChange);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
+    if (isSmallScreen && settings.textSize !== 100) {
+      setSettings(prev => ({ ...prev, textSize: 100 }));
+    }
+  }, [isMounted, isSmallScreen, settings.textSize]);
+
+  useEffect(() => {
+    if (!isMounted || !resolvedTheme) return;
+
+    const shouldBeDark = resolvedTheme === 'dark';
+    setSettings(prev => (prev.darkMode === shouldBeDark ? prev : { ...prev, darkMode: shouldBeDark }));
+  }, [isMounted, resolvedTheme]);
 
   const toggleSetting = (key) => {
-    // TODO: Dark Mode functionality to be implemented
-    if (key === 'darkMode') return;
-    
+    if (key === 'darkMode') {
+      const nextDarkMode = !isDarkMode;
+      setTheme(nextDarkMode ? 'dark' : 'light');
+      setSettings(prev => ({ ...prev, darkMode: nextDarkMode }));
+      return;
+    }
+
     setSettings(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
@@ -134,7 +203,9 @@ const AccessibilityWidget = () => {
 
   const resetAll = () => {
     setSettings(DEFAULT_SETTINGS);
-    localStorage.setItem('accessibilitySettings', JSON.stringify(DEFAULT_SETTINGS));
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('accessibilitySettings', JSON.stringify(DEFAULT_SETTINGS));
+    }
   };
 
   const buttonRef = useRef(null);
@@ -266,7 +337,8 @@ const AccessibilityWidget = () => {
               width: '380px',
               maxHeight: '600px',
               overflowY: 'auto',
-              backgroundColor: 'white',
+              backgroundColor: settings.darkMode ? '#f1ece7' : 'white',
+              color: settings.darkMode ? '#0b0b0b' : undefined,
               borderRadius: '8px',
               boxShadow: '0 10px 40px rgba(0,0,0,0.2)',
               cursor: 'default'
@@ -291,12 +363,16 @@ const AccessibilityWidget = () => {
               <div className="grid grid-cols-3 gap-3 mb-6">
                 <button
                   onClick={() => {
+                    if (isSmallScreen) return;
                     if (settings.textSize === 100) adjustValue('textSize', 115);
                     else if (settings.textSize === 115) adjustValue('textSize', 130);
                     else adjustValue('textSize', 100);
                   }}
-                  className={`p-4 rounded-lg border-2 transition-all w-full ${settings.textSize > 100 ? 'bg-[#405862] text-[#f1ece7] border-[#405862]' : 'bg-gray-50 border-gray-200 hover:border-[#405862]'}`}
-                  style={settings.textSize > 100 ? { backgroundColor: '#405862', borderColor: '#405862' } : {}}
+                  disabled={isSmallScreen}
+                  aria-disabled={isSmallScreen}
+                  title={isSmallScreen ? "Bigger Text is disabled on tablet and mobile." : undefined}
+                  className={`p-4 rounded-lg border-2 transition-all w-full flex flex-col items-center justify-center text-center gap-2 min-h-[108px] leading-tight ${settings.textSize > 100 && !isSmallScreen ? 'bg-[#405862] text-[#f1ece7] border-[#405862]' : 'bg-gray-50 border-gray-200'} ${isSmallScreen ? 'cursor-not-allowed opacity-50' : 'hover:border-[#405862]'}`}
+                  style={settings.textSize > 100 && !isSmallScreen ? { backgroundColor: '#405862', borderColor: '#405862' } : {}}
                 >
                   <ZoomIn className="mx-auto mb-2" size={24} />
                   <div className="text-sm font-medium mb-2">Bigger Text</div>
@@ -311,7 +387,7 @@ const AccessibilityWidget = () => {
                     else if (settings.cursorSize === 125) adjustValue('cursorSize', 150);
                     else adjustValue('cursorSize', 100);
                   }}
-                  className={`p-4 rounded-lg border-2 transition-all w-full ${settings.cursorSize > 100 ? 'bg-[#405862] text-[#f1ece7] border-[#405862]' : 'bg-gray-50 border-gray-200 hover:border-[#405862]'}`}
+                  className={`p-4 rounded-lg border-2 transition-all w-full flex flex-col items-center justify-center text-center gap-2 min-h-[108px] leading-tight ${settings.cursorSize > 100 ? 'bg-[#405862] text-[#f1ece7] border-[#405862]' : 'bg-gray-50 border-gray-200 hover:border-[#405862]'}`}
                   style={settings.cursorSize > 100 ? { backgroundColor: '#405862', borderColor: '#405862' } : {}}
                 >
                   <MousePointer className="mx-auto mb-2" size={24} />
@@ -323,7 +399,7 @@ const AccessibilityWidget = () => {
                 </button>
                 <button
                   onClick={() => toggleSetting('hideImages')}
-                  className={`p-4 rounded-lg border-2 transition-all ${settings.hideImages ? 'bg-[#405862] text-[#f1ece7] border-[#405862]' : 'bg-gray-50 border-gray-200 hover:border-[#405862]'}`}
+                  className={`p-4 rounded-lg border-2 transition-all flex flex-col items-center justify-center text-center gap-2 min-h-[108px] leading-tight ${settings.hideImages ? 'bg-[#405862] text-[#f1ece7] border-[#405862]' : 'bg-gray-50 border-gray-200 hover:border-[#405862]'}`}
                   style={settings.hideImages ? { backgroundColor: '#405862', borderColor: '#405862' } : {}}
                 >
                   <ImageOff className="mx-auto mb-2" size={24} />
@@ -335,7 +411,7 @@ const AccessibilityWidget = () => {
               <div className="grid grid-cols-3 gap-3 mb-6">
                 <button
                   onClick={() => toggleSetting('invertColors')}
-                  className={`p-4 rounded-lg border-2 transition-all ${settings.invertColors ? 'bg-[#405862] text-[#f1ece7] border-[#405862]' : 'bg-gray-50 border-gray-200 hover:border-[#405862]'}`}
+                  className={`p-4 rounded-lg border-2 transition-all flex flex-col items-center justify-center text-center gap-2 min-h-[108px] leading-tight ${settings.invertColors ? 'bg-[#405862] text-[#f1ece7] border-[#405862]' : 'bg-gray-50 border-gray-200 hover:border-[#405862]'}`}
                   style={settings.invertColors ? { backgroundColor: '#405862', borderColor: '#405862' } : {}}
                 >
                   <svg className="mx-auto mb-2" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -348,16 +424,15 @@ const AccessibilityWidget = () => {
                 </button>
                 <button
                   onClick={() => toggleSetting('darkMode')}
-                  className={`p-4 rounded-lg border-2 transition-all bg-gray-50 border-gray-200 cursor-not-allowed opacity-50`}
-                  title="Dark Mode functionality coming soon"
+                  className={`p-4 rounded-lg border-2 transition-all flex flex-col items-center justify-center text-center gap-2 min-h-[108px] leading-tight ${isDarkMode ? 'bg-[#405862] text-[#f1ece7] border-[#405862]' : 'bg-gray-50 border-gray-200 hover:border-[#405862]'}`}
+                  style={isDarkMode ? { backgroundColor: '#405862', borderColor: '#405862' } : {}}
                 >
                   <Moon className="mx-auto mb-2" size={24} />
                   <div className="text-sm font-medium">Dark Mode</div>
-                  <div className="text-xs text-gray-400 mt-1">Coming Soon</div>
                 </button>
                 <button
                   onClick={() => toggleSetting('grayscale')}
-                  className={`p-4 rounded-lg border-2 transition-all ${settings.grayscale ? 'bg-[#405862] text-[#f1ece7] border-[#405862]' : 'bg-gray-50 border-gray-200 hover:border-[#405862]'}`}
+                  className={`p-4 rounded-lg border-2 transition-all flex flex-col items-center justify-center text-center gap-2 min-h-[108px] leading-tight ${settings.grayscale ? 'bg-[#405862] text-[#f1ece7] border-[#405862]' : 'bg-gray-50 border-gray-200 hover:border-[#405862]'}`}
                   style={settings.grayscale ? { backgroundColor: '#405862', borderColor: '#405862' } : {}}
                 >
                   <svg className="mx-auto mb-2" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -368,7 +443,7 @@ const AccessibilityWidget = () => {
                 </button>
                 <button
                   onClick={() => toggleSetting('contrast')}
-                  className={`p-4 rounded-lg border-2 transition-all ${settings.contrast ? 'bg-[#405862] text-[#f1ece7] border-[#405862]' : 'bg-gray-50 border-gray-200 hover:border-[#405862]'}`}
+                  className={`p-4 rounded-lg border-2 transition-all flex flex-col items-center justify-center text-center gap-2 min-h-[108px] leading-tight ${settings.contrast ? 'bg-[#405862] text-[#f1ece7] border-[#405862]' : 'bg-gray-50 border-gray-200 hover:border-[#405862]'}`}
                   style={settings.contrast ? { backgroundColor: '#405862', borderColor: '#405862' } : {}}
                 >
                   <Sun className="mx-auto mb-2" size={24} />
@@ -380,7 +455,7 @@ const AccessibilityWidget = () => {
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => toggleSetting('readingGuide')}
-                  className={`p-4 rounded-lg border-2 transition-all ${settings.readingGuide ? 'bg-[#405862] text-[#f1ece7] border-[#405862]' : 'bg-gray-50 border-gray-200 hover:border-[#405862]'}`}
+                  className={`p-4 rounded-lg border-2 transition-all flex flex-col items-center justify-center text-center gap-2 min-h-[108px] leading-tight ${settings.readingGuide ? 'bg-[#405862] text-[#f1ece7] border-[#405862]' : 'bg-gray-50 border-gray-200 hover:border-[#405862]'}`}
                   style={settings.readingGuide ? { backgroundColor: '#405862', borderColor: '#405862' } : {}}
                 >
                   <Minus className="mx-auto mb-2" size={24} />
@@ -388,7 +463,7 @@ const AccessibilityWidget = () => {
                 </button>
                 <button
                   onClick={() => toggleSetting('highlightLinks')}
-                  className={`p-4 rounded-lg border-2 transition-all ${settings.highlightLinks ? 'bg-[#405862] text-[#f1ece7] border-[#405862]' : 'bg-gray-50 border-gray-200 hover:border-[#405862]'}`}
+                  className={`p-4 rounded-lg border-2 transition-all flex flex-col items-center justify-center text-center gap-2 min-h-[108px] leading-tight ${settings.highlightLinks ? 'bg-[#405862] text-[#f1ece7] border-[#405862]' : 'bg-gray-50 border-gray-200 hover:border-[#405862]'}`}
                   style={settings.highlightLinks ? { backgroundColor: '#405862', borderColor: '#405862' } : {}}
                 >
                   <Link className="mx-auto mb-2" size={24} />

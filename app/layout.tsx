@@ -138,8 +138,22 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
+        <Script id="theme-init" strategy="beforeInteractive">
+          {`
+            (function () {
+              try {
+                var root = document.documentElement;
+                var theme = localStorage.getItem('theme');
+                var useDark = theme === 'dark';
+                root.classList.remove('dark', 'light');
+                root.classList.add(useDark ? 'dark' : 'light');
+                root.style.colorScheme = useDark ? 'dark' : 'light';
+              } catch (e) {}
+            })();
+          `}
+        </Script>
         {/* Google tag (gtag.js) */}
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-6MYCRFPPGE" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">
@@ -160,10 +174,8 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-         <AccessibilityWidget />
-
-         
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
+          <AccessibilityWidget />
           <SeoSchema schema={generateOrganizationSchema()} />
           <Suspense fallback={null}>
             <div className="flex min-h-screen flex-col">

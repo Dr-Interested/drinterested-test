@@ -54,7 +54,7 @@ export default function SponsorshipsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-[#f5f1eb]/30">
       {/* Hero Section */}
-      <section className="bg-[#f5f1eb] py-10 md:py-16">
+      <section className="bg-[#f5f1eb] dark:bg-[#0b0b0b] py-10 md:py-16">
         <div className="container max-w-4xl mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 bg-[#4ecdc4]/10 text-[#405862] px-4 py-2 rounded-full text-sm font-medium mb-6">
             <Sparkles className="h-4 w-4" />
@@ -72,11 +72,11 @@ export default function SponsorshipsPage() {
       </section>
 
       {/* Current Sponsors Section */}
-      <section className="py-12 md:py-16">
+      <section className="py-12 md:py-16 bg-[#f7f6f2] dark:bg-[#0b0b0b]">
         <div className="container max-w-5xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#405862] mb-4">Our Sponsors</h2>
-            <p className="text-muted-foreground">Organizations supporting youth healthcare leadership</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#405862] dark:text-white mb-4">Our Sponsors</h2>
+            <p className="text-[#405862]/70 dark:text-white/70">Organizations supporting youth healthcare leadership</p>
           </div>
 
           <div className="bg-white rounded-2xl border-2 border-[#4ecdc4]/20 p-12 md:p-16 text-center shadow-sm">
@@ -92,11 +92,11 @@ export default function SponsorshipsPage() {
       </section>
 
       {/* Sponsor Us Section */}
-      <section className="py-12 md:py-16 bg-gradient-to-b from-[#f5f1eb]/30 to-white">
+      <section className="py-12 md:py-16 bg-[#f7f6f2] dark:bg-[#0b0b0b]">
         <div className="container max-w-5xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#405862] mb-4">Sponsor Us</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#405862] dark:text-white mb-4">Sponsor Us</h2>
+            <p className="text-lg text-[#405862]/80 dark:text-white/80 max-w-2xl mx-auto text-pretty">
               Partner with Dr. Interested to make a meaningful impact on the next generation of healthcare leaders
             </p>
           </div>
@@ -294,7 +294,7 @@ export default function SponsorshipsPage() {
           </div>
 
           {/* Closing Message */}
-          <div className="mt-12 p-8 text-center bg-gradient-to-r from-[#4ecdc4]/5 to-[#405862]/5 rounded-xl">
+          <div className="mt-12 p-8 text-center bg-gradient-to-r from-[#4ecdc4]/5 to-[#405862]/5 dark:from-[#0b0b0b] dark:to-[#101415] rounded-xl">
             <p className="text-lg text-[#405862] font-medium text-pretty">
               Thank you for supporting youth pursuing careers in healthcare.
             </p>
@@ -303,7 +303,7 @@ export default function SponsorshipsPage() {
       </section>
 
       {/* Sponsorship Package Section */}
-      <section className="py-12 md:py-16">
+      <section className="py-12 md:py-16 bg-[#f7f6f2] dark:bg-[#0b0b0b]">
         <div className="container max-w-5xl mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-[#405862] mb-4">Sponsorship Package</h2>
