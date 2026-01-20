@@ -33,11 +33,14 @@ export default function MembersClient() {
   >({});
   const coordinatorScrollPositions = useRef<Record<string, number>>({});
   const deputyScrollPositions = useRef<Record<string, number>>({});
+  const scrollUnlockUntil = useRef<Record<string, number>>({});
+  const scrollUnlockUsed = useRef<Record<string, boolean>>({});
   const departmentDirectors = departments.flatMap((department) =>
     Array.isArray(department.director)
       ? department.director
       : [department.director]
   );
+  const ambassadorNames = ambassadors.map((ambassador) => ambassador.name);
 
   const params = useParams(); // { tab: 'leadership' | 'departments' | 'advisors' | 'join' }
   const router = useRouter();
@@ -62,6 +65,119 @@ export default function MembersClient() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    if (activeTab !== "departments" || typeof window === "undefined") {
+      return;
+    }
+
+    const handleWheel = (event: WheelEvent) => {
+      if (event.ctrlKey) return;
+      const targets = Array.from(
+        document.querySelectorAll<HTMLElement>("[data-scroll-lock]")
+      );
+      if (!targets.length) return;
+
+      const pointerX = event.clientX;
+      const pointerY = event.clientY;
+      let activeTarget: HTMLElement | null = null;
+
+      for (const target of targets) {
+        const rect = target.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) continue;
+        if (
+          pointerX >= rect.left &&
+          pointerX <= rect.right &&
+          pointerY >= rect.top &&
+          pointerY <= rect.bottom
+        ) {
+          activeTarget = target;
+          break;
+        }
+      }
+
+      if (!activeTarget) return;
+
+      const maxScroll =
+        activeTarget.scrollWidth - activeTarget.clientWidth;
+      if (maxScroll <= 1) return;
+
+      const lockKey =
+        activeTarget.dataset.scrollLock || "scroll-lock-default";
+      const delta =
+        Math.abs(event.deltaY) > Math.abs(event.deltaX)
+          ? event.deltaY
+          : event.deltaX;
+
+      if (delta === 0) return;
+
+      const edgeThreshold = 16;
+      const now = Date.now();
+      const unlockUsed = scrollUnlockUsed.current[lockKey] || false;
+      const canScrollLeft =
+        activeTarget.scrollLeft > edgeThreshold;
+      const canScrollRight =
+        activeTarget.scrollLeft < maxScroll - edgeThreshold;
+
+      const multiplier =
+        event.deltaMode === 1
+          ? 16
+          : event.deltaMode === 2
+            ? activeTarget.clientWidth
+            : 1;
+      const deltaPx = delta * multiplier;
+      const next = Math.min(
+        Math.max(0, activeTarget.scrollLeft + deltaPx),
+        Math.max(0, maxScroll)
+      );
+
+      const canScroll =
+        (delta < 0 && canScrollLeft) ||
+        (delta > 0 && canScrollRight);
+
+      if (canScroll) {
+        if (event.cancelable) {
+          event.preventDefault();
+        }
+        event.stopPropagation();
+        activeTarget.scrollLeft = next;
+        if (
+          next > edgeThreshold &&
+          next < maxScroll - edgeThreshold
+        ) {
+          scrollUnlockUsed.current[lockKey] = false;
+        }
+        return;
+      }
+
+      const atStart = activeTarget.scrollLeft <= edgeThreshold;
+      const atEnd =
+        activeTarget.scrollLeft >= maxScroll - edgeThreshold;
+      if (!atStart && !atEnd) {
+        scrollUnlockUsed.current[lockKey] = false;
+      }
+
+      const edgeActive =
+        (delta > 0 && atEnd) || (delta < 0 && atStart);
+      if (edgeActive && !unlockUsed) {
+        scrollUnlockUsed.current[lockKey] = true;
+        scrollUnlockUntil.current[lockKey] = now + 500;
+      }
+
+      if (edgeActive && now < (scrollUnlockUntil.current[lockKey] || 0)) {
+        if (event.cancelable) {
+          event.preventDefault();
+        }
+        event.stopPropagation();
+        return;
+      }
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+    };
+  }, [activeTab]);
 
   const toggleBio = (id: string) => {
     setExpandedBios((prev) => ({
@@ -209,38 +325,8 @@ export default function MembersClient() {
           )}
           <div
             ref={scrollerRef}
-            onWheel={(event) => {
-              const el = scrollerRef.current;
-              if (!el) return;
-              const hasOverflow = el.scrollWidth > el.clientWidth + 1;
-              if (!hasOverflow) return;
-
-              const delta =
-                Math.abs(event.deltaY) > Math.abs(event.deltaX)
-                  ? event.deltaY
-                  : event.deltaX;
-
-              if (delta === 0) return;
-              if (event.cancelable) {
-                event.preventDefault();
-              }
-              event.stopPropagation();
-
-              const multiplier =
-                event.deltaMode === 1
-                  ? 16
-                  : event.deltaMode === 2
-                    ? el.clientWidth
-                    : 1;
-              const deltaPx = delta * multiplier;
-              const maxScroll = el.scrollWidth - el.clientWidth;
-              const next = Math.min(
-                Math.max(0, el.scrollLeft + deltaPx),
-                Math.max(0, maxScroll)
-              );
-              el.scrollLeft = next;
-            }}
-            className="scrollbar-none overflow-x-auto overflow-y-hidden overscroll-x-contain overscroll-y-contain"
+            data-scroll-lock="coordinators"
+            className="scrollbar-none overflow-x-auto overflow-y-hidden overscroll-x-contain"
           >
             <div
               className="flex gap-4 min-w-max pr-4"
@@ -491,46 +577,6 @@ export default function MembersClient() {
     useEffect(() => {
       const el = scrollerRef.current;
       if (!el) return;
-
-      const onWheel = (event: WheelEvent) => {
-        const hasOverflow = el.scrollWidth > el.clientWidth + 1;
-        if (!hasOverflow) return;
-
-        const delta =
-          Math.abs(event.deltaY) > Math.abs(event.deltaX)
-            ? event.deltaY
-            : event.deltaX;
-
-        if (delta === 0) return;
-        event.preventDefault();
-        event.stopPropagation();
-
-        const multiplier =
-          event.deltaMode === 1
-            ? 16
-            : event.deltaMode === 2
-              ? el.clientWidth
-              : 1;
-        const deltaPx = delta * multiplier;
-        const maxScroll = el.scrollWidth - el.clientWidth;
-        const next = Math.min(
-          Math.max(0, el.scrollLeft + deltaPx),
-          Math.max(0, maxScroll)
-        );
-        el.scrollLeft = next;
-        scrollPositions[departmentId] = next;
-        updateScrollState();
-      };
-
-      el.addEventListener("wheel", onWheel, { passive: false });
-      return () => {
-        el.removeEventListener("wheel", onWheel);
-      };
-    }, [departmentId, scrollPositions, updateScrollState]);
-
-    useEffect(() => {
-      const el = scrollerRef.current;
-      if (!el) return;
       const onScroll = () => {
         scrollPositions[departmentId] = el.scrollLeft;
         updateScrollState();
@@ -584,7 +630,8 @@ export default function MembersClient() {
         )}
         <div
           ref={scrollerRef}
-          className="scrollbar-none overflow-x-auto overflow-y-hidden overscroll-x-contain overscroll-y-contain pb-7"
+          data-scroll-lock="deputies"
+          className="scrollbar-none overflow-x-auto overflow-y-hidden overscroll-x-contain pb-7"
         >
           <div className="flex gap-10 min-w-max pr-4" data-scroll-track>
             {deputies.map((deputy) => (
@@ -604,7 +651,7 @@ export default function MembersClient() {
   };
 
   return (
-    <div>
+    <div className="overflow-x-hidden">
       <ScrollToTop />
       <section className="hero-section py-8 md:py-10 bg-[#f5f1eb]">
         <div className="container">
@@ -864,6 +911,42 @@ export default function MembersClient() {
                               )}
                             </button>
                           )}
+                          {(assistant.socialLinks?.linkedin ||
+                            assistant.socialLinks?.instagram ||
+                            assistant.socialLinks?.website) && (
+                            <div className="flex space-x-3 mt-2">
+                              {assistant.socialLinks?.linkedin && (
+                                <Link
+                                  href={assistant.socialLinks.linkedin}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                                >
+                                  <Linkedin className="h-5 w-5" />
+                                </Link>
+                              )}
+                              {assistant.socialLinks?.instagram && (
+                                <Link
+                                  href={assistant.socialLinks.instagram}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                                >
+                                  <Instagram className="h-5 w-5" />
+                                </Link>
+                              )}
+                              {assistant.socialLinks?.website && (
+                                <Link
+                                  href={assistant.socialLinks.website}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                                >
+                                  <Globe className="h-5 w-5" />
+                                </Link>
+                              )}
+                            </div>
+                          )}
                         </CardContent>
                       </div>
                     </Card>
@@ -877,56 +960,104 @@ export default function MembersClient() {
                   Directors
                 </h3>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {departmentDirectors.map((director) => (
-                    <Card
-                      key={director.id}
-                      className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
-                    >
-                      <div className="grid md:grid-cols-3">
-                        <div className="md:col-span-1 bg-[#f5f1eb] flex">
-                          <div className="relative w-full aspect-square md:aspect-auto md:h-full">
-                            <Image
-                              src={director.image || "/placeholder.svg"}
-                              alt={director.name}
-                              fill
-                              className="object-cover"
-                            />
+                  {departmentDirectors.map((director) => {
+                    const showToggle = director.bio.length > 180;
+                    const clampStyle = expandedBios[director.id]
+                      ? undefined
+                      : {
+                          display: "-webkit-box",
+                          WebkitLineClamp: 4,
+                          WebkitBoxOrient: "vertical" as const,
+                          overflow: "hidden",
+                        };
+                    return (
+                      <Card
+                        key={director.id}
+                        className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
+                      >
+                        <div className="grid md:grid-cols-3">
+                          <div className="md:col-span-1 bg-[#f5f1eb] flex">
+                            <div className="relative w-full aspect-square md:aspect-auto md:h-full">
+                              <Image
+                                src={director.image || "/placeholder.svg"}
+                                alt={director.name}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <CardContent className="md:col-span-2 p-4 min-w-0">
-                          <h4 className="text-base md:text-lg font-semibold text-[#405862] leading-snug break-words">
-                            {director.name}
-                          </h4>
-                          <p className="text-sm md:text-base text-[#405862]/75 mb-2 break-words">
-                            {director.role}
-                          </p>
-                          <p className="text-sm md:text-base leading-relaxed text-[#405862] mb-3">
-                            {expandedBios[director.id]
-                              ? director.bio
-                              : truncateBio(director.bio, 100)}
-                          </p>
-                          {director.bio.length > 100 && (
-                            <button
-                              onClick={() => toggleBio(director.id)}
-                              className="text-[#405862] text-sm font-medium hover:text-[#4ecdc4] transition-colors mb-3 flex items-center"
+                          <CardContent className="md:col-span-2 p-4 min-w-0">
+                            <h4 className="text-base md:text-lg font-semibold text-[#405862] leading-snug break-words">
+                              {director.name}
+                            </h4>
+                            <p className="text-sm md:text-base text-[#405862]/75 mb-2 break-words">
+                              {director.role}
+                            </p>
+                            <p
+                              className="text-sm md:text-base leading-relaxed text-[#405862] mb-3"
+                              style={clampStyle}
                             >
-                              {expandedBios[director.id] ? (
-                                <>
-                                  Show Less{" "}
-                                  <ChevronUp className="h-4 w-4 ml-1" />
-                                </>
-                              ) : (
-                                <>
-                                  See More{" "}
-                                  <ChevronDown className="h-4 w-4 ml-1" />
-                                </>
-                              )}
-                            </button>
-                          )}
-                        </CardContent>
-                      </div>
-                    </Card>
-                  ))}
+                              {director.bio}
+                            </p>
+                            {showToggle && (
+                              <button
+                                onClick={() => toggleBio(director.id)}
+                                className="text-[#405862] text-sm font-medium hover:text-[#4ecdc4] transition-colors mb-3 flex items-center"
+                              >
+                                {expandedBios[director.id] ? (
+                                  <>
+                                    Show Less{" "}
+                                    <ChevronUp className="h-4 w-4 ml-1" />
+                                  </>
+                                ) : (
+                                  <>
+                                    See More{" "}
+                                    <ChevronDown className="h-4 w-4 ml-1" />
+                                  </>
+                                )}
+                              </button>
+                            )}
+                            {(director.socialLinks?.linkedin ||
+                              director.socialLinks?.instagram ||
+                              director.socialLinks?.website) && (
+                              <div className="flex space-x-3 mt-2">
+                                {director.socialLinks?.linkedin && (
+                                  <Link
+                                    href={director.socialLinks.linkedin}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                                  >
+                                    <Linkedin className="h-5 w-5" />
+                                  </Link>
+                                )}
+                                {director.socialLinks?.instagram && (
+                                  <Link
+                                    href={director.socialLinks.instagram}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                                  >
+                                    <Instagram className="h-5 w-5" />
+                                  </Link>
+                                )}
+                                {director.socialLinks?.website && (
+                                  <Link
+                                    href={director.socialLinks.website}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                                  >
+                                    <Globe className="h-5 w-5" />
+                                  </Link>
+                                )}
+                              </div>
+                            )}
+                          </CardContent>
+                        </div>
+                      </Card>
+                    );
+                  })}
                 </div>
               </div>
             </TabsContent>
@@ -953,54 +1084,86 @@ export default function MembersClient() {
                     <div className="space-y-6">
                       <div className="space-y-3">
                         <div className="flex flex-col items-center gap-6 max-w-5xl mx-auto">
-                          {directorList.map((director) => (
-                            <div
-                              key={director.id}
-                              className="w-full flex flex-col items-center text-center gap-5"
-                            >
-                              <div className="relative h-28 w-28 sm:h-32 sm:w-32 rounded-full overflow-hidden bg-white shrink-0">
-                                <Image
-                                  src={director.image || "/placeholder.svg"}
-                                  alt={director.name}
-                                  fill
-                                  className="object-cover object-center"
-                                />
-                              </div>
-                              <div className="max-w-3xl">
-                                <h5 className="text-xl font-semibold text-[#405862] leading-snug break-words">
-                                  {director.name}
-                                </h5>
-                                <p className="text-sm md:text-base text-[#405862]/75 break-words">
-                                  {director.role}
-                                </p>
-                                <div className="flex items-center justify-center gap-3 mt-2">
-                                  {director.socialLinks?.linkedin && (
-                                    <Link
-                                      href={director.socialLinks.linkedin}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                          {directorList.map((director) => {
+                            const showToggle = director.bio.length > 180;
+                            const clampStyle = expandedBios[director.id]
+                              ? undefined
+                              : {
+                                  display: "-webkit-box",
+                                  WebkitLineClamp: 4,
+                                  WebkitBoxOrient: "vertical" as const,
+                                  overflow: "hidden",
+                                };
+                            return (
+                              <div
+                                key={director.id}
+                                className="w-full flex flex-col items-center text-center gap-5"
+                              >
+                                <div className="relative h-28 w-28 sm:h-32 sm:w-32 rounded-full overflow-hidden bg-white shrink-0">
+                                  <Image
+                                    src={director.image || "/placeholder.svg"}
+                                    alt={director.name}
+                                    fill
+                                    className="object-cover object-center"
+                                  />
+                                </div>
+                                <div className="max-w-3xl">
+                                  <h5 className="text-xl font-semibold text-[#405862] leading-snug break-words">
+                                    {director.name}
+                                  </h5>
+                                  <p className="text-sm md:text-base text-[#405862]/75 break-words">
+                                    {director.role}
+                                  </p>
+                                  <div className="flex items-center justify-center gap-3 mt-2">
+                                    {director.socialLinks?.linkedin && (
+                                      <Link
+                                        href={director.socialLinks.linkedin}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                                      >
+                                        <Linkedin className="h-5 w-5" />
+                                      </Link>
+                                    )}
+                                    {director.socialLinks?.instagram && (
+                                      <Link
+                                        href={director.socialLinks.instagram}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                                      >
+                                        <Instagram className="h-5 w-5" />
+                                      </Link>
+                                    )}
+                                  </div>
+                                  <p
+                                    className="text-sm md:text-base leading-relaxed text-[#405862] mt-2"
+                                    style={clampStyle}
+                                  >
+                                    {director.bio}
+                                  </p>
+                                  {showToggle && (
+                                    <button
+                                      onClick={() => toggleBio(director.id)}
+                                      className="text-[#405862] text-xs md:text-sm font-medium hover:text-[#4ecdc4] transition-colors mt-2 flex items-center justify-center text-center w-full"
                                     >
-                                      <Linkedin className="h-5 w-5" />
-                                    </Link>
-                                  )}
-                                  {director.socialLinks?.instagram && (
-                                    <Link
-                                      href={director.socialLinks.instagram}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                                    >
-                                      <Instagram className="h-5 w-5" />
-                                    </Link>
+                                      {expandedBios[director.id] ? (
+                                        <>
+                                          Show Less{" "}
+                                          <ChevronUp className="h-3 w-3 ml-1" />
+                                        </>
+                                      ) : (
+                                        <>
+                                          See More{" "}
+                                          <ChevronDown className="h-3 w-3 ml-1" />
+                                        </>
+                                      )}
+                                    </button>
                                   )}
                                 </div>
-                                <p className="text-sm md:text-base leading-relaxed text-[#405862] mt-2">
-                                  {director.bio}
-                                </p>
                               </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       </div>
 
@@ -1045,52 +1208,26 @@ export default function MembersClient() {
                   Meet the ambassadors representing Dr. Interested around the
                   world.
                 </p>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {ambassadors.map((ambassador) => (
-                    <Card
-                      key={ambassador.id}
-                      className={`border-[#405862]/20 shadow-sm relative ${
-                        ambassador.name === "Mannat Sulan"
-                          ? "sm:col-span-2 sm:justify-self-center sm:w-full sm:max-w-[calc((100%-1rem)/2)] lg:col-span-1 lg:col-start-2 lg:max-w-none"
-                          : ""
-                      }`}
-                    >
-                      <div className="absolute top-3 right-3 text-[#405862]/70">
-                        {ambassador.socialLinks?.linkedin ? (
-                          <Link
-                            href={ambassador.socialLinks.linkedin}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:text-[#4ecdc4] transition-colors"
-                          >
-                            <Linkedin className="h-4 w-4" />
-                          </Link>
-                        ) : (
-                          <Linkedin className="h-4 w-4" />
-                        )}
-                      </div>
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-3">
-                          <div className="relative h-12 w-12 rounded-full overflow-hidden bg-[#f5f1eb]">
-                            <Image
-                              src={ambassador.image || "/placeholder.svg"}
-                              alt={ambassador.name}
-                              fill
-                              className="object-cover object-center"
-                            />
-                          </div>
-                          <div className="min-w-0">
-                            <h5 className="text-base font-semibold text-[#405862] leading-snug break-words">
-                              {ambassador.name}
-                            </h5>
-                            <p className="text-sm text-[#405862]/70 break-words">
-                              {ambassador.role}
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                <div className="ambassador-marquee">
+                  <div className="ambassador-marquee__track">
+                    {ambassadorNames.map((name, index) => (
+                      <span
+                        key={`ambassador-${index}`}
+                        className="ambassador-marquee__name"
+                      >
+                        {name}
+                      </span>
+                    ))}
+                    {ambassadorNames.map((name, index) => (
+                      <span
+                        key={`ambassador-dup-${index}`}
+                        className="ambassador-marquee__name"
+                        aria-hidden="true"
+                      >
+                        {name}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </TabsContent>
