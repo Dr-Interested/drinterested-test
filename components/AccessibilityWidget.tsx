@@ -36,7 +36,7 @@ const AccessibilityWidget = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [settings, setSettings] = useState(loadSettings);
+  const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const pathname = usePathname();
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const isDarkMode = resolvedTheme ? resolvedTheme === 'dark' : settings.darkMode;
@@ -61,7 +61,7 @@ const AccessibilityWidget = () => {
   }, [isMounted]);
 
   useEffect(() => {
-    if (!isMounted || typeof window === 'undefined') return;
+    if (!isMounted || typeof window === 'undefined' || typeof document === 'undefined') return;
 
     window.localStorage.setItem('accessibilitySettings', JSON.stringify(settings));
 
@@ -82,69 +82,23 @@ const AccessibilityWidget = () => {
     if (settings.grayscale) filters.push('grayscale(100%)');
     if (settings.contrast) filters.push('contrast(115%)');
 
-    root.style.filter = filters.join(' ');
+    const counterFilters = [];
+    if (settings.invertColors) counterFilters.push('invert(1)');
+    if (settings.grayscale) counterFilters.push('grayscale(0)');
+    if (settings.contrast) counterFilters.push('contrast(87%)');
 
-    const applyImageVisibility = () => {
-      const images = document.querySelectorAll('img');
-      images.forEach(img => {
-        img.style.opacity = settings.hideImages ? '0' : '';
-      });
-    };
+    root.classList.toggle('accessibility-hide-images', settings.hideImages);
+    root.classList.toggle('accessibility-highlight-links', settings.highlightLinks);
 
-    const applyMediaFilters = () => {
-      const mediaElements = document.querySelectorAll('img, video, iframe');
-      mediaElements.forEach(el => {
-        if (filters.length > 0) {
-          const counterFilters = [];
-          if (settings.invertColors) counterFilters.push('invert(1)');
-          if (settings.grayscale) counterFilters.push('grayscale(0)');
-          if (settings.contrast) counterFilters.push('contrast(87%)');
-          el.style.filter = counterFilters.join(' ');
-        } else {
-          el.style.filter = '';
-        }
-      });
-    };
-
-    const updateLinks = () => {
-      const allLinks = document.querySelectorAll('a');
-      allLinks.forEach(link => {
-        if (link.closest('.accessibility-menu') || link.closest('.accessibility-button')) {
-          return;
-        }
-
-        if (settings.highlightLinks) {
-          link.style.setProperty('background-color', 'yellow', 'important');
-          link.style.setProperty('color', 'black', 'important');
-          link.style.setProperty('text-decoration', 'underline', 'important');
-          link.style.setProperty('font-weight', 'bold', 'important');
-        } else {
-          link.style.removeProperty('background-color');
-          link.style.removeProperty('color');
-          link.style.removeProperty('text-decoration');
-          link.style.removeProperty('font-weight');
-        }
-      });
-    };
-
-    applyImageVisibility();
-    applyMediaFilters();
-    updateLinks();
-
-    const observer = new MutationObserver(() => {
-      applyImageVisibility();
-      applyMediaFilters();
-      updateLinks();
-    });
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
-
-    return () => {
-      observer.disconnect();
-    };
+    if (filters.length > 0) {
+      root.classList.add('accessibility-has-filters');
+      root.style.setProperty('--access-filter', filters.join(' '));
+      root.style.setProperty('--access-media-filter', counterFilters.join(' ') || 'none');
+    } else {
+      root.classList.remove('accessibility-has-filters');
+      root.style.removeProperty('--access-filter');
+      root.style.removeProperty('--access-media-filter');
+    }
   }, [settings, isMounted, pathname]);
 
   useEffect(() => {
