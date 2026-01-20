@@ -6,7 +6,7 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Menu, Instagram, Linkedin } from "lucide-react"
 
 const routes = [
@@ -84,6 +84,7 @@ export default function Navbar() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-[280px] p-0" ref={sheetRef}>
+              <SheetTitle className="sr-only">Main navigation</SheetTitle>
               <div className="flex flex-col h-full">
                 <div className="p-4 border-b flex items-center">
                   <Link href="/" className="flex items-center gap-2" onClick={() => setIsOpen(false)}>
