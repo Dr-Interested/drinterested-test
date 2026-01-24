@@ -44,7 +44,7 @@ export const deputyexecdir: MemberType[] = [
     id: "deputyexec1",
     name: "Velan Mangai",
     role: "Deputy Executive Director",
-    bio: "Velan Mangai Sivakumar is a Grade 10 student in Glenforest Secondary School. He is extremely passionate about STEM and biological sciences in particular. He has volunteered for many STEM organizations such as the Rosalind Franklin Institute. He is a trainer for HOSA (Health Occupation Students of America). His best result in STEM contests would be getting top 25 nationally and qualifying for the national camp in the Junior Science Olympiad of Canada. He also plays chess and his best results include qualifying for the Canadian Youth Chess Championship U16 twice and getting 4th in the Canadian Chess League Twice.",
+    bio: "Velan Mangai Sivakumar is extremely passionate about STEM and biological sciences in particular. He has volunteered for many STEM organizations such as the Rosalind Franklin Institute. He is a trainer for HOSA (Health Occupation Students of America). His best result in STEM contests would be getting top 25 nationally and qualifying for the national camp in the Junior Science Olympiad of Canada. He also plays chess and his best results include qualifying for the Canadian Youth Chess Championship U16 twice and getting 4th in the Canadian Chess League Twice.",
     image: "/velan.png",
     socialLinks: {},
   },
@@ -52,7 +52,7 @@ export const deputyexecdir: MemberType[] = [
     id: "deputyexec2",
     name: "Kishan Suhirthan",
     role: "Deputy Executive Director",
-    bio: "Kishan Suhirthan is a Grade 11 student in the IB Program at Glenforest Secondary School with a strong passion for engineering and technology. As a Flight Sergeant in the Royal Canadian Air Cadet Program, he has developed strong leadership and organizational skills. His involvement with Innovire and FRC Team 1325 \"Inverse Paradox\" highlights his teamwork, creativity, and technical expertise. Proficient in both software development and electrical systems, Kishan is a dedicated and well-rounded individual committed to excellence in every project he undertakes.",
+    bio: "Kishan Suhirthan is a student with a strong passion for engineering and technology. As a Flight Sergeant in the Royal Canadian Air Cadet Program, he has developed strong leadership and organizational skills. His involvement with Innovire and FRC Team 1325 \"Inverse Paradox\" highlights his teamwork, creativity, and technical expertise. Proficient in both software development and electrical systems, Kishan is a dedicated and well-rounded individual committed to excellence in every project he undertakes.",
     image: "/kishan-headshot.jpg",
     socialLinks: {
       linkedin: "https://linkedin.com/in/kishansuhirthan",
@@ -150,7 +150,7 @@ export const departments: DepartmentType[] = [
       name: "Arghya Vyas",
       role: "Director - Technology",
       image: "/arghya.jpg",
-      bio: "An aspiring tech innovator and Grade 10 MYP IB student at Glenforest Secondary School, Arghya brings 2-3 years of robotics experience along with a strong understanding of programming languages such as JavaScript and TypeScript. Arghya's experience extends to working with libraries like discord.py and Next.js through personal projects and organizational development initiatives. As the founder of CalcIB, Arghya maintains a 95%+ average while leading collaborative efforts, including UX and graphic design, as well as the web development team at FutureMD. Arghya also actively competes in the Vex Robotics Competition as a member of team 31331. Proficient in Microsoft Office and Google Workspace, Arghya is driven by a passion for technology and a commitment to excelling in every endeavor.",
+      bio: "An aspiring tech innovator, Arghya brings 2-3 years of robotics experience along with a strong understanding of programming languages such as JavaScript and TypeScript. Arghya's experience extends to working with libraries like discord.py and Next.js through personal projects and organizational development initiatives. As the founder of CalcIB, Arghya maintains a 95%+ average while leading collaborative efforts, including UX and graphic design, as well as the web development team at FutureMD. Arghya also actively competes in the Vex Robotics Competition as a member of team 31331. Proficient in Microsoft Office and Google Workspace, Arghya is driven by a passion for technology and a commitment to excelling in every endeavor.",
       socialLinks: {
         linkedin: "https://www.linkedin.com/in/arghya-vyas-2a40a72b1/",
         instagram: "https://www.instagram.com/arghyavarfet/",
@@ -232,7 +232,7 @@ export const departments: DepartmentType[] = [
       name: "Hasaan Qidwai",
       role: "Director - Marketing",
       image: "/hasaan.png",
-      bio: "Hasaan is a dedicated Grade 10 student enrolled in the IB MYP Programme at Glenforest Secondary School, where he excels in academics with an overall average of 95%+. Passionate about mathematics and design, Hasaan combines his enthusiasm with leadership skills through active participation as a COY Peer Helper, supporting Grade 9 and 10 students in mastering mathematics. Proficient in both Office 365 and Google Suite software, he demonstrates strong technical skills that complement his academic and mentoring pursuits.",
+      bio: "Hasaan is a dedicated Grade 11 student enrolled in the IB DP Programme, where he excels in academics with an overall average of 95%+. Passionate about mathematics and design, Hasaan combines his enthusiasm with leadership skills through active participation as a COY Peer Helper, supporting Grade 9 and 10 students in mastering mathematics. Proficient in both Office 365 and Google Suite software, he demonstrates strong technical skills that complement his academic and mentoring pursuits.",
       socialLinks: {
         linkedin: "https://www.linkedin.com/in/hasaan-ahmed-qidwai-890478346/",
       },
@@ -559,7 +559,7 @@ export const departments: DepartmentType[] = [
       name: "Yumeth Wickramasinghe",
       role: "Director - Human Resources",
       image: "/yumeth.png",
-      bio: "Yumeth Wickramasinghe is a grade 10 IB student at Glenforest Secondary School. He has been a part of many volunteering activities around the community,  such as the Egyptian Coptic festival and making cards for Kids during the Christmas season. He also volunteers in his school every week, helping out some of his peers with Mathematics and sometimes English. Some of his hobbies include reading, playing tennis and badminton as well as playing board games. He has been involved in the Junior Tennis Team at Glenforest and won Junior Athlete of the Month. He looks forward to continuing to develop his leadership skills and to succeed in new adventures in the future.",
+      bio: "Yumeth Wickramasinghe is a student at Glenforest Secondary School. He has been a part of many volunteering activities around the community,  such as the Egyptian Coptic festival and making cards for Kids during the Christmas season. He also volunteers in his school every week, helping out some of his peers with Mathematics and sometimes English. Some of his hobbies include reading, playing tennis and badminton as well as playing board games. He has been involved in the Junior Tennis Team at Glenforest and won Junior Athlete of the Month. He looks forward to continuing to develop his leadership skills and to succeed in new adventures in the future.",
       socialLinks: {
         linkedin: "http://www.linkedin.com/in/yumeth-w",
       },
@@ -751,7 +751,7 @@ export const departments: DepartmentType[] = [
       name: "Ali Salman",
       role: "Director - Events",
       image: "/ali-salman.jpeg",
-      bio: "Ali Salman is a Grade 10 student at Glenforest Secondary School pursuing the IB program. He is deeply passionate about engineering, robotics, and computer science, demonstrated through his involvement in school and external initiatives. At school, he serves as the Secretary and Trainer of the Computer Science Club and was part of the pit-crew team for the FRC Robotics Club before it disbanded. Outside of school, he is a logistics member at a STEM nonprofit, writes for prominent student-led science journals, and is part of the mechanical sub-team for one of Ontario's top 10 ranked FRC robotics teams. His most prominent achievements include being recognized as a global finalist at the prestigious New York Academy of Sciences Junior Academy Ethical AI competition.",
+      bio: "Ali Salman is a student pursuing the IB program. He is deeply passionate about engineering, robotics, and computer science, demonstrated through his involvement in school and external initiatives. At school, he serves as the Secretary and Trainer of the Computer Science Club and was part of the pit-crew team for the FRC Robotics Club before it disbanded. Outside of school, he is a logistics member at a STEM nonprofit, writes for prominent student-led science journals, and is part of the mechanical sub-team for one of Ontario's top 10 ranked FRC robotics teams. His most prominent achievements include being recognized as a global finalist at the prestigious New York Academy of Sciences Junior Academy Ethical AI competition.",
       socialLinks: {
         linkedin: "https://www.linkedin.com/in/ali-salman-569975294/",
       },
@@ -866,7 +866,7 @@ export const departments: DepartmentType[] = [
       name: "Liam Lacey",
       role: "Director - Finance",
       image: "/liam.png",
-      bio: " Liam is a grade 11 IB DP student at Glenforest Secondary School who's interested in learning more about the financial workings of healthcare, and its subsectors, ultimately to pursue his own goal of heading into the business world and its many avenues. He has volunteered in several events as a prominent member of the Athletic Council within Glenforest SS, in addition to other clubs including the Rock Band and DECA. He aims to further improve my own leadership skills, while also focusing on expanding his repertoire of financial knowledge, and its workings within different industries. He is looking forward to continuing his pursuit of learning more about the finance and business space, while being a strong contributor to Dr.Interested",
+      bio: "Liam is a student who's interested in learning more about the financial workings of healthcare, and its subsectors, ultimately to pursue his own goal of heading into the business world and its many avenues. He has volunteered in several events as a prominent member of the Athletic Council within Glenforest SS, in addition to other clubs including the Rock Band and DECA. He aims to further improve my own leadership skills, while also focusing on expanding his repertoire of financial knowledge, and its workings within different industries. He is looking forward to continuing his pursuit of learning more about the finance and business space, while being a strong contributor to Dr.Interested",
     },
     deputyDirectors: [
       {

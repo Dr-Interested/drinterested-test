@@ -14,6 +14,7 @@ export const metadata: Metadata = {
     "medical student advisors",
     "youth healthcare mentors",
     "student organization executives",
+    "Adil Mukhi",
   ],
   openGraph: {
     title: "Our Team | Dr. Interested",
