@@ -818,9 +818,11 @@ export default function HomePage() {
                 <h4 className="text-base font-semibold text-[#405862] mb-3">Listen on Spotify</h4>
                 <div className="aspect-video w-full rounded-md overflow-hidden">
                   <iframe
-                    src="https://open.spotify.com/embed/episode/0PGLBjdMcupoOYP3IzHooS?utm_source=generator"
-                    width="100%"
-                    height="352"
+                    data-testid="embed-iframe"
+                    style={{ borderRadius: "12px" }}
+                    src="https://open.spotify.com/embed/episode/03vIYvBFFgNplGlVCKUmLm/video?utm_source=generator"
+                    width="624"
+                    height="351"
                     frameBorder="0"
                     allowFullScreen
                     allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
@@ -846,12 +848,13 @@ export default function HomePage() {
                 </h4>
                 <div className="aspect-video w-full rounded-md overflow-hidden">
                   <iframe
-                    width="100%"
+                    width="560"
                     height="315"
-                    src="https://www.youtube.com/embed/videoseries?list=PLhgtIQtU24W2axj8qIfCS-j1idk6LbCF4"
-                    title="Dr. Interested YouTube Playlist - Healthcare Education for High School Students"
+                    src="https://www.youtube.com/embed/dQiELtTYjQs?si=JxmVEt2x3ZVq6cAF"
+                    title="YouTube video player"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
                     allowFullScreen
                     className="rounded-md"
                   ></iframe>
