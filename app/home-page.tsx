@@ -30,7 +30,6 @@ import { motion } from "framer-motion"
 import { Quote, Users, TrendingUp, Heart, Award, BookOpen, Sparkles, Globe } from "lucide-react"
 import SeoSchema from "@/components/seo-schema"
 import { generateOrganizationSchema } from "@/lib/seo-utils"
-import { DomainAnnouncementPopup } from "@/components/domain-announcement-popup"
 
 
   const scaleIn = {
@@ -73,7 +72,6 @@ export default function HomePage() {
     <div className="flex flex-col min-h-screen">
       <SeoSchema schema={generateOrganizationSchema()} />
       <ScrollToTop />
-      <DomainAnnouncementPopup />
 
       {/* Hero Section */}
       <section className="hero-section relative py-10 md:py-16 overflow-hidden bg-gradient-to-b from-[#f5f1eb] to-white">

@@ -2,7 +2,8 @@ import { blogPosts } from "@/data/blog"
 import { webinars } from "@/data/webinars"
 import {
   getAllMembers,
-  MemberType,
+  getMemberSlug,
+  type MemberType,
 } from "@/data/members"
 import { upcomingEvents, pastEvents, EventType } from "@/data/events"
 
@@ -280,7 +281,7 @@ export async function GET() {
   const allMembers: MemberType[] = getAllMembers()
 
   allMembers.forEach((member) => {
-    const memberUrl = `${baseUrl}/team/${member.id}`
+    const memberUrl = `${baseUrl}/teams/${getMemberSlug(member)}`
     const imageUrl = `${baseUrl}${member.image}`
     const memberImageDescription =
       member.image === "/logo.png"
