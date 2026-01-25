@@ -129,6 +129,19 @@ iframe {
   width: 100%;
 }
 
+body:has(.team-page) {
+  background-color: #f5f1eb;
+}
+
+body:has(.team-page) main {
+  background-color: #f5f1eb;
+}
+
+.dark body:has(.team-page),
+.dark body:has(.team-page) main {
+  background-color: #000;
+}
+
 /* Image Hover Effects */
 .image-hover {
   transition: transform 0.3s ease;

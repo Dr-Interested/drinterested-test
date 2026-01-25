@@ -130,14 +130,14 @@ export default async function TeamMemberPage({
   };
 
   return (
-    <div className="bg-[#f5f1eb] min-h-full">
+    <div className="team-page bg-[#f5f1eb] h-full flex flex-col">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <section className="py-10">
+      <section className="flex-1 pt-16 pb-40 md:pt-20">
         <div className="container">
-          <div className="grid gap-6 md:grid-cols-[240px_1fr] items-start">
+          <div className="grid gap-6 md:grid-cols-[240px_1fr] items-center">
             <div className="flex justify-center md:justify-start">
               <div className="relative h-48 w-48 rounded-2xl overflow-hidden border border-[#405862]/15 bg-white shadow-sm">
                 <Image
