@@ -15,6 +15,7 @@ const DEFAULT_SETTINGS = {
   readingGuide: false,
   highlightLinks: false
 };
+const POSITION_STORAGE_KEY = 'accessibilityPosition';
 
 const loadSettings = () => {
   if (typeof window === 'undefined') {
@@ -68,13 +69,43 @@ const AccessibilityWidget = () => {
     };
   };
 
+  const getCornerPosition = () => {
+    if (typeof window === 'undefined') return { x: 0, y: 0 };
+    const { width, height } = getButtonSize();
+    const margin = 16;
+    return clampPosition(
+      window.innerWidth - width - margin,
+      window.innerHeight - height - margin
+    );
+  };
+
+  const loadSavedPosition = () => {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    try {
+      const saved = window.localStorage.getItem(POSITION_STORAGE_KEY);
+      if (!saved) return null;
+      const parsed = JSON.parse(saved);
+      if (typeof parsed?.x !== 'number' || typeof parsed?.y !== 'number') {
+        return null;
+      }
+      return parsed;
+    } catch {
+      return null;
+    }
+  };
+
   // Use useLayoutEffect to set isMounted BEFORE any rendering
   useLayoutEffect(() => {
     if (typeof window === 'undefined') return;
 
     setIsMounted(true);
     // Set initial position here, before the component fully renders
-    setPosition(clampPosition(window.innerWidth - 88, window.innerHeight - 88));
+    const savedPosition = loadSavedPosition();
+    const fallback = { x: window.innerWidth - 88, y: window.innerHeight - 88 };
+    const initial = savedPosition ?? fallback;
+    setPosition(clampPosition(initial.x, initial.y));
   }, []);
 
   useEffect(() => {
@@ -184,7 +215,11 @@ const AccessibilityWidget = () => {
     if (typeof window === 'undefined') return;
 
     const handleResize = () => {
-      setPosition((prev) => clampPosition(prev.x, prev.y));
+      if (isSmallScreen) {
+        setPosition(getCornerPosition());
+      } else {
+        setPosition((prev) => clampPosition(prev.x, prev.y));
+      }
     };
     window.addEventListener('resize', handleResize);
     const mediaQuery = window.matchMedia('(max-width: 1024px)');
@@ -218,6 +253,14 @@ const AccessibilityWidget = () => {
   }, [isMounted, isSmallScreen, settings.textSize, settings.cursorSize]);
 
   useEffect(() => {
+    if (!isMounted) return;
+    if (isSmallScreen) {
+      setIsDragging(false);
+      setPosition(getCornerPosition());
+    }
+  }, [isMounted, isSmallScreen]);
+
+  useEffect(() => {
     if (!isMounted || !resolvedTheme) return;
 
     const shouldBeDark = resolvedTheme === 'dark';
@@ -247,6 +290,9 @@ const AccessibilityWidget = () => {
   };
 
   const handleMouseDown = (e) => {
+    if (isSmallScreen) {
+      return;
+    }
     if (e.target.closest('.accessibility-button') && !e.target.closest('.accessibility-menu')) {
       setIsDragging(true);
       setDragOffset({
@@ -269,6 +315,16 @@ const AccessibilityWidget = () => {
 
   const handleMouseUp = () => {
     setIsDragging(false);
+    if (typeof window !== 'undefined') {
+      try {
+        window.localStorage.setItem(
+          POSITION_STORAGE_KEY,
+          JSON.stringify(clampPosition(position.x, position.y))
+        );
+      } catch {
+        // ignore storage errors
+      }
+    }
   };
 
   useEffect(() => {
@@ -350,7 +406,7 @@ const AccessibilityWidget = () => {
           left: `${position.x}px`,
           top: `${position.y}px`,
           zIndex: 9999,
-          cursor: isDragging ? 'grabbing' : 'grab'
+          cursor: isSmallScreen ? 'default' : isDragging ? 'grabbing' : 'grab'
         }}
         onMouseDown={handleMouseDown}
       >

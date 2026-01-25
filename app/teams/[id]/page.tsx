@@ -41,7 +41,7 @@ export async function generateMetadata({
     };
   }
 
-  const title = `${member.name} - ${member.role} | Dr. Interested`;
+  const titleText = `${member.name} - ${member.role} | Dr. Interested`;
   const description = buildDescription(
     member.bio,
     `Meet ${member.name}, ${member.role} at Dr. Interested.`
@@ -50,11 +50,11 @@ export async function generateMetadata({
   const imageUrl = `${baseUrl}${member.image || "/websitebanner.jpg"}`;
 
   return {
-    title,
+    title: { absolute: titleText },
     description,
     alternates: { canonical: url },
     openGraph: {
-      title,
+      title: titleText,
       description,
       url,
       siteName: "Dr. Interested",
