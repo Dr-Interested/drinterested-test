@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   description:
     'Dr. Interested supports youth in finding their unique "spark" in medicine through programs & opportunities. Earn volunteer hours while building your future!',
   keywords: [
+    "Adil Mukhi",
+    "Mississauga",
+    "Dr. Interested",
     "healthcare education",
     "medical careers",
     "high school students",
@@ -46,7 +49,6 @@ export const metadata: Metadata = {
     "doctor interest",
     "dr interested",
     "dr interest",
-    "Adil Mukhi",
     "medical students",
     "healthcare advisors",
     "impact report",
