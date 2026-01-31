@@ -82,44 +82,34 @@ export function DomainAnnouncementPopup({ onClose, isMainPage = false }: DomainA
 
                 {/* Title */}
                 <div className="space-y-2">
-                  <h2 className="text-2xl font-bold text-[#405862] leading-tight">We've Moved to a New Domain!</h2>
-                  <p className="text-sm font-medium text-[#405862]/70">Celebrating Our One-Year Anniversary</p>
+                  <h2 className="text-2xl font-bold text-[#405862] leading-tight">2025 Annual Impact Report Released!</h2>
+                  <p className="text-sm font-medium text-[#405862]/70">See the Latest Numbers and Achievements</p>
                 </div>
 
                 {/* Description */}
                 <div className="space-y-3">
                   <p className="text-sm text-[#405862]/80 leading-relaxed max-w-md mx-auto">
-                    In preparation for our one-year anniversary, we're excited to announce that Dr. Interested has moved
-                    to:
+                    We're thrilled to share our 2025 Annual Impact Report, showcasing the incredible journey of Dr. Interested and our global community of healthcare-focused youth.
                   </p>
 
                   <div className="bg-white/60 backdrop-blur-sm rounded-lg p-4 border border-[#4ecdc4]/30">
-                    <p className="text-lg font-bold text-[#405862]">www.drinterested.org</p>
+                    <p className="text-lg font-bold text-[#405862]">View Our Impact Report</p>
+                    <p className="text-xs text-[#405862]/70 mt-1">Download the full 2025 report</p>
                   </div>
 
                   <p className="text-sm text-[#405862]/80 leading-relaxed max-w-md mx-auto">
-                    Get ready for exciting things ahead!
+                    Discover how we've impacted thousands of students worldwide and helped shape the future of healthcare education.
                   </p>
-                </div>
-
-                {/* Email Update Notice */}
-                <div className="bg-gradient-to-r from-[#405862]/10 to-[#4ecdc4]/10 rounded-lg p-4 border border-[#405862]/20">
-                  <div className="flex items-start gap-2 text-left">
-                    <Sparkles className="h-4 w-4 text-[#4ecdc4] mt-0.5 flex-shrink-0" />
-                    <div className="text-xs text-[#405862]/80 leading-relaxed">
-                      <strong className="text-[#405862]">Newsletter Subscribers:</strong> Please update your contacts
-                      from <span className="font-mono bg-white/60 px-1 rounded">outreach@drinterested.tech</span> to{" "}
-                      <span className="font-mono bg-white/60 px-1 rounded">outreach@drinterested.org</span>
-                    </div>
-                  </div>
                 </div>
 
                 {/* CTA Button */}
                 <Button
-                  onClick={handleClose}
+                  asChild
                   className="bg-gradient-to-r from-[#405862] to-[#4a6570] hover:from-[#4a6570] hover:to-[#405862] text-white px-8 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 >
-                  Got It!
+                  <a href="https://impact.drinterested.org/2025/annual" target="_blank" rel="noopener noreferrer">
+                    View Report
+                  </a>
                 </Button>
               </div>
             </div>

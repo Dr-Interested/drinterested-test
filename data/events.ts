@@ -14,26 +14,16 @@ export type EventType = {
 // Upcoming events data
 export const upcomingEvents: EventType[] = [
   {
-    title: "From Classroom to Career: Expanding Pathways in a Changing World",
-    date: "January 27, 2026",
-    time: "18:00 EST",
-    location: "Virtual",
-    description:
-      "Held for the Learning Planet Festival by Dr. Interested in partnership with UNESCO and the Learning Planet Institute. This policy-focused session examines how education systems can better support young people's transition from learning to work in an era of rapidly changing careers. Traditional education pathways have often been designed around linear progressions, yet today's labour markets increasingly demand flexibility, early exposure, and interdisciplinary skill development.",
-    image: "/unesco-webinar.png",
-    status: "open",
-    link: "https://discord.com/events/1321261267482312775/1464478936527274212",
-  },
-  {
     title: "Beyond the White Coat",
     date: "February 1 - 14, 2026",
     time: "Ongoing",
     location: "Virtual",
     description:
       "Explore diverse medical fields and discover hidden, lesser-known healthcare professions in this interactive 2-week event. Participants engage in three sequential activities: first, review informative sheets and short videos about unique healthcare careers; next, solve puzzles and navigate a virtual escape room themed around these professions; finally, choose a healthcare profession, select a related myth to debunk, and create a one-page resource to submit. Top submissions will be featured and celebrated!",
-    image: "/Logos/Logo.png",
+    image: "/Beyond the White Coat.png",
     status: "open",
-    link: "TBD",
+    link: "https://forms.gle/raS2Gr9nynyjPnnS7",
+    featured: true,
   },
   {
     title: "Power of Opportunity: Research",
@@ -43,8 +33,9 @@ export const upcomingEvents: EventType[] = [
     description:
       "In partnership with ColdMatchAI, Dr. Interested announces an upcoming webinar on how youth can break into research and shape their future outcomes. Through mentorship, research competitions, webinars, talks, and more, we're helping high school and young people explore and pursue specific medical careers.",
     image: "/Logos/Logo.png",
-    status: "open",
+    status: "closed",
     link: "TBD",
+    featured: false,
   },
   {
     title: "Importance of Words in Medicine",
@@ -54,8 +45,9 @@ export const upcomingEvents: EventType[] = [
     description:
       "In partnership with The Kindness and Smile Zone, Dr. Interested presents a webinar on medical literacy focused on the importance of proper communication in healthcare. This workshop helps families understand and navigate the healthcare system more confidently, featuring Muhammad Awais speaking on effective communication and logistical planning with medical professionals. A Q&A session will be offered at the end for questions and follow-ups.",
     image: "/Logos/Logo.png",
-    status: "open",
+    status: "closed",
     link: "TBD",
+    featured: false,
   },
   {
     title: "Office Hours",
@@ -72,6 +64,17 @@ export const upcomingEvents: EventType[] = [
 
 // Past events data
 export const pastEvents: EventType[] = [
+  {
+    title: "From Classroom to Career: Expanding Pathways in a Changing World",
+    date: "January 27, 2026",
+    time: "18:00 EST",
+    location: "Virtual",
+    description:
+      "Held for the Learning Planet Festival by Dr. Interested in partnership with UNESCO and the Learning Planet Institute. This policy-focused session examines how education systems can better support young people's transition from learning to work in an era of rapidly changing careers. Traditional education pathways have often been designed around linear progressions, yet today's labour markets increasingly demand flexibility, early exposure, and interdisciplinary skill development.",
+    image: "/unesco-webinar.png",
+    status: "open",
+    link: "https://discord.com/events/1321261267482312775/1464478936527274212",
+  },
   {
     title: "Dr. Interested Simmon Chang Chess (Against Cancer) Club",
     date: "December 28, 2025",

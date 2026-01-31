@@ -56,16 +56,34 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const impactReportPages: MetadataRoute.Sitemap = [
     {
-      url: "https://impact2025.drinterested.org",
+      url: "https://impact.drinterested.org",
+      lastModified: currentDate,
+      changeFrequency: "monthly",
+      priority: 1.0,
+    },
+    {
+      url: "https://impact.drinterested.org/2025/annual",
       lastModified: currentDate,
       changeFrequency: "yearly",
-      priority: 0.95,
+      priority: 0.9,
+    },
+    {
+      url: "https://impact.drinterested.org/2025/semi-annual",
+      lastModified: currentDate,
+      changeFrequency: "yearly",
+      priority: 0.8,
+    },
+    {
+      url: "https://impact.drinterested.org/2025.pdf",
+      lastModified: currentDate,
+      changeFrequency: "yearly",
+      priority: 0.7,
     },
     {
       url: `${baseUrl}/dr-interested-impact-report-2025%20(1).pdf`,
       lastModified: currentDate,
       changeFrequency: "yearly",
-      priority: 0.95,
+      priority: 0.7,
     },
   ]
 

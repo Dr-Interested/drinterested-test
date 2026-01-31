@@ -105,8 +105,10 @@ export function generateOrganizationSchema() {
       "https://x.com/Dr_Interested_",
       "https://www.tiktok.com/@dr.interested",
       "https://mastodon.social/@drinterested",
-      "https://news.drinterested.org/",
-      "https://impact2025.drinterested.org/",
+      "https://news.impact.drinterested.org/",
+      "https://www.drinterested.org/annualreport2025.pdf",
+      "https://impact.drinterested.org/2025/annual",
+      "https://impact.drinterested.org",
       "https://chess.drinterested.org/",
     ],
     hasPart: [
@@ -116,6 +118,12 @@ export function generateOrganizationSchema() {
         url: "https://chess.drinterested.org",
         description:
           "The Dr. Interested Simmon Chang Chess (Against Cancer) Club — tournaments and initiatives supporting pediatric cancer research.",
+      },
+      {
+        "@type": "WebSite",
+        "name": "2025 Annual Impact Report",
+        "url": "https://impact.drinterested.org/2025/annual",
+        "description": "Dr. Interested's 2025 Annual Impact Report showcasing impact metrics including 160,000+ youth impacted, 106 countries reached, 1,400+ members, 20+ events, 400+ mentor hours, and 900 volunteers.",
       },
     ],
     contactPoint: [
@@ -147,7 +155,7 @@ export function generateOrganizationSchema() {
     slogan: "Inspiring the Next Generation of Healthcare Professionals",
     numberOfEmployees: {
       "@type": "QuantitativeValue",
-      value: 90,
+      value: 367,
     },
     memberOf: {
       "@type": "Organization",

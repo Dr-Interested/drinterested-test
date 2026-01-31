@@ -42,14 +42,14 @@ export default function OurWorkPage() {
         <div className="container relative z-10 max-w-5xl mx-auto">
           <motion.div className="text-center" initial="hidden" animate="visible" variants={fadeIn}>
             <motion.a
-              href="https://impact2025.drinterested.org"
+              href="https://impact.drinterested.org/2025/annual"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-[#4ecdc4]/20 text-[#4ecdc4] px-4 py-2 rounded-full text-sm font-medium mb-4 hover:bg-[#4ecdc4]/30 transition-colors cursor-pointer"
               variants={fadeIn}
             >
               <Sparkles className="w-4 h-4" />
-              <span>Check out the First Half of 2025 Impact Report</span>
+              <span>Check out our 2025 Annual Impact Report</span>
             </motion.a>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#405862] mb-4">
               Empowering the Next Generation of Healthcare Leaders
@@ -102,7 +102,7 @@ export default function OurWorkPage() {
             <motion.div variants={scaleIn}>
               <div className="bg-gradient-to-br from-[#4ecdc4]/10 to-[#4ecdc4]/5 p-5 rounded-xl text-center border border-[#4ecdc4]/20 hover:border-[#4ecdc4]/40 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
                 <Users className="w-7 h-7 text-[#4ecdc4] mx-auto mb-2" />
-                <div className="text-3xl font-bold text-[#405862] mb-1">60,000+</div>
+                <div className="text-3xl font-bold text-[#405862] mb-1">160,000+</div>
                 <div className="text-[#405862]/70 text-xs font-medium">Youth Impacted</div>
               </div>
             </motion.div>
@@ -110,7 +110,7 @@ export default function OurWorkPage() {
             <motion.div variants={scaleIn}>
               <div className="bg-gradient-to-br from-[#4ecdc4]/10 to-[#4ecdc4]/5 p-5 rounded-xl text-center border border-[#4ecdc4]/20 hover:border-[#4ecdc4]/40 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
                 <Globe className="w-7 h-7 text-[#4ecdc4] mx-auto mb-2" />
-                <div className="text-3xl font-bold text-[#405862] mb-1">70+</div>
+                <div className="text-3xl font-bold text-[#405862] mb-1">106</div>
                 <div className="text-[#405862]/70 text-xs font-medium">Countries Reached</div>
               </div>
             </motion.div>
@@ -118,7 +118,7 @@ export default function OurWorkPage() {
             <motion.div variants={scaleIn}>
               <div className="bg-gradient-to-br from-[#4ecdc4]/10 to-[#4ecdc4]/5 p-5 rounded-xl text-center border border-[#4ecdc4]/20 hover:border-[#4ecdc4]/40 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
                 <TrendingUp className="w-7 h-7 text-[#4ecdc4] mx-auto mb-2" />
-                <div className="text-3xl font-bold text-[#405862] mb-1">1100+</div>
+                <div className="text-3xl font-bold text-[#405862] mb-1">1,400+</div>
                 <div className="text-[#405862]/70 text-xs font-medium">Members</div>
               </div>
             </motion.div>
@@ -126,8 +126,8 @@ export default function OurWorkPage() {
             <motion.div variants={scaleIn}>
               <div className="bg-gradient-to-br from-[#4ecdc4]/10 to-[#4ecdc4]/5 p-5 rounded-xl text-center border border-[#4ecdc4]/20 hover:border-[#4ecdc4]/40 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
                 <Award className="w-7 h-7 text-[#4ecdc4] mx-auto mb-2" />
-                <div className="text-3xl font-bold text-[#405862] mb-1">90+</div>
-                <div className="text-[#405862]/70 text-xs font-medium">Executives Coordinators</div>
+                <div className="text-3xl font-bold text-[#405862] mb-1">367+</div>
+                <div className="text-[#405862]/70 text-xs font-medium">Executives</div>
               </div>
             </motion.div>
           </motion.div>
@@ -142,8 +142,8 @@ export default function OurWorkPage() {
           >
             <motion.div variants={fadeIn}>
               <div className="bg-[#f5f1eb] p-4 rounded-xl text-center">
-                <div className="text-2xl font-bold text-[#4ecdc4] mb-1">100+</div>
-                <div className="text-[#405862]/70 text-xs">Hours of Mentorship</div>
+                <div className="text-2xl font-bold text-[#4ecdc4] mb-1">400+</div>
+                <div className="text-[#405862]/70 text-xs">Mentor Hours</div>
               </div>
             </motion.div>
 
@@ -156,8 +156,8 @@ export default function OurWorkPage() {
 
             <motion.div variants={fadeIn}>
               <div className="bg-[#f5f1eb] p-4 rounded-xl text-center">
-                <div className="text-2xl font-bold text-[#4ecdc4] mb-1">1 000 000+</div>
-                <div className="text-[#405862]/70 text-xs">Content Views</div>
+                <div className="text-2xl font-bold text-[#4ecdc4] mb-1">3.7M+</div>
+                <div className="text-[#405862]/70 text-xs">Content Impressions</div>
               </div>
             </motion.div>
 

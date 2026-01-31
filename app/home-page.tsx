@@ -246,7 +246,7 @@ export default function HomePage() {
       <motion.div variants={scaleIn}>
         <div className="bg-gradient-to-br from-[#4ecdc4]/10 to-[#4ecdc4]/5 p-5 rounded-xl text-center border border-[#4ecdc4]/20 hover:border-[#4ecdc4]/40 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
           <Users className="w-7 h-7 text-[#4ecdc4] mx-auto mb-2" />
-          <div className="text-3xl font-bold text-[#405862] mb-1">60,000+</div>
+          <div className="text-3xl font-bold text-[#405862] mb-1">160,000+</div>
           <div className="text-[#405862]/70 text-xs font-medium">Youth Impacted</div>
         </div>
       </motion.div>
@@ -254,7 +254,7 @@ export default function HomePage() {
       <motion.div variants={scaleIn}>
         <div className="bg-gradient-to-br from-[#4ecdc4]/10 to-[#4ecdc4]/5 p-5 rounded-xl text-center border border-[#4ecdc4]/20 hover:border-[#4ecdc4]/40 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
           <Globe className="w-7 h-7 text-[#4ecdc4] mx-auto mb-2" />
-          <div className="text-3xl font-bold text-[#405862] mb-1">70+</div>
+          <div className="text-3xl font-bold text-[#405862] mb-1">106</div>
           <div className="text-[#405862]/70 text-xs font-medium">Countries Reached</div>
         </div>
       </motion.div>
@@ -262,7 +262,7 @@ export default function HomePage() {
       <motion.div variants={scaleIn}>
         <div className="bg-gradient-to-br from-[#4ecdc4]/10 to-[#4ecdc4]/5 p-5 rounded-xl text-center border border-[#4ecdc4]/20 hover:border-[#4ecdc4]/40 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
           <TrendingUp className="w-7 h-7 text-[#4ecdc4] mx-auto mb-2" />
-          <div className="text-3xl font-bold text-[#405862] mb-1">1100+</div>
+          <div className="text-3xl font-bold text-[#405862] mb-1">1,400+</div>
           <div className="text-[#405862]/70 text-xs font-medium">Members</div>
         </div>
       </motion.div>
@@ -270,8 +270,8 @@ export default function HomePage() {
       <motion.div variants={scaleIn}>
               <div className="bg-gradient-to-br from-[#4ecdc4]/10 to-[#4ecdc4]/5 p-5 rounded-xl text-center border border-[#4ecdc4]/20 hover:border-[#4ecdc4]/40 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
                 <Award className="w-7 h-7 text-[#4ecdc4] mx-auto mb-2" />
-                <div className="text-3xl font-bold text-[#405862] mb-1">1 Million+</div>
-                <div className="text-[#405862]/70 text-xs font-medium">Content Views</div>
+                <div className="text-3xl font-bold text-[#405862] mb-1">3.7M+</div>
+                <div className="text-[#405862]/70 text-xs font-medium">Content Impressions</div>
               </div>
             </motion.div>
     </motion.div>

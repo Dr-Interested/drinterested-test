@@ -121,12 +121,12 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="dr-interested-impact-report-2025 (1).pdf"
+                  href="https://impact.drinterested.org/2025/annual"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-white/80 hover:text-[#4ecdc4] transition-colors"
                 >
-                  Semi-Annual Impact Report
+                  2025 Annual Impact Report
                 </Link>
               </li>
             </ul>

@@ -55,18 +55,18 @@ export function ImpactPopup({ onClose }: ImpactPopupProps) {
 
   const content = {
     en: {
-      badge: "New Release",
-      title: "2025 Semi-Annual Impact Report",
-      subtitle: "Measuring Our Healthcare Education Impact",
+      badge: "2025 Impact Released",
+      title: "2025 Annual Impact Report",
+      subtitle: "Celebrating Our Global Impact",
       description:
-        "Discover how Dr. Interested has empowered 550+ high school students across 65+ countries to explore healthcare careers through comprehensive education and mentorship.",
+        "Discover how Dr. Interested has empowered 160,000+ youth across 106 countries to explore healthcare careers through mentorship, education, and community programs.",
       stats: [
-        { number: "550+", label: "Members" },
-        { number: "350K+", label: "Views" },
-        { number: "6+", label: "Programs" },
-        { number: "65+", label: "Countries" },
+        { number: "160K+", label: "Youth Impacted" },
+        { number: "106", label: "Countries" },
+        { number: "1.4K+", label: "Members" },
+        { number: "3.7M+", label: "Impressions" },
       ],
-      button: "View Impact Report",
+      button: "View Full Report",
       newsletter: {
         title: "Stay Updated",
         subtitle: "Get the latest healthcare opportunities & insights",
@@ -77,18 +77,18 @@ export function ImpactPopup({ onClose }: ImpactPopupProps) {
       },
     },
     fr: {
-      badge: "Nouvelle Publication",
-      title: "Rapport d'Impact Semestriel 2025",
-      subtitle: "Mesurer Notre Impact en Éducation Sanitaire",
+      badge: "Impact 2025 Publié",
+      title: "Rapport d'Impact Annuel 2025",
+      subtitle: "Célébrer Notre Impact Global",
       description:
-        "Découvrez comment Dr. Interested a permis à plus de 550 lycéens dans plus de 65 pays d'explorer les carrières de santé grâce à une éducation et un mentorat complets.",
+        "Découvrez comment Dr. Interested a autonomisé plus de 160 000 jeunes dans 106 pays à explorer les carrières en santé par le mentorat, l'éducation et les programmes communautaires.",
       stats: [
-        { number: "550+", label: "Membres" },
-        { number: "350K+", label: "Vues" },
-        { number: "6+", label: "Programmes" },
-        { number: "65+", label: "Pays" },
+        { number: "160K+", label: "Jeunes Impactés" },
+        { number: "106", label: "Pays" },
+        { number: "1.4K+", label: "Membres" },
+        { number: "3.7M+", label: "Impressions" },
       ],
-      button: "Voir le Rapport d'Impact",
+      button: "Voir le Rapport Complet",
       newsletter: {
         title: "Restez Informé",
         subtitle: "Recevez les dernières opportunités et insights en santé",
@@ -185,7 +185,7 @@ export function ImpactPopup({ onClose }: ImpactPopupProps) {
                   asChild
                   className="bg-gradient-to-r from-[#405862] to-[#4a6570] hover:from-[#4a6570] hover:to-[#405862] text-white px-8 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 >
-                  <a href="https://impact2025.drinterested.tech/" target="_blank" rel="noopener noreferrer">
+                  <a href="https://impact.drinterested.org/2025/annual" target="_blank" rel="noopener noreferrer">
                     {currentContent.button}
                     <ExternalLink className="h-4 w-4 ml-2" />
                   </a>
