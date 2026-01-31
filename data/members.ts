@@ -1071,7 +1071,7 @@ const getDepartmentMembers = (department: DepartmentType): MemberType[] => {
   ]
 }
 
-export const getAllMembers = (): MemberType[] => [
+const getAllMembersList = (): MemberType[] => [
   executiveDirector,
   ...deputyexecdir,
   ...executiveAssistants,
@@ -1080,5 +1080,46 @@ export const getAllMembers = (): MemberType[] => [
   ...ambassadors,
 ]
 
+const slugify = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .replace(/-{2,}/g, "-")
+
+const buildMemberSlugMap = () => {
+  const used = new Set<string>()
+  const map = new Map<string, string>()
+  const members = getAllMembersList()
+  for (const member of members) {
+    const base = slugify(`${member.name}-${member.role}`)
+    let slug = base
+    let suffix = 2
+    while (used.has(slug)) {
+      slug = `${base}-${suffix}`
+      suffix += 1
+    }
+    used.add(slug)
+    map.set(member.id, slug)
+  }
+  return map
+}
+
+const memberSlugMap = buildMemberSlugMap()
+
+export const getAllMembers = (): MemberType[] => getAllMembersList()
+
+export const getMemberSlug = (member: MemberType) =>
+  memberSlugMap.get(member.id) ?? slugify(`${member.name}-${member.role}`)
+
 export const getMemberById = (id: string) =>
   getAllMembers().find((member) => member.id === id)
+
+export const getMemberBySlug = (slug: string) =>
+  getAllMembers().find((member) => getMemberSlug(member) === slug)
+
+export const getMemberByIdOrSlug = (idOrSlug?: string) =>
+  idOrSlug ? getMemberById(idOrSlug) ?? getMemberBySlug(idOrSlug) : undefined

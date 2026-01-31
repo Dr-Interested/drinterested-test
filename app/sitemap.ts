@@ -3,6 +3,7 @@ import { blogPosts, blogTopics } from "@/data/blog"
 import { webinars } from "@/data/webinars"
 import {
   getAllMembers,
+  getMemberSlug,
 } from "@/data/members"
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -168,7 +169,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }))
 
   const teamPages: MetadataRoute.Sitemap = getAllMembers().map((member) => ({
-    url: `${baseUrl}/team/${member.id}`,
+    url: `${baseUrl}/teams/${getMemberSlug(member)}`,
     lastModified: currentDate,
     changeFrequency: "monthly" as const,
     priority: 0.5,

@@ -112,6 +112,36 @@ html {
   scroll-behavior: smooth;
 }
 
+html,
+body {
+  overflow-x: hidden;
+}
+
+img,
+video,
+iframe,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+iframe {
+  width: 100%;
+}
+
+body:has(.team-page) {
+  background-color: #f5f1eb;
+}
+
+body:has(.team-page) main {
+  background-color: #f5f1eb;
+}
+
+.dark body:has(.team-page),
+.dark body:has(.team-page) main {
+  background-color: #000;
+}
+
 /* Image Hover Effects */
 .image-hover {
   transition: transform 0.3s ease;
@@ -516,6 +546,22 @@ img.loading {
 }
 
 @media (max-width: 1024px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  img,
+  video,
+  iframe {
+    max-width: 100%;
+    height: auto;
+  }
+
+  iframe {
+    width: 100%;
+  }
+
   .hero-section {
     padding-top: 3rem;
     padding-bottom: 3rem;

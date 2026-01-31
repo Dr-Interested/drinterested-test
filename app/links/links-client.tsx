@@ -11,7 +11,6 @@ import {
   Youtube,
   Music,
   ShoppingBag,
-  MessageCircle,
   Calendar,
   BookOpen,
   Users,
@@ -19,6 +18,7 @@ import {
   Copy,
   Check,
 } from "lucide-react"
+import DiscordIcon from "@/components/icons/discord-icon"
 
 export default function LinksPageClient() {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -38,7 +38,7 @@ export default function LinksPageClient() {
     {
       title: "Join Our Discord Community",
       url: "https://discord.gg/pzbGRgsGXY",
-      icon: <MessageCircle className="h-5 w-5" />,
+      icon: <DiscordIcon className="h-5 w-5" />,
       color: "bg-[#5865F2] hover:bg-[#4752C4]",
     },
     {

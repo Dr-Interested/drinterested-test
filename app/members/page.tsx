@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import MembersClient from "./MembersClient"
 import {
   getAllMembers,
+  getMemberSlug,
 } from "@/data/members"
 
 export const metadata: Metadata = {
@@ -47,7 +48,7 @@ export default function MembersPage() {
       const sameAs = member.socialLinks
         ? Object.values(member.socialLinks).filter(Boolean)
         : []
-      const url = `${baseUrl}/team/${member.id}`
+      const url = `${baseUrl}/teams/${getMemberSlug(member)}`
 
       return {
         "@type": "Person",

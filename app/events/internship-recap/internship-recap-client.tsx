@@ -191,9 +191,6 @@ export default function InternshipRecapClientPage() {
             >
               <div
                 className="min-h-full min-w-full flex items-center justify-center"
-                style={{
-                  padding: zoomLevel > 1 ? "50px" : "0",
-                }}
               >
                 {selectedImage && (
                   <div

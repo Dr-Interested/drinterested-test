@@ -30,7 +30,7 @@ import { motion } from "framer-motion"
 import { Quote, Users, TrendingUp, Heart, Award, BookOpen, Sparkles, Globe } from "lucide-react"
 import SeoSchema from "@/components/seo-schema"
 import { generateOrganizationSchema } from "@/lib/seo-utils"
-import { DomainAnnouncementPopup } from "@/components/domain-announcement-popup"
+import DiscordIcon from "@/components/icons/discord-icon"
 
 
   const scaleIn = {
@@ -73,7 +73,6 @@ export default function HomePage() {
     <div className="flex flex-col min-h-screen">
       <SeoSchema schema={generateOrganizationSchema()} />
       <ScrollToTop />
-      <DomainAnnouncementPopup />
 
       {/* Hero Section */}
       <section className="hero-section relative py-10 md:py-16 overflow-hidden bg-gradient-to-b from-[#f5f1eb] to-white">
@@ -83,7 +82,7 @@ export default function HomePage() {
         <div className="container relative z-10">
           <div className="grid gap-6 md:grid-cols-2 md:gap-10 items-center">
             <motion.div
-              className="space-y-4 hero-fixed-colors"
+              className="space-y-4 hero-fixed-colors order-2 md:order-1"
               initial="hidden"
               animate={isLoaded ? "visible" : "hidden"}
               variants={fadeIn}
@@ -122,22 +121,7 @@ export default function HomePage() {
                     className="inline-flex items-center text-[#405862] hover:text-[#4ecdc4] transition-colors gap-1 hover:scale-110 duration-200"
                     aria-label="Discord"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <circle cx="9" cy="12" r="1" />
-                      <circle cx="15" cy="12" r="1" />
-                      <path d="M7.5 7.2c.3-.1.6-.2.8-.2h7.4c.2 0 .5.1.8.2M7.5 16.8c.3.1.6.2.8.2h7.4c.2 0 .5-.1.8-.2" />
-                      <path d="M16 3h-2a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2H4a2 2 0 0 0-2 2v3a8 8 0 0 0 4 7v3a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-3a8 8 0 0 0 4-7V5a2 2 0 0 0-2-2z" />
-                    </svg>
+                    <DiscordIcon className="h-5 w-5" />
                   </Link>
                   <Link
                     href="https://www.instagram.com/dr.interested/"
@@ -179,29 +163,29 @@ export default function HomePage() {
                   </Link>
                 </div>
               </div>
-              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-24 max-w-md w-48">
-  <div className="relative h-14 w-32 rounded-lg overflow-hidden shadow-sm">
-    <Image
-      src="/imaginecan.png"
-      alt="Imagine Canada Member"
-      fill
-      className="object-contain "
-    />
-  </div>
+              <div className="mt-6 grid grid-cols-2 gap-4 max-w-sm w-full justify-items-center">
+                <div className="relative h-14 w-full max-w-[140px] rounded-lg overflow-hidden shadow-sm">
+                  <Image
+                    src="/imaginecan.png"
+                    alt="Imagine Canada Member"
+                    fill
+                    className="object-contain "
+                  />
+                </div>
 
-  <div className="relative h-14 w-32 rounded-lg overflow-hidden shadow-sm">
-    <Image
-      src="/development.png"
-      alt="Youth development recognition"
-      fill
-      className="object-contain "
-    />
-  </div>
-</div>
+                <div className="relative h-14 w-full max-w-[140px] rounded-lg overflow-hidden shadow-sm">
+                  <Image
+                    src="/development.png"
+                    alt="Youth development recognition"
+                    fill
+                    className="object-contain "
+                  />
+                </div>
+              </div>
             </motion.div>
 
             <motion.div
-              className="relative flex items-center justify-center"
+              className="relative flex items-center justify-center order-1 md:order-2 my-6 md:my-0"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={isLoaded ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.7 }}

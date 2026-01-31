@@ -26,7 +26,17 @@ import {
 import ScrollToTop from "@/components/scroll-to-top";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export default function MembersClient() {
+type MembersClientProps = {
+  initialTab?: string;
+  focusId?: string;
+  disableUrlSync?: boolean;
+};
+
+export default function MembersClient({
+  initialTab: initialTabOverride,
+  focusId,
+  disableUrlSync = false,
+}: MembersClientProps = {}) {
   const [expandedBios, setExpandedBios] = useState<Record<string, boolean>>({});
   const [scrolledDepartments, setScrolledDepartments] = useState<
     Record<string, boolean>
@@ -48,23 +58,39 @@ export default function MembersClient() {
   // Ensure URL tab is valid, fallback to 'leadership'
   const validTabs = ["leadership", "departments", "advisors", "join"];
   const tabParam = Array.isArray(params?.tab) ? params.tab[0] : params?.tab;
-  const initialTab = validTabs.includes(tabParam || "")
-    ? tabParam!
-    : "leadership";
+  const initialTab =
+    initialTabOverride && validTabs.includes(initialTabOverride)
+      ? initialTabOverride
+      : validTabs.includes(tabParam || "")
+        ? tabParam!
+        : "leadership";
 
   const [activeTab, setActiveTab] = useState(initialTab);
 
   // Update URL when active tab changes
   useEffect(() => {
+    if (disableUrlSync) return;
     if (activeTab !== initialTab) {
       router.replace(`/members/${activeTab}`);
     }
-  }, [activeTab, initialTab, router]);
+  }, [activeTab, disableUrlSync, initialTab, router]);
 
   // Scroll to top on page load
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    if (!focusId) return;
+    const targetId = focusId;
+    const timeout = window.setTimeout(() => {
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 150);
+    return () => window.clearTimeout(timeout);
+  }, [activeTab, focusId]);
 
   useEffect(() => {
     if (activeTab !== "departments" || typeof window === "undefined") {
@@ -335,6 +361,7 @@ export default function MembersClient() {
               {coordinators.map((coordinator) => (
                 <Card
                   key={coordinator.id}
+                  id={coordinator.id}
                   data-scroll-item
                   className="w-64 shrink-0 border-[#405862]/20 shadow-sm"
                 >
@@ -439,6 +466,7 @@ export default function MembersClient() {
     return (
       <div
         key={deputy.id}
+        id={deputy.id}
         className="w-full flex flex-col md:flex-row md:items-start md:justify-between gap-4"
       >
         <div className="flex flex-col sm:flex-row items-center sm:items-center gap-4 flex-1">
@@ -695,12 +723,15 @@ export default function MembersClient() {
                   Executive Director
                 </h3>
                 <div className="max-w-2xl mx-auto">
-                  <Card className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
+                  <Card
+                    id={executiveDirector.id}
+                    className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
+                  >
                     <div className="grid md:grid-cols-3">
                       <div className="md:col-span-1 bg-[#f5f1eb] flex items-center justify-center">
                         <div className="relative h-full w-full aspect-square">
                           <Image
-                            src="/adil.png"
+                            src={executiveDirector.image || "/placeholder.svg"}
                             alt={executiveDirector.name}
                             fill
                             className="object-cover"
@@ -780,6 +811,7 @@ export default function MembersClient() {
                   {deputyexecdir.map((vp) => (
                     <Card
                       key={vp.id}
+                      id={vp.id}
                       className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
                     >
                       <div className="grid md:grid-cols-3">
@@ -868,6 +900,7 @@ export default function MembersClient() {
                   {executiveAssistants.map((assistant) => (
                     <Card
                       key={assistant.id}
+                      id={assistant.id}
                       className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
                     >
                       <div className="grid md:grid-cols-3">
@@ -973,6 +1006,7 @@ export default function MembersClient() {
                     return (
                       <Card
                         key={director.id}
+                        id={director.id}
                         className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
                       >
                         <div className="grid md:grid-cols-3">
@@ -1097,6 +1131,7 @@ export default function MembersClient() {
                             return (
                               <div
                                 key={director.id}
+                                id={director.id}
                                 className="w-full flex flex-col items-center text-center gap-5"
                               >
                                 <div className="relative h-28 w-28 sm:h-32 sm:w-32 rounded-full overflow-hidden bg-white shrink-0">
@@ -1208,6 +1243,13 @@ export default function MembersClient() {
                   Meet the ambassadors representing Dr. Interested around the
                   world.
                 </p>
+                <div className="sr-only">
+                  {ambassadors.map((ambassador) => (
+                    <span key={ambassador.id} id={ambassador.id}>
+                      {ambassador.name} - {ambassador.role}
+                    </span>
+                  ))}
+                </div>
                 <div className="ambassador-marquee">
                   <div className="ambassador-marquee__track">
                     {ambassadorNames.map((name, index) => (
@@ -1243,25 +1285,26 @@ export default function MembersClient() {
                   medical education.
                 </p>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {advisors.map((advisor) => (
-                    <Card
-                      key={advisor.id}
-                      className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
-                    >
-                      <div className="bg-[#f5f1eb] flex items-center justify-center p-4">
-                        <div className="relative h-32 w-32 rounded-full overflow-hidden">
-                          <Image
-                            src={advisor.image || "/placeholder.svg"}
-                            alt={advisor.name}
-                            fill
-                            className="object-cover"
-                          />
+                    {advisors.map((advisor) => (
+                      <Card
+                        key={advisor.id}
+                        id={advisor.id}
+                        className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
+                      >
+                        <div className="bg-[#f5f1eb] flex items-center justify-center p-4">
+                          <div className="relative h-32 w-32 rounded-full overflow-hidden">
+                            <Image
+                              src={advisor.image || "/placeholder.svg"}
+                              alt={advisor.name}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
                         </div>
-                      </div>
-                      <CardContent className="p-4">
-                        <h4 className="text-lg font-semibold text-[#405862]">
-                          {advisor.name}
-                        </h4>
+                        <CardContent className="p-4">
+                          <h4 className="text-lg font-semibold text-[#405862]">
+                            {advisor.name}
+                          </h4>
                         <p className="text-sm md:text-base text-[#405862]/75 mb-2">
                           {advisor.role}
                         </p>

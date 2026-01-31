@@ -180,6 +180,7 @@ export default function RootLayout({
           <Suspense fallback={null}>
             <div className="flex min-h-screen flex-col">
               <Navbar />
+              <div className="h-16 md:hidden" aria-hidden="true" />
               <main className="flex-1">{children}</main>
               <Footer />
               <Toaster />
