@@ -27,26 +27,26 @@ export const upcomingEvents: EventType[] = [
   },
   {
     title: "Power of Opportunity: Research",
-    date: "February 7, 2026",
-    time: "TBD",
+    date: "February 21, 2026",
+    time: "Upcoming",
     location: "Virtual",
     description:
       "In partnership with ColdMatchAI, Dr. Interested announces an upcoming webinar on how youth can break into research and shape their future outcomes. Through mentorship, research competitions, webinars, talks, and more, we're helping high school and young people explore and pursue specific medical careers.",
     image: "/Logos/Logo.png",
-    status: "closed",
-    link: "TBD",
+    status: "open",
+    link: "https://docs.google.com/forms/d/e/1FAIpQLScbAcuriZRiZKklZ3Ly6qBkXkTmL2oOJTqK9Ko-2XLF7ekH7A/viewform?pli=1",
     featured: false,
   },
   {
     title: "Importance of Words in Medicine",
     date: "March 7, 2026",
-    time: "TBD",
+    time: "Upcoming",
     location: "Virtual",
     description:
       "In partnership with The Kindness and Smile Zone, Dr. Interested presents a webinar on medical literacy focused on the importance of proper communication in healthcare. This workshop helps families understand and navigate the healthcare system more confidently, featuring Muhammad Awais speaking on effective communication and logistical planning with medical professionals. A Q&A session will be offered at the end for questions and follow-ups.",
     image: "/Logos/Logo.png",
-    status: "closed",
-    link: "TBD",
+    status: "open",
+    link: "https://docs.google.com/forms/d/e/1FAIpQLSebQpmty8v4O3YNQO2PEuX5umWItU4YHFklLxa_Wjqa8owk8w/viewform",
     featured: false,
   },
   {
@@ -70,10 +70,10 @@ export const pastEvents: EventType[] = [
     time: "18:00 EST",
     location: "Virtual",
     description:
-      "Held for the Learning Planet Festival by Dr. Interested in partnership with UNESCO and the Learning Planet Institute. This policy-focused session examines how education systems can better support young people's transition from learning to work in an era of rapidly changing careers. Traditional education pathways have often been designed around linear progressions, yet today's labour markets increasingly demand flexibility, early exposure, and interdisciplinary skill development.",
+      "Hosted as part of the Learning Planet Festival, this policy focused session looks at how education systems can better support young people as they move from learning into work. Careers are changing fast. Linear pathways no longer fit reality. We explore flexibility, early exposure, interdisciplinary skills, and what real system level change can look like.",
     image: "/unesco-webinar.png",
-    status: "open",
-    link: "https://discord.com/events/1321261267482312775/1464478936527274212",
+    status: "completed",
+    link: "https://www.youtube.com/watch?v=fMrcCGrTRF8",
   },
   {
     title: "Dr. Interested Simmon Chang Chess (Against Cancer) Club",
