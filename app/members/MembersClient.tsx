@@ -1394,8 +1394,8 @@ export default function MembersClient({
 
 <p className="mb-6 text-base md:text-lg text-[#405862]/90 max-w-3xl">
   <span className="font-semibold">Dr. Interested</span> is a global youth organization active in
-  <span className="font-semibold"> 70+ countries</span>, reaching
-  <span className="font-semibold"> 60,000+ students</span> worldwide. We operate fully online through
+  <span className="font-semibold"> 106 countries</span>, reaching
+  <span className="font-semibold"> 160,000+ students</span> worldwide. We operate fully online through
   Discord, with optional in-person opportunities depending on your city.
 </p>
 
