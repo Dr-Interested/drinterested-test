@@ -32,7 +32,7 @@ export const upcomingEvents: EventType[] = [
     location: "Virtual",
     description:
       "In partnership with ColdMatchAI, Dr. Interested announces an upcoming webinar on how youth can break into research and shape their future outcomes. Through mentorship, research competitions, webinars, talks, and more, we're helping high school and young people explore and pursue specific medical careers.",
-    image: "/Logos/Logo.png",
+    image: "/Power of opportunity.png",
     status: "open",
     link: "https://docs.google.com/forms/d/e/1FAIpQLScbAcuriZRiZKklZ3Ly6qBkXkTmL2oOJTqK9Ko-2XLF7ekH7A/viewform?pli=1",
     featured: false,
@@ -44,7 +44,7 @@ export const upcomingEvents: EventType[] = [
     location: "Virtual",
     description:
       "In partnership with The Kindness and Smile Zone, Dr. Interested presents a webinar on medical literacy focused on the importance of proper communication in healthcare. This workshop helps families understand and navigate the healthcare system more confidently, featuring Muhammad Awais speaking on effective communication and logistical planning with medical professionals. A Q&A session will be offered at the end for questions and follow-ups.",
-    image: "/Logos/Logo.png",
+    image: "/TKASZ_Banner.png",
     status: "open",
     link: "https://docs.google.com/forms/d/e/1FAIpQLSebQpmty8v4O3YNQO2PEuX5umWItU4YHFklLxa_Wjqa8owk8w/viewform",
     featured: false,
