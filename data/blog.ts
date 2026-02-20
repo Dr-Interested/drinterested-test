@@ -226,7 +226,7 @@ Zhang, Yanan, et al. “Status and Influencing Factors of Academic Burnout among
 https://bmcnurs.biomedcentral.com/articles/10.1186/s12912-025-04036-2  
 Accessed 2 Feb. 2026.
   `,
-  coverImage: "burnout.png",
+  coverImage: "/burnout.png",
   date: "February 2, 2026",
   author: authors["manha-atiq"],
   topic: "Health",
@@ -288,7 +288,7 @@ Ingle, James N., et al. “Cancer Pharmacogenomics.” *Cancer*, U.S. National L
 
 “Table of Pharmacogenomic Biomarkers in Drug Labeling.” *U.S. Food and Drug Administration*, www.fda.gov. Accessed 1 Feb. 2026.
   `,
-  coverImage: "pmed.png",
+  coverImage: "/pmed.png",
   date: "February 1, 2026",
   author: authors["evan-wright"],
   topic: "Health",
@@ -331,7 +331,7 @@ Though phage science is still in its infancy, their potential is enormous. These
 - Shkoporov, A. N., & Hill, C. (2019). *Bacteriophages of the human gut: The "known unknown" of the microbiome.* Cell Host & Microbe, 25(2), 195–209.  
 - Kortright, K. E., Chan, B. K., Koff, J. L., & Turner, P. E. (2019). *Phage therapy: A renewed approach to combat antibiotic-resistant bacteria.* Cell Host & Microbe, 25(2), 219–232.
   `,
-  coverImage: "gut-phages.png",
+  coverImage: "/gut-phages.png",
   date: "November 25, 2025",
   author: authors["nashto-mohammed"],
   topic: "Health",
