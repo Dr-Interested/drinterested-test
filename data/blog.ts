@@ -116,6 +116,11 @@ export const authors: Record<string, Author> = {
   image: "/logo.png",
   bio: "Nashto is an aspiring medical student and researcher with a keen interest in microbiology and virology, dedicated to exploring the intricate relationships between microbes and human health."
 },
+"evan-wright": {
+  name: "Evan Wright",
+  image: "/logo.png",
+  bio: " "
+},
 }
 
 // Blog Topics
@@ -178,11 +183,123 @@ export const blogTopics: BlogTopic[] = [
 
 // Blog Posts (Ordered from Most Recent to Oldest)
 export const blogPosts: BlogPost[] = [
+  {
+  slug: "the-burnout-pipeline-how-students-lose-interest-in-healthcare-before-they-even-start",
+  title: "The Burnout Pipeline: How Students Lose Interest in Healthcare Before They Even Start",
+  excerpt: "The idea of a “healthcare dream” for example becoming a nurse, doctor, surgeon, inspires many students, but unfortunately, the growing reality is that too many students lose interest in healthcare before they ever even begin. ",
+  content: `
+# Introduction
+
+The idea of a *“healthcare dream”* — for example becoming a nurse, doctor, or surgeon — inspires many students, but unfortunately, the growing reality is that too many students lose interest in healthcare before they ever even begin. This is because of burnout, stress, and declining motivation. Research shows that burnout isn’t only a problem for practicing healthcare professionals; rather, it begins early in training. A study of pre-medical undergraduates found that higher burnout levels directly correlate with a drop in interest in medical careers, not because students lacked passion, but because stress and mental health struggles destroyed their aspirations over time. This problem threatens the future workforce at a time when healthcare systems are already dealing with staffing shortages.
+
+# Academic Pressure and Early Burnout
+
+Medical and healthcare education is well known to be notoriously demanding, and that intensity contributes to early burnout before students even get close to reaching the clinical stage. Burnout is characterized by emotional exhaustion and reduced self-efficacy. Studies find that burnout rates among medical students are driven by heavy workloads, exams, and psychological stressors inherent in healthcare training environments. When students start to feel overwhelmed by these expectations, many rethink their future in the field.
+
+# Mental Health Struggles Reduce Career Interest
+
+The connection between burnout and declining interest in healthcare careers is measurable. In another study of undergraduate pre-medical students, those reporting higher burnout scores and depressive symptoms were significantly more likely to say they were less interested in pursuing medicine over time. This means that the problem begins long before actual clinical training and affects students who may have otherwise become doctors or nurses. It also shows how mental health struggles don’t just make students unhappy — they can destroy passion and long-term career aspirations.
+
+# Retention and Pipeline Threats in Healthcare
+
+Burnout affects more than just medical students. Nursing students and many other allied health students show the same trends. Research on nursing student burnout directly relates to high academic pressure, low future professional confidence, and mental fatigue. When students feel unsupported or overwhelmed, they are more likely to disengage academically and reconsider their commitment to healthcare work. Therefore, providing students with a positive, engaging learning environment — along with strong mental health support and more realistic academic expectations — is essential.
+
+# Conclusion: Preventing Burnout to Preserve the Healthcare Workforce
+
+Ultimately, the evidence is clear: higher burnout and depressive symptoms among students pursuing healthcare correspond with declining interest in healthcare careers, especially among women. To preserve the future workforce, educators and institutions must address this issue. Providing students with a positive, engaging environment to learn in — with strong mental health support and more realistic academic expectations — is a necessary solution.
+
+# Works Cited
+
+Grace, Matthew K. “Depressive Symptoms, Burnout, and Declining Medical Career Interest among Undergraduate Pre-Medical Students.” *International Journal of Medical Education*, vol. 9, 2018, pp. 302–308.  
+https://doi.org/10.5116/ijme.5be5.8131  
+Accessed 2 Feb. 2026.
+
+Kiss, Hedvig, and Bettina F. Pikó. “Risk and Protective Factors of Student Burnout among Medical Students: A Multivariate Analysis.” *BMC Medical Education*, vol. 25, no. 56, 2025.  
+https://bmcmededuc.biomedcentral.com/articles/10.1186/s12909-025-06956-8  
+Accessed 2 Feb. 2026.
+
+“Medical Student Distress Rises amid Overall Healthcare Burnout Improvement.” *OR Manager*, 2025.  
+https://www.ormanager.com/briefs/report-medical-student-distress-rises-amid-overall-healthcare-burnout-improvement/  
+Accessed 2 Feb. 2026.
+
+Zhang, Yanan, et al. “Status and Influencing Factors of Academic Burnout among Undergraduate Nursing Students.” *BMC Nursing*, vol. 24, no. 102, 2025.  
+https://bmcnurs.biomedcentral.com/articles/10.1186/s12912-025-04036-2  
+Accessed 2 Feb. 2026.
+  `,
+  coverImage: "burnout.png",
+  date: "February 2, 2026",
+  author: authors["manha-atiq"],
+  topic: "Health",
+  readingTime: "5 min read",
+  featured: false
+},
+{
+  slug: "personalized-medicine-why-one-treatment-doesnt-fit-all",
+  title: "Personalized Medicine: Why One Treatment Doesn’t Fit All",
+  excerpt:"For most of modern history, medicine has been based on the idea of the average patient. Doctors used standard drug doses and treatment plans and expected them to work for most people.",
+  content: `# Introduction
+
+For most of modern history, medicine has been based on the idea of the *average patient*. Doctors used standard drug doses and treatment plans and expected them to work for most people. This approach can help in emergencies or simple infections, but it often does not work well for chronic diseases, cancer, or mental health conditions. People with the same diagnosis can react very differently to the same treatment.
+
+*Personalized medicine*, also called *precision medicine*, focuses on what will work best for a specific person instead of what usually works for everyone. It recognizes that differences in genetics, lifestyle, and environment affect how diseases develop and how treatments work. As genetic testing and data tools improve, personalized medicine is becoming more common in hospitals and clinics.
+
+# Genetics and Treatment Differences
+
+One big reason treatments do not work the same for everyone is genetics. Small differences in DNA can affect how the body processes medications. *Pharmacogenomics* studies how these genetic differences change how drugs work and what side effects they cause. A normal drug dose can be too weak for one person and too strong for another.
+
+For example, about 30 percent of people have a genetic variant that makes the blood thinner *clopidogrel* less effective, which can increase the risk of blood clots. Another example is *warfarin*, a drug used to prevent clots. Some people are very sensitive to it because of their genes, so a standard dose can cause dangerous bleeding. Because of this, the FDA recommends considering genetic testing before using warfarin.
+
+In cancer treatment, drugs like *trastuzumab* are only effective in patients whose tumors have high levels of the *HER2* protein. These examples show that without genetic information, doctors may give treatments that do not work well or may even be harmful.
+
+# Lifestyle and Environmental Factors
+
+Genes are important, but they are not the whole story. People with similar DNA can still have very different health outcomes because of lifestyle and environment. Diet, exercise, stress, sleep, pollution, and exposure to toxins all affect how diseases develop and how the body responds to medicine.
+
+For example, two people with high blood pressure may need different treatments if one’s condition is mainly caused by stress and diet while the other has kidney problems. Personalized medicine looks at the full picture by combining genetic data with medical records, lab results, and patient habits. This allows doctors to adjust medications, recommend specific lifestyle changes, and focus on mental and social health instead of using the same plan for everyone.
+
+# Benefits and Challenges
+
+Personalized medicine has clear benefits. Matching the right treatment to the right person can reduce side effects and improve how well treatments work. In cancer care, patients who receive treatments based on their tumor’s genetics often respond better than those who receive standard treatments.
+
+However, there are challenges:
+
+- Genetic testing can be expensive  
+- Doctors need training to understand the results  
+- There are privacy concerns with storing genetic data  
+- Access may be limited to wealthier patients or large medical centers  
+
+Unless access improves, personalized medicine may not benefit everyone equally.
+
+# Conclusion
+
+Personalized medicine changes the idea that one treatment works for everyone with the same disease. By using genetic information along with lifestyle, environment, and personal health history, it treats patients as individuals instead of averages.
+
+Examples like *clopidogrel*, *warfarin*, and *HER2-targeted cancer treatments* already show how personalized care can be safer and more effective. As technology continues to improve, medical care will likely become more personal and better suited to each individual.
+
+# Sources / References
+
+The Jackson Laboratory. “What Is Personalized Medicine?” *The Jackson Laboratory*, www.jax.org/personalized-medicine/precision-medicine-and-you/what-is-precision-medicine. Accessed 1 Feb. 2026.
+
+“Innovative Health Dallas: Personalized Medicine – Why One-Size-Fits-All Doesn’t Work Anymore.” *Innovative Health Dallas*, www.innovativehealthdallas.com/personalized-medicine-why-one-size-fits-all-doesnt-work-anymore. Accessed 1 Feb. 2026.
+
+“Why One-Size-Fits-All Doesn’t Work: How Personalized Medicine Is Changing Healthcare.” *Prime Direct Health*, primedirecthealth.com/personalized-medicine-in-healthcare. Accessed 1 Feb. 2026.
+
+Ingle, James N., et al. “Cancer Pharmacogenomics.” *Cancer*, U.S. National Library of Medicine, pmc.ncbi.nlm.nih.gov/articles/PMC3646359. Accessed 1 Feb. 2026.
+
+“Table of Pharmacogenomic Biomarkers in Drug Labeling.” *U.S. Food and Drug Administration*, www.fda.gov. Accessed 1 Feb. 2026.
+  `,
+  coverImage: "pmed.png",
+  date: "February 1, 2026",
+  author: authors["evan-wright"],
+  topic: "Health",
+  readingTime: "6 min read",
+  featured: false
+},
 {
   slug: "phages-in-your-gut",
   title: "Phages in Your Gut: The Invisible Viruses That Shape Your Health",
   excerpt:
-    "Bacteriophages, or phages, are viruses that infect bacteria and play a crucial role in regulating the gut microbiome, supporting digestion, immunity, and even offering potential therapeutic applications.",
+    "The idea of a “healthcare dream” for example becoming a nurse, doctor, surgeon, inspires many students, but unfortunately, the growing reality is that too many students lose interest in healthcare before they ever even begin. ",
   content: `
 ## Phages in Your Gut: The Invisible Viruses That Shape Your Health
 
