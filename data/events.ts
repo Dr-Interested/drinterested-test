@@ -35,7 +35,7 @@ export const pastEvents: EventType[] = [
     location: "Virtual",
     description:
       "From February 23 to March 6, Monday to Friday, 8 PM to 9 PM EST, you will step into the role of a researcher. Not as a spectator. As the investigator.\n\nHere is the mission.\n\nIdentify a prevalent disease in your local area.\nBreak down its causes and risk factors.\nAnalyze its real world impact.\nPresent your findings to the community using clear, compelling storytelling.\n\nScience meets communication. Data meets purpose.",
-    image: "/Disease Discovery Day.png",
+    image: "/diseasediscnew.png",
     status: "completed",
     link: "https://forms.gle/A9gfAvWrs2jahsYX6",
     featured: true,
@@ -47,10 +47,22 @@ export const pastEvents: EventType[] = [
     location: "Virtual",
     description:
       "In partnership with The Kindness and Smile Zone, Dr. Interested presents a webinar on medical literacy focused on the importance of proper communication in healthcare. This workshop helps families understand and navigate the healthcare system more confidently, featuring Muhammad Awais speaking on effective communication and logistical planning with medical professionals. A Q&A session will be offered at the end for questions and follow-ups.",
-    image: "/TKASZ_Banner.png",
+    image: "/importanceofmed.png",
     status: "completed",
     link: "https://docs.google.com/forms/d/e/1FAIpQLSebQpmty8v4O3YNQO2PEuX5umWItU4YHFklLxa_Wjqa8owk8w/viewform",
     featured: false,
+  },
+  {
+    title: "Beyond the White Coat",
+    date: "February 1 - 14, 2026",
+    time: " ",
+    location: "Virtual",
+    description:
+      "Explore diverse medical fields and discover hidden, lesser-known healthcare professions in this interactive 2-week event. Participants engage in three sequential activities: first, review informative sheets and short videos about unique healthcare careers; next, solve puzzles and navigate a virtual escape room themed around these professions; finally, choose a healthcare profession, select a related myth to debunk, and create a one-page resource to submit. Top submissions will be featured and celebrated!",
+    image: "/Beyond the White Coat.png",
+    status: "closed",
+    link: "https://forms.gle/raS2Gr9nynyjPnnS7",
+    featured: true,
   },
   {
     title: "From Classroom to Career: Expanding Pathways in a Changing World",
