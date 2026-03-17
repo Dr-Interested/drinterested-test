@@ -7,6 +7,7 @@ const templateMap: Record<string, string> = {
   insetpassword123: "/certificate-rpc.png",
   webinarsarefun67: "/certificate-webinar.png",
   iloveparticipation: "/partcert.png",
+  diseasestocure2026: "/diseasedisccert.png",
 }
 
 function CertificateForm() {
