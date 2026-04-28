@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Approve Members</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background-color:#fff;color:#1a1a1a;line-height:1.6}nav{background-color:#fff;border-bottom:1px solid #e0e0e0;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center}nav .logo{font-family:'Bricolage Grotesque',sans-serif;font-size:1.5rem;font-weight:700;color:#1a1a1a;text-decoration:none}nav a{color:#4CAF7D;text-decoration:none;font-weight:500;margin-left:2rem;transition:color .2s}nav a:hover{color:#2d8659}.container{max-width:1200px;margin:0 auto;padding:2rem 1.5rem}h1{font-family:'Bricolage Grotesque',sans-serif;font-size:2rem;font-weight:700;margin-bottom:2rem;color:#1a1a1a}.tabs{display:flex;gap:1rem;margin-bottom:2rem;border-bottom:2px solid #e0e0e0;padding-bottom:0}.tab-button{background:0;border:none;padding:.75rem 1.5rem;font-family:'Inter',sans-serif;font-size:.95rem;font-weight:500;color:#666;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s}.tab-button:hover{color:#4CAF7D}.tab-button.active{color:#4CAF7D;border-bottom-color:#4CAF7D}.members-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:1.5rem}.member-card{border:1px solid #e0e0e0;border-radius:12px;overflow:hidden;background:#fff}.member-image{width:100%;height:200px;object-fit:cover;background-color:#f0f0f0}.member-info{padding:1.5rem}.member-name{font-family:'Bricolage Grotesque',sans-serif;font-size:1.1rem;font-weight:600;color:#1a1a1a;margin-bottom:.25rem}.member-role{color:#4CAF7D;font-weight:500;font-size:.9rem;margin-bottom:.5rem}.member-dept{color:#999;font-size:.85rem;margin-bottom:.75rem}.member-bio{color:#666;font-size:.85rem;line-height:1.5;margin-bottom:1rem}.member-meta{font-size:.8rem;color:#999;margin-bottom:1rem}.member-socials{display:flex;gap:.5rem;margin-bottom:1rem}.social-link{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background-color:#f5f5f5;color:#4CAF7D;text-decoration:none;transition:all .2s;font-size:.75rem;font-weight:600}.social-link:hover{background-color:#4CAF7D;color:#fff}.member-actions{display:flex;gap:.75rem}.btn{padding:.5rem 1rem;border:none;border-radius:6px;font-family:'Inter',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;flex:1}.btn-approve{background-color:#4CAF7D;color:#fff}.btn-approve:hover{background-color:#2d8659}.btn-reject{background-color:#f5f5f5;color:#c62828;border:1px solid #f0f0f0}.btn-reject:hover{background-color:#ffebee}.btn:disabled{opacity:.6;cursor:not-allowed}.loading{text-align:center;padding:3rem 1rem;color:#666}.empty-message{text-align:center;padding:3rem 1rem;color:#999}.count-badge{background-color:#4CAF7D;color:#fff;padding:.25rem .75rem;border-radius:12px;font-size:.75rem;font-weight:600;margin-left:.5rem}.status-badge{display:inline-block;padding:.25rem .75rem;border-radius:4px;font-size:.75rem;font-weight:600;margin-bottom:.75rem}.status-pending{background-color:#fff3cd;color:#856404}.status-approved{background-color:#d4edda;color:#155724}.login-modal{position:fixed;top:0;left:0;right:0;bottom:0;background-color:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:9999}.login-modal.hidden{display:none}.login-box{background:#fff;padding:2rem;border-radius:12px;max-width:350px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.1)}.login-box h2{font-family:'Bricolage Grotesque',sans-serif;font-size:1.5rem;margin-bottom:1.5rem;color:#1a1a1a}.login-box input{width:100%;padding:.75rem;border:1px solid #d0d0d0;border-radius:8px;font-family:'Inter',sans-serif;margin-bottom:1rem}.login-box input:focus{outline:0;border-color:#4CAF7D;box-shadow:0 0 0 3px rgba(76,175,125,.1)}.login-box button{width:100%;padding:.75rem;background-color:#4CAF7D;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer}.login-box button:hover{background-color:#2d8659}.login-error{color:#c62828;font-size:.9rem;margin-bottom:1rem;display:none}.logout-btn{background-color:transparent!important;color:#c62828!important;padding:0!important;margin-left:2rem!important;font-weight:500;cursor:pointer;border:none;font-family:'Inter',sans-serif;font-size:.95rem}.logout-btn:hover{color:#a01a1a!important}
+    </style>
+</head>
+<body>
+    <div id="l" class="login-modal">
+        <div class="login-box">
+            <h2>Access Required</h2>
+            <div id="e" class="login-error"></div>
+            <input type="password" id="p" placeholder="Enter password" onkeypress="if(event.key==='Enter')c()">
+            <button onclick="c()">Verify</button>
+        </div>
+    </div>
+
+    <nav id="n" style="display:none">
+        <a href="#" class="logo">Dr. Interested</a>
+        <div>
+            <a href="form.html">Apply</a>
+            <a href="members.html">Members</a>
+            <a href="admin.html">Admin</a>
+            <button class="logout-btn" onclick="d()">Logout</button>
+        </div>
+    </nav>
+
+    <div id="m" class="container" style="display:none">
+        <h1>Manage Members</h1>
+
+        <div class="tabs">
+            <button class="tab-button active" data-tab="pending">
+                Pending <span class="count-badge" id="pc">0</span>
+            </button>
+            <button class="tab-button" data-tab="approved">
+                Approved <span class="count-badge" id="ac">0</span>
+            </button>
+        </div>
+
+        <div id="x"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+const u='https://uxegbptqrufidqoobndl.supabase.co',k='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4ZWdicHRxcnVmaWRxb29ibmRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MjQxOTUsImV4cCI6MjA5MTAwMDE5NX0.J5dwUFAAdzUrP_A-MTqflSMov0ooS_8UnAq1ha6xlv4',pw='Dr.Interested@0123.HaroonRyan!';let a=[],t='pending';const s=window.supabase.createClient(u,k),b=document.querySelectorAll('.tab-button');function c(){const e=document.getElementById('p').value,r=document.getElementById('e');if(e===pw){sessionStorage.setItem('a','1');document.getElementById('l').classList.add('hidden');document.getElementById('n').style.display='flex';document.getElementById('m').style.display='block';gsap.from('#n',{duration:.5,opacity:0,y:-20});gsap.from('#m',{duration:.6,opacity:0,y:20,delay:.1});h()}else{r.textContent='Invalid';r.style.display='block';document.getElementById('p').value=''}}function d(){sessionStorage.removeItem('a');gsap.to('#n, #m',{duration:.3,opacity:0,onComplete:()=>{document.getElementById('n').style.display='none';document.getElementById('m').style.display='none';f()}})}function f(){if(sessionStorage.getItem('a')==='1'){document.getElementById('l').classList.add('hidden');document.getElementById('n').style.display='flex';document.getElementById('m').style.display='block';gsap.from('#n',{duration:.5,opacity:0,y:-20});gsap.from('#m',{duration:.6,opacity:0,y:20,delay:.1});h()}else{document.getElementById('p').focus()}}b.forEach(e=>{e.addEventListener('click',()=>{gsap.to('.tab-button.active',{duration:.2,color:'#666'});b.forEach(r=>r.classList.remove('active'));e.classList.add('active');gsap.from(e,{duration:.2,color:'#666'});t=e.dataset.tab;v()})});async function h(){try{document.getElementById('x').innerHTML='<div class="loading"><p>Loading...</p></div>';gsap.from('#x',{duration:.3,opacity:0});const e=await s.from('members').select('*').order('created_at',{ascending:!1});if(e.error)throw e.error;a=e.data||[];const r=a.filter(i=>!i.approved).length,i=a.filter(l=>l.approved).length;document.getElementById('pc').textContent=r;document.getElementById('ac').textContent=i;v()}catch(e){console.error(e);document.getElementById('x').innerHTML='<div class="empty-message">Error loading</div>'}}function v(){const e=t==='pending'?a.filter(r=>!r.approved):a.filter(r=>r.approved);if(0===e.length){document.getElementById('x').innerHTML=`<div class="empty-message">No ${t}</div>`;return}document.getElementById('x').innerHTML='<div class="members-grid">'+e.map(r=>g(r)).join('')+'</div>';gsap.from('.member-card',{duration:.4,opacity:0,y:20,stagger:.08,ease:'back.out'})}function g(e){const r=e.socials||{};let i='';r.github&&(i+=`<a href="${w(r.github)}" target="_blank" class="social-link">GH</a>`);r.linkedin&&(i+=`<a href="${w(r.linkedin)}" target="_blank" class="social-link">IN</a>`);r.instagram&&(i+=`<a href="${w(r.instagram)}" target="_blank" class="social-link">IG</a>`);const o=e.approved?'<span class="status-badge status-approved">APPROVED</span>':'<span class="status-badge status-pending">PENDING</span>',l=!e.approved?`<button class="btn btn-approve" onclick="y('${e.id}')">Approve</button><button class="btn btn-reject" onclick="z('${e.id}')">Reject</button>`:`<button class="btn btn-reject" onclick="z('${e.id}')">Remove</button>`;return`<div class="member-card"><img src="${w(e.image)}" alt="${w(e.name)}" class="member-image"><div class="member-info">${o}<div class="member-name">${w(e.name)}</div><div class="member-role">${w(e.role)}</div><div class="member-dept">${w(e.department)}</div><div class="member-bio">${w(e.bio)}</div><div class="member-meta">Applied ${new Date(e.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</div><div class="member-socials">${i}</div><div class="member-actions">${l}</div></div></div>`}function w(e){if(!e)return'';const r=document.createElement('div');return r.textContent=e,r.innerHTML}async function y(e){try{await s.from('members').update({approved:!0}).eq('id',e);gsap.to('.member-card',{duration:.2,opacity:.5});setTimeout(()=>{h()},200)}catch(r){alert('Failed')}}async function z(e){if(!confirm('Sure?'))return;try{await s.from('members').delete().eq('id',e);gsap.to('.member-card',{duration:.2,opacity:.5});setTimeout(()=>{h()},200)}catch(r){alert('Failed')}}f();
+    </script>
+</body>
+</html>

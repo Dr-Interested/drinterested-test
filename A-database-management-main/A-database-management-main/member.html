@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Members - Dr. Interested</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        nav {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            text-decoration: none;
+        }
+
+        nav a {
+            color: #4CAF7D;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 2rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: #2d8659;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        h1 {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #1a1a1a;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 0;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+        }
+
+        .tab-button:hover {
+            color: #4CAF7D;
+        }
+
+        .tab-button.active {
+            color: #4CAF7D;
+            border-bottom-color: #4CAF7D;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #1a1a1a;
+            padding-top: 1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .grid.featured {
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            border-color: #4CAF7D;
+            box-shadow: 0 8px 24px rgba(76, 175, 125, 0.12);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: #f0f0f0;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-name {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-role {
+            color: #4CAF7D;
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-bio {
+            color: #666;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            flex: 1;
+        }
+
+        .card-socials {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: auto;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background-color: #f5f5f5;
+            color: #4CAF7D;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .social-link:hover {
+            background-color: #4CAF7D;
+            color: white;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #666;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 2rem;
+            height: 2rem;
+            border: 3px solid #e0e0e0;
+            border-top-color: #4CAF7D;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #999;
+        }
+
+        .featured-badge {
+            display: inline-block;
+            background-color: #4CAF7D;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#" class="logo">Dr. Interested</a>
+        <div>
+            <a href="form.html">Apply</a>
+            <a href="members.html">Members</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Our Members</h1>
+
+        <div class="tabs" id="tabs"></div>
+
+        <div id="content"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://uxegbptqrufidqoobndl.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4ZWdicHRxcnVmaWRxb29ibmRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MjQxOTUsImV4cCI6MjA5MTAwMDE5NX0.J5dwUFAAdzUrP_A-MTqflSMov0ooS_8UnAq1ha6xlv4';
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let allMembers = [];
+        let departments = [];
+        let currentDepartment = 'All';
+
+        const contentEl = document.getElementById('content');
+        const tabsEl = document.getElementById('tabs');
+
+        async function loadMembers() {
+            try {
+                contentEl.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Loading members...</p></div>';
+
+                const { data, error } = await supabase
+                    .from('members')
+                    .select('*')
+                    .eq('approved', true)
+                    .order('created_at', { ascending: true });
+
+                if (error) throw error;
+
+                allMembers = data || [];
+
+                // Extract unique departments
+                departments = ['All', ...new Set(allMembers.map(m => m.department))];
+
+                renderTabs();
+                filterAndRender();
+            } catch (error) {
+                console.error('Error loading members:', error);
+                contentEl.innerHTML = '<div class="empty-message">Failed to load members. Please try again later.</div>';
+            }
+        }
+
+        function renderTabs() {
+            tabsEl.innerHTML = departments.map(dept => `
+                <button class="tab-button ${dept === 'All' ? 'active' : ''}" data-dept="${dept}">
+                    ${dept}
+                </button>
+            `).join('');
+
+            tabsEl.querySelectorAll('.tab-button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabsEl.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentDepartment = btn.dataset.dept;
+                    filterAndRender();
+                });
+            });
+        }
+
+        function filterAndRender() {
+            const filtered = currentDepartment === 'All'
+                ? allMembers
+                : allMembers.filter(m => m.department === currentDepartment);
+
+            if (filtered.length === 0) {
+                contentEl.innerHTML = '<div class="empty-message">No members yet in this department.</div>';
+                return;
+            }
+
+            // Separate leadership and others
+            const leadership = filtered.filter(m => m.department === 'Leadership');
+            const others = filtered.filter(m => m.department !== 'Leadership');
+
+            let html = '';
+
+            // Featured leadership section (only show if viewing all or leadership)
+            if ((currentDepartment === 'All' || currentDepartment === 'Leadership') && leadership.length > 0) {
+                html += '<div class="section"><div class="section-title">Leadership</div>';
+                html += '<div class="grid featured">';
+                html += leadership.map(member => renderCard(member, true)).join('');
+                html += '</div></div>';
+            }
+
+            // Regular members grid
+            if (others.length > 0) {
+                const sectionTitle = currentDepartment === 'All' ? 'Team' : '';
+                if (sectionTitle) html += `<div class="section"><div class="section-title">${sectionTitle}</div>`;
+                html += '<div class="grid">';
+                html += others.map(member => renderCard(member)).join('');
+                html += '</div>';
+                if (sectionTitle) html += '</div>';
+            }
+
+            contentEl.innerHTML = html;
+        }
+
+        function renderCard(member, isFeatured = false) {
+            const socials = member.socials || {};
+            let socialsHtml = '';
+
+            if (socials.github) {
+                socialsHtml += `<a href="${socials.github}" target="_blank" rel="noopener noreferrer" class="social-link" title="GitHub">GH</a>`;
+            }
+            if (socials.linkedin) {
+                socialsHtml += `<a href="${socials.linkedin}" target="_blank" rel="noopener noreferrer" class="social-link" title="LinkedIn">IN</a>`;
+            }
+            if (socials.instagram) {
+                socialsHtml += `<a href="${socials.instagram}" target="_blank" rel="noopener noreferrer" class="social-link" title="Instagram">IG</a>`;
+            }
+
+            const badge = isFeatured ? '<div class="featured-badge">LEADERSHIP</div>' : '';
+
+            return `
+                <div class="card">
+                    <img src="${member.image}" alt="${member.name}" class="card-image" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22200%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22280%22 height=%22200%22/%3E%3C/svg%3E'">
+                    <div class="card-content">
+                        ${badge}
+                        <div class="card-name">${escapeHtml(member.name)}</div>
+                        <div class="card-role">${escapeHtml(member.role)}</div>
+                        <div class="card-bio">${escapeHtml(member.bio)}</div>
+                        <div class="card-socials">
+                            ${socialsHtml}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Load members on page load
+        loadMembers();
+    </script>
+</body>
+</html>

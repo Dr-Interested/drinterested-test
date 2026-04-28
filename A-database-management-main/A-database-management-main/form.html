@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply to Join Dr. Interested</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        nav {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            text-decoration: none;
+        }
+
+        nav a {
+            color: #4CAF7D;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 2rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: #2d8659;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        h1 {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        input[type="text"],
+        input[type="url"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d0d0d0;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus,
+        input[type="url"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #4CAF7D;
+            box-shadow: 0 0 0 3px rgba(76, 175, 125, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .social-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .social-inputs .form-group {
+            margin-bottom: 0;
+        }
+
+        button {
+            background-color: #4CAF7D;
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #2d8659;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .message.success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #81c784;
+            display: block;
+        }
+
+        .message.error {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef5350;
+            display: block;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid #ffffff;
+            border-top-color: #4CAF7D;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#" class="logo">Dr. Interested</a>
+        <div>
+            <a href="form.html">Apply</a>
+            <a href="members.html">Members</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Apply to Join</h1>
+        <p class="subtitle">Help us build an interesting community. Tell us about yourself.</p>
+
+        <div id="message" class="message"></div>
+
+        <form id="memberForm">
+            <div class="form-group">
+                <label for="name">Full Name *</label>
+                <input type="text" id="name" name="name" required autocomplete="name">
+            </div>
+
+            <div class="form-group">
+                <label for="role">Role *</label>
+                <input type="text" id="role" name="role" placeholder="e.g., Designer, Developer, Researcher" required>
+            </div>
+
+            <div class="form-group">
+                <label for="department">Department *</label>
+                <select id="department" name="department" required>
+                    <option value="">Select a department</option>
+                    <option value="Leadership">Leadership</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Design">Design</option>
+                    <option value="Research">Research</option>
+                    <option value="Operations">Operations</option>
+                    <option value="Community">Community</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="bio">Bio *</label>
+                <textarea id="bio" name="bio" placeholder="Tell us about yourself, your interests, and what you'd like to contribute..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="image">Profile Image URL *</label>
+                <input type="url" id="image" name="image" placeholder="https://example.com/image.jpg" required>
+            </div>
+
+            <div class="form-group">
+                <label>Social Links (optional)</label>
+                <div class="social-inputs">
+                    <div class="form-group">
+                        <label for="github">GitHub</label>
+                        <input type="url" id="github" name="github" placeholder="https://github.com/username">
+                    </div>
+                    <div class="form-group">
+                        <label for="linkedin">LinkedIn</label>
+                        <input type="url" id="linkedin" name="linkedin" placeholder="https://linkedin.com/in/username">
+                    </div>
+                    <div class="form-group">
+                        <label for="instagram">Instagram</label>
+                        <input type="url" id="instagram" name="instagram" placeholder="https://instagram.com/username">
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit">
+                <span id="buttonText">Submit Application</span>
+            </button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        if (!window.supabaseClient) {
+            window.supabaseClient = window.supabase.createClient(
+                'https://uxegbptqrufidqoobndl.supabase.co',
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV4ZWdicHRxcnVmaWRxb29ibmRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MjQxOTUsImV4cCI6MjA5MTAwMDE5NX0.J5dwUFAAdzUrP_A-MTqflSMov0ooS_8UnAq1ha6xlv4'
+            );
+        }
+
+        const form = document.getElementById('memberForm');
+        const messageEl = document.getElementById('message');
+        const buttonText = document.getElementById('buttonText');
+
+        // Animate page load
+        gsap.from('nav', { duration: 0.5, opacity: 0, y: -20 });
+        gsap.from('.container > h1, .container > .subtitle', {
+            duration: 0.6,
+            opacity: 0,
+            y: 20,
+            stagger: 0.1,
+            delay: 0.2
+        });
+        gsap.from('.form-group', {
+            duration: 0.4,
+            opacity: 0,
+            x: -10,
+            stagger: 0.05,
+            delay: 0.3
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitButton = form.querySelector('button');
+            submitButton.disabled = true;
+            buttonText.innerHTML = '<span class="loading"></span>';
+
+            try {
+                // Sanitize inputs
+                const formData = {
+                    name: sanitizeInput(document.getElementById('name').value),
+                    role: sanitizeInput(document.getElementById('role').value),
+                    department: document.getElementById('department').value,
+                    bio: sanitizeInput(document.getElementById('bio').value),
+                    image: document.getElementById('image').value.trim(),
+                    socials: {
+                        github: document.getElementById('github').value.trim() || null,
+                        linkedin: document.getElementById('linkedin').value.trim() || null,
+                        instagram: document.getElementById('instagram').value.trim() || null,
+                    },
+                    approved: false,
+                };
+
+                // Validate image URL
+                new URL(formData.image);
+
+                // Validate social URLs if present
+                if (formData.socials.github) new URL(formData.socials.github);
+                if (formData.socials.linkedin) new URL(formData.socials.linkedin);
+                if (formData.socials.instagram) new URL(formData.socials.instagram);
+
+                const { data, error } = await window.supabaseClient
+                    .from('members')
+                    .insert([formData])
+                    .select();
+
+                if (error) throw error;
+
+                messageEl.classList.remove('error');
+                messageEl.classList.add('success');
+                messageEl.textContent = '✓ Application submitted successfully! We\'ll review it soon.';
+
+                gsap.from(messageEl, { duration: 0.3, opacity: 0, y: -10 });
+                form.reset();
+
+                setTimeout(() => {
+                    gsap.to(messageEl, { duration: 0.3, opacity: 0, onComplete: () => {
+                        messageEl.style.display = 'none';
+                    }});
+                }, 4000);
+            } catch (error) {
+                console.error('Error:', error.message);
+                messageEl.classList.remove('success');
+                messageEl.classList.add('error');
+                messageEl.textContent = `Error: ${error.message}`;
+                gsap.from(messageEl, { duration: 0.3, opacity: 0, y: -10 });
+            } finally {
+                submitButton.disabled = false;
+                buttonText.textContent = 'Submit Application';
+            }
+        });
+
+        // Sanitize input to prevent XSS
+        function sanitizeInput(input) {
+            const div = document.createElement('div');
+            div.textContent = input.trim();
+            return div.innerHTML;
+        }
+
+        // Animate form fields on focus
+        document.querySelectorAll('input, textarea, select').forEach(field => {
+            field.addEventListener('focus', () => {
+                gsap.to(field, { duration: 0.2, boxShadow: '0 0 0 3px rgba(76, 175, 125, 0.1)' });
+            });
+        });
+    </script>
+</body>
+</html>

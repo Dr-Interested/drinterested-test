@@ -1,0 +1,591 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 200 28% 31%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 0 0% 100%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 39 30% 95%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 39 30% 95%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 200 28% 31%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 30 26% 93%;
+    --card: 0 0% 6%;
+    --card-foreground: 30 26% 93%;
+    --popover: 0 0% 6%;
+    --popover-foreground: 30 26% 93%;
+    --primary: 200 28% 31%;
+    --primary-foreground: 30 26% 93%;
+    --secondary: 0 0% 8%;
+    --secondary-foreground: 30 26% 93%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 30 26% 93%;
+    --accent: 0 0% 10%;
+    --accent-foreground: 30 26% 93%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 30 26% 93%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 200 28% 31%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.main-bg {
+  background-color: #f5f1eb;
+}
+
+.secondary-bg {
+  background-color: #ffffff;
+}
+
+.third-bg {
+  background-color: #405862;
+}
+
+.third-text {
+  color: #405862;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4ecdc4;
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4ecdc4;
+}
+
+::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+  background: transparent;
+  display: none;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #4ecdc4 transparent;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+img,
+video,
+iframe,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+iframe {
+  width: 100%;
+}
+
+body:has(.team-page) {
+  background-color: #f5f1eb;
+}
+
+body:has(.team-page) main {
+  background-color: #f5f1eb;
+}
+
+.dark body:has(.team-page),
+.dark body:has(.team-page) main {
+  background-color: #000;
+}
+
+/* Image Hover Effects */
+.image-hover {
+  transition: transform 0.3s ease;
+}
+
+.image-hover:hover {
+  transform: scale(1.05);
+}
+
+/* Button Hover Animation */
+.btn-hover-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-hover-effect:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: -100%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: left 0.3s ease;
+  z-index: 1;
+}
+
+.btn-hover-effect:hover:after {
+  left: 100%;
+}
+
+/* Animation for logo pulse */
+@keyframes pulse-slow {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 5s ease-in-out infinite;
+}
+
+/* Page transitions */
+.page-transition-enter {
+  opacity: 0;
+}
+.page-transition-enter-active {
+  opacity: 1;
+  transition: opacity 300ms;
+}
+.page-transition-exit {
+  opacity: 1;
+}
+.page-transition-exit-active {
+  opacity: 0;
+  transition: opacity 300ms;
+}
+
+/* Improved card hover effects */
+.hover-card-effect {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-card-effect:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Loading animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.loading-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Improved focus styles for accessibility */
+:focus-visible {
+  outline: 2px solid #4ecdc4;
+  outline-offset: 2px;
+}
+
+html.accessibility-has-filters body {
+  filter: var(--access-filter, none);
+}
+
+html.accessibility-has-filters img,
+html.accessibility-has-filters video,
+html.accessibility-has-filters iframe,
+html.accessibility-has-filters svg {
+  filter: var(--access-media-filter, none);
+}
+
+html.accessibility-hide-images img,
+html.accessibility-hide-images video,
+html.accessibility-hide-images iframe {
+  opacity: 0;
+  pointer-events: none;
+}
+
+html.accessibility-highlight-links a {
+  background-color: yellow;
+  color: black;
+  text-decoration: underline;
+  font-weight: 700;
+}
+
+html.accessibility-highlight-links .accessibility-menu a,
+html.accessibility-highlight-links .accessibility-button a {
+  background-color: inherit;
+  color: inherit;
+  text-decoration: inherit;
+  font-weight: inherit;
+}
+
+/* Prevent image loading flicker */
+img {
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+img.loading {
+  opacity: 0;
+}
+
+/* Ensure images maintain aspect ratio */
+.img-container {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ensure rounded corners for logo images */
+.logo-image {
+  border-radius: 50%;
+}
+
+/* Hide scrollbars where custom buttons handle navigation */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes scroll-nudge-left {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-3px);
+  }
+}
+
+@keyframes scroll-nudge-right {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+}
+
+.scroll-arrow-left {
+  animation: scroll-nudge-left 1.6s ease-in-out infinite;
+}
+
+.scroll-arrow-right {
+  animation: scroll-nudge-right 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-arrow-left,
+  .scroll-arrow-right {
+    animation: none;
+  }
+}
+
+@keyframes ambassador-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ambassador-marquee {
+  position: relative;
+  overflow: hidden;
+  border-radius: 999px;
+  border: 1px solid rgba(64, 88, 98, 0.15);
+  background-color: #ffffff;
+  padding: 0.75rem 0;
+}
+
+.ambassador-marquee__track {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  width: max-content;
+  white-space: nowrap;
+  padding-left: 2.5rem;
+  animation: ambassador-marquee 30s linear infinite;
+}
+
+.ambassador-marquee__name {
+  color: #405862;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 640px) {
+  .ambassador-marquee {
+    padding: 0.6rem 0;
+  }
+
+  .ambassador-marquee__track {
+    gap: 1.75rem;
+    padding-left: 1.75rem;
+  }
+
+  .ambassador-marquee__name {
+    font-size: 0.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambassador-marquee__track {
+    animation: none;
+    transform: translateX(0);
+  }
+}
+
+/* Dark mode palette overrides */
+.dark {
+  color-scheme: dark;
+}
+
+.dark body {
+  background-color: #000;
+  color: #f1ece7;
+}
+
+.dark .main-bg,
+.dark .secondary-bg {
+  background-color: #000;
+  color: #f1ece7;
+}
+
+.dark .third-bg {
+  background-color: #405862;
+  color: #f1ece7;
+}
+
+.dark [class*="bg-white"] {
+  background-color: #000;
+  color: #f1ece7;
+}
+
+.dark [class*="bg-white/95"] {
+  background-color: rgba(0, 0, 0, 0.95);
+}
+
+.dark [class*="bg-white/90"] {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.dark [class*="bg-white/80"] {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.dark [class*="bg-white/60"] {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.dark [class*="bg-white/30"] {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.dark [class*="bg-white/20"] {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.dark [class*="bg-white/10"] {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.dark [class*="bg-white/5"] {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dark [class*="bg-[#f5f1eb]"] {
+  background-color: #000;
+  color: #f1ece7;
+}
+
+.dark [class*="bg-[#f5f1eb]/50"] {
+  background-color: #111;
+}
+
+.dark [class*="bg-[#f5f1eb]/30"] {
+  background-color: #111;
+}
+
+.dark [class*="bg-[#f5f1eb]/10"] {
+  background-color: #111;
+}
+
+.dark [class*="bg-[#f1ece7]"] {
+  background-color: #000;
+  color: #f1ece7;
+}
+
+.dark [class*="text-[#405862]"] {
+  color: #f1ece7;
+}
+
+.dark [class*="text-[#405862]/90"] {
+  color: rgba(241, 236, 231, 0.9);
+}
+
+.dark [class*="text-[#405862]/80"] {
+  color: rgba(241, 236, 231, 0.8);
+}
+
+.dark [class*="text-[#405862]/70"] {
+  color: rgba(241, 236, 231, 0.7);
+}
+
+.dark [class*="text-[#405862]/60"] {
+  color: rgba(241, 236, 231, 0.6);
+}
+
+.dark [class*="text-[#405862]/50"] {
+  color: rgba(241, 236, 231, 0.5);
+}
+
+.dark [class*="text-[#405862]/40"] {
+  color: rgba(241, 236, 231, 0.4);
+}
+
+.dark .text-muted-foreground {
+  color: #f1ece7;
+}
+
+.dark .ambassador-marquee {
+  background-color: #000;
+  border-color: rgba(241, 236, 231, 0.2);
+}
+
+.dark .ambassador-marquee__name {
+  color: #f1ece7;
+}
+
+.dark [class*="bg-[#4ecdc4]"][class*="text-[#405862]"],
+.dark [class*="bg-[#4ecdc4]/10"][class*="text-[#405862]"],
+.dark [class*="bg-[#4ecdc4]/20"][class*="text-[#405862]"],
+.dark [class*="bg-[#4ecdc4]/30"][class*="text-[#405862]"] {
+  color: #405862;
+}
+
+.dark .hero-fixed-colors [class*="text-[#405862]"] {
+  color: #405862;
+}
+
+.dark .hero-fixed-colors [class*="text-[#405862]/90"] {
+  color: rgba(64, 88, 98, 0.9);
+}
+
+.dark .hero-fixed-colors [class*="text-[#405862]/80"] {
+  color: rgba(64, 88, 98, 0.8);
+}
+
+.dark .keep-light-theme {
+  color: #405862;
+  background-color: #EDFAF9;
+  border-color: #4ecdc4;
+}
+
+.dark .keep-light-theme:hover {
+  color: #405862;
+  background-color: #D0F3F0;
+}
+
+@media (max-width: 1024px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  img,
+  video,
+  iframe {
+    max-width: 100%;
+    height: auto;
+  }
+
+  iframe {
+    width: 100%;
+  }
+
+  .hero-section {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-section .container {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .hero-section .grid {
+    gap: 1.5rem;
+  }
+
+  .hero-section + section {
+    margin-top: 0.75rem;
+  }
+
+  .full-bleed {
+    width: 100%;
+    left: 0;
+    right: 0;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
