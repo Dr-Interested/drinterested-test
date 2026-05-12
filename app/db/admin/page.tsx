@@ -4,7 +4,6 @@ import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase-client"
 import { Loader2 } from "lucide-react"
 
-const ADMIN_PASSWORD = "Dr.Interested@0123.HaroonRyan!"
 
 type Member = {
   id: string
@@ -24,8 +23,10 @@ type Member = {
 
 export default function DbAdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [authError, setAuthError] = useState(false)
+  const [isLoggingIn, setIsLoggingIn] = useState(false)
 
   const [members, setMembers] = useState<Member[]>([])
   const [activeTab, setActiveTab] = useState<"pending" | "approved">("pending")
@@ -37,8 +38,17 @@ export default function DbAdminPage() {
 
   // Auth Effect
   useEffect(() => {
-    const isAuth = sessionStorage.getItem("adminAuth") === "1"
-    if (isAuth) setIsAuthenticated(true)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session)
+    })
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session)
+    })
+
+    return () => subscription.unsubscribe()
   }, [])
 
   // Data Fetching Effect
@@ -48,19 +58,28 @@ export default function DbAdminPage() {
     fetchMembers()
   }, [isAuthenticated])
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (password === ADMIN_PASSWORD) {
-      sessionStorage.setItem("adminAuth", "1")
-      setIsAuthenticated(true)
-    } else {
+    setIsLoggingIn(true)
+    setAuthError(false)
+    
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+
+    setIsLoggingIn(false)
+
+    if (error) {
       setAuthError(true)
+    } else {
+      setEmail("")
       setPassword("")
     }
   }
 
-  const handleLogout = () => {
-    sessionStorage.removeItem("adminAuth")
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
     setIsAuthenticated(false)
   }
 
@@ -142,31 +161,48 @@ export default function DbAdminPage() {
     return (
       <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
         <div className="bg-white rounded-xl p-8 w-full max-w-sm shadow-[0_10px_40px_rgba(0,0,0,0.1)]">
-          <h2 className="text-2xl font-bold font-bricolage mb-6 text-[#1a1a1a]">Access Required</h2>
+          <h2 className="text-2xl font-bold font-bricolage mb-6 text-[#1a1a1a]">Admin Login</h2>
           
           {authError && (
-            <p className="text-[#c62828] text-sm mb-4">Invalid password</p>
+            <p className="text-[#c62828] text-sm mb-4">Invalid email or password.</p>
           )}
 
           <form onSubmit={handleLogin}>
             <input
+              type="email"
+              placeholder="Email address"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value)
+                setAuthError(false)
+              }}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4CAF7D] mb-4"
+              autoFocus
+              required
+            />
+            <input
               type="password"
-              placeholder="Enter password"
+              placeholder="Password"
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value)
                 setAuthError(false)
               }}
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4CAF7D] mb-4"
-              autoFocus
+              required
             />
             <button
               type="submit"
-              className="w-full py-3 bg-[#4CAF7D] hover:bg-[#2d8659] text-white font-semibold rounded-lg transition-colors"
+              disabled={isLoggingIn}
+              className="w-full py-3 bg-[#4CAF7D] hover:bg-[#2d8659] text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
             >
-              Verify
+              {isLoggingIn && <Loader2 className="w-4 h-4 animate-spin" />}
+              Login
             </button>
           </form>
+          <p className="text-xs text-gray-500 mt-4 text-center">
+            Admins must be added via the Supabase Dashboard.
+          </p>
         </div>
       </div>
     )
