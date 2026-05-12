@@ -1,40 +1,40 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { getWebinarBySlug, getAllWebinarSlugs } from "@/data/webinars"
 import WatchPageClient from "@/components/watch/WatchPageClient"
+import { createClient } from "@supabase/supabase-js"
 
-export async function generateStaticParams() {
-  const slugs = getAllWebinarSlugs()
-  return slugs.map((slug) => ({ slug }))
-}
+export const revalidate = 0; // Don't statically cache
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ id: string }>
 }): Promise<Metadata> {
-  const { slug } = await params
+  const { id } = await params
 
-  if (!slug) {
+  if (!id) {
     notFound()
   }
 
-  const webinar = getWebinarBySlug(slug)
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+
+  const { data: webinar } = await supabase.from("webinars").select("*").eq("id", id).single()
 
   if (!webinar) {
     return { title: "Webinar Not Found" }
   }
 
   const baseUrl = "https://www.drinterested.org"
-
-  const watchUrl = `${baseUrl}/watch/${webinar.slug}`
+  const watchUrl = `${baseUrl}/watch/${webinar.id}`
 
   return {
     title: webinar.title,
     description: webinar.description,
 
     keywords: [
-      ...webinar.tags,
       "Dr. Interested",
       "webinar",
       "medical education",
@@ -53,17 +53,17 @@ export async function generateMetadata({
       title: webinar.title,
       description: webinar.description,
       siteName: "Dr. Interested",
-      videos: [
+      videos: webinar.video_url ? [
         {
-          url: `${baseUrl}${webinar.videoPath}`,
+          url: webinar.video_url.startsWith('http') ? webinar.video_url : `${baseUrl}${webinar.video_url}`,
           width: 1920,
           height: 1080,
           type: "video/mp4",
         },
-      ],
+      ] : [],
       images: [
         {
-          url: `${baseUrl}${webinar.thumbnailPath}`,
+          url: webinar.image.startsWith('http') ? webinar.image : `${baseUrl}${webinar.image}`,
           width: 1280,
           height: 720,
           alt: webinar.title,
@@ -76,7 +76,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: webinar.title,
       description: webinar.description,
-      images: [`${baseUrl}${webinar.thumbnailPath}`],
+      images: [webinar.image.startsWith('http') ? webinar.image : `${baseUrl}${webinar.image}`],
     },
 
     alternates: {
@@ -96,11 +96,16 @@ export async function generateMetadata({
 export default async function WatchPage({
   params,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ id: string }>
 }) {
-  const { slug } = await params
+  const { id } = await params
 
-  const webinar = getWebinarBySlug(slug)
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+
+  const { data: webinar } = await supabase.from("webinars").select("*").eq("id", id).single()
 
   if (!webinar) {
     notFound()

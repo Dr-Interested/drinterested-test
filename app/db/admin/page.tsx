@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase-client"
 import { Loader2 } from "lucide-react"
-
+import EventsAdmin from "./EventsAdmin"
+import WebinarsAdmin from "./WebinarsAdmin"
 
 type Member = {
   id: string
@@ -21,6 +22,20 @@ type Member = {
   }
 }
 
+type Blog = {
+  id: string
+  slug: string
+  title: string
+  excerpt: string
+  content: string
+  cover_image: string
+  topic: string
+  reading_time: string
+  featured: boolean
+  author_id: string
+  created_at: string
+}
+
 export default function DbAdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [email, setEmail] = useState("")
@@ -28,13 +43,22 @@ export default function DbAdminPage() {
   const [authError, setAuthError] = useState(false)
   const [isLoggingIn, setIsLoggingIn] = useState(false)
 
+  const [activeMainTab, setActiveMainTab] = useState<"members" | "blogs" | "events" | "webinars">("members")
+
+  // Members State
   const [members, setMembers] = useState<Member[]>([])
   const [activeTab, setActiveTab] = useState<"pending" | "approved">("pending")
   const [loading, setLoading] = useState(true)
-
   const [editingMember, setEditingMember] = useState<Member | null>(null)
   const [editForm, setEditForm] = useState<Partial<Member>>({})
   const [savingEdit, setSavingEdit] = useState(false)
+
+  // Blogs State
+  const [blogs, setBlogs] = useState<Blog[]>([])
+  const [editingBlog, setEditingBlog] = useState<Blog | null>(null)
+  const [isCreatingBlog, setIsCreatingBlog] = useState(false)
+  const [blogForm, setBlogForm] = useState<Partial<Blog>>({})
+  const [savingBlog, setSavingBlog] = useState(false)
 
   // Auth Effect
   useEffect(() => {
@@ -55,8 +79,14 @@ export default function DbAdminPage() {
   useEffect(() => {
     if (!isAuthenticated) return
 
-    fetchMembers()
-  }, [isAuthenticated])
+    if (activeMainTab === "members") {
+      fetchMembers()
+    } else {
+      fetchBlogs()
+      // We also need members for the author dropdown
+      fetchMembers()
+    }
+  }, [isAuthenticated, activeMainTab])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -96,6 +126,24 @@ export default function DbAdminPage() {
     } catch (err: any) {
       console.error(err)
       alert("Error loading members")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const fetchBlogs = async () => {
+    setLoading(true)
+    try {
+      const { data, error } = await supabase
+        .from("blogs")
+        .select("*")
+        .order("created_at", { ascending: false })
+
+      if (error) throw error
+      setBlogs(data || [])
+    } catch (err: any) {
+      console.error(err)
+      alert("Error loading blogs")
     } finally {
       setLoading(false)
     }
@@ -157,6 +205,57 @@ export default function DbAdminPage() {
     }
   }
 
+  const handleSaveBlog = async () => {
+    setSavingBlog(true)
+    try {
+      // Auto-generate slug from title if missing
+      const finalSlug = blogForm.slug || blogForm.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+
+      const blogData = {
+        title: blogForm.title,
+        slug: finalSlug,
+        excerpt: blogForm.excerpt,
+        content: blogForm.content,
+        cover_image: blogForm.cover_image,
+        topic: blogForm.topic,
+        reading_time: blogForm.reading_time,
+        author_id: blogForm.author_id,
+        featured: blogForm.featured || false
+      }
+
+      let error;
+      if (isCreatingBlog) {
+        const res = await supabase.from("blogs").insert([blogData])
+        error = res.error
+      } else if (editingBlog) {
+        const res = await supabase.from("blogs").update(blogData).eq("id", editingBlog.id)
+        error = res.error
+      }
+
+      if (error) throw error
+      setEditingBlog(null)
+      setIsCreatingBlog(false)
+      fetchBlogs()
+    } catch (err) {
+      console.error(err)
+      alert("Failed to save blog.")
+    } finally {
+      setSavingBlog(false)
+    }
+  }
+
+  const handleDeleteBlog = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this blog?")) return
+    try {
+      const { error } = await supabase.from("blogs").delete().eq("id", id)
+      if (error) throw error
+      fetchBlogs()
+    } catch (error) {
+      console.error(error)
+      alert("Failed to delete blog.")
+    }
+  }
+
   if (!isAuthenticated) {
     return (
       <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
@@ -215,7 +314,7 @@ export default function DbAdminPage() {
   return (
     <div className="container max-w-6xl mx-auto py-12 px-4 relative">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-        <h1 className="text-3xl font-bold font-bricolage text-[#1a1a1a]">Manage Members</h1>
+        <h1 className="text-3xl font-bold font-bricolage text-[#1a1a1a]">Admin Dashboard</h1>
         <button
           onClick={handleLogout}
           className="text-[#c62828] hover:text-[#a01a1a] font-medium transition-colors"
@@ -224,115 +323,221 @@ export default function DbAdminPage() {
         </button>
       </div>
 
-      <div className="flex gap-4 border-b-2 border-gray-200 mb-8">
+      {/* Main Navigation */}
+      <div className="flex gap-4 mb-8 bg-gray-100 p-1 rounded-lg w-fit overflow-x-auto">
         <button
-          onClick={() => setActiveTab("pending")}
-          className={`flex items-center gap-2 px-6 py-3 font-medium text-[0.95rem] border-b-4 transition-colors -mb-[2px] ${
-            activeTab === "pending"
-              ? "text-[#4CAF7D] border-[#4CAF7D]"
-              : "text-gray-500 border-transparent hover:text-[#4CAF7D]"
+          onClick={() => setActiveMainTab("members")}
+          className={`px-6 py-2 rounded-md font-medium text-sm transition-all whitespace-nowrap ${
+            activeMainTab === "members" ? "bg-white text-[#4CAF7D] shadow-sm" : "text-gray-500 hover:text-gray-700"
           }`}
         >
-          Pending
-          <span className="bg-[#4CAF7D] text-white px-2 py-0.5 rounded-full text-xs font-bold">
-            {pendingMembers.length}
-          </span>
+          Manage Members
         </button>
         <button
-          onClick={() => setActiveTab("approved")}
-          className={`flex items-center gap-2 px-6 py-3 font-medium text-[0.95rem] border-b-4 transition-colors -mb-[2px] ${
-            activeTab === "approved"
-              ? "text-[#4CAF7D] border-[#4CAF7D]"
-              : "text-gray-500 border-transparent hover:text-[#4CAF7D]"
+          onClick={() => setActiveMainTab("blogs")}
+          className={`px-6 py-2 rounded-md font-medium text-sm transition-all whitespace-nowrap ${
+            activeMainTab === "blogs" ? "bg-white text-[#4CAF7D] shadow-sm" : "text-gray-500 hover:text-gray-700"
           }`}
         >
-          Approved
-          <span className="bg-[#4CAF7D] text-white px-2 py-0.5 rounded-full text-xs font-bold">
-            {approvedMembers.length}
-          </span>
+          Manage Blogs
+        </button>
+        <button
+          onClick={() => setActiveMainTab("events")}
+          className={`px-6 py-2 rounded-md font-medium text-sm transition-all whitespace-nowrap ${
+            activeMainTab === "events" ? "bg-white text-[#4CAF7D] shadow-sm" : "text-gray-500 hover:text-gray-700"
+          }`}
+        >
+          Manage Events
+        </button>
+        <button
+          onClick={() => setActiveMainTab("webinars")}
+          className={`px-6 py-2 rounded-md font-medium text-sm transition-all whitespace-nowrap ${
+            activeMainTab === "webinars" ? "bg-white text-[#4CAF7D] shadow-sm" : "text-gray-500 hover:text-gray-700"
+          }`}
+        >
+          Manage Webinars
         </button>
       </div>
 
-      {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 text-gray-500">
-          <Loader2 className="w-8 h-8 animate-spin mb-4 text-[#4CAF7D]" />
-          <p>Loading members...</p>
-        </div>
-      ) : displayMembers.length === 0 ? (
-        <div className="text-center py-20 text-gray-500">
-          No {activeTab} members
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {displayMembers.map((member) => (
-            <div key={member.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden flex flex-col">
-              <img
-                src={member.image || "data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22200%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22280%22 height=%22200%22/%3E%3C/svg%3E"}
-                alt={member.name}
-                className="w-full h-[200px] object-cover bg-gray-100"
-              />
-              <div className="p-5 flex flex-col flex-grow">
-                <div className="mb-3">
-                  {member.approved ? (
-                    <span className="inline-block bg-[#d4edda] text-[#155724] px-2 py-1 rounded text-xs font-bold">
-                      APPROVED
-                    </span>
-                  ) : (
-                    <span className="inline-block bg-[#fff3cd] text-[#856404] px-2 py-1 rounded text-xs font-bold">
-                      PENDING
-                    </span>
-                  )}
-                </div>
+      {activeMainTab === "events" && <EventsAdmin />}
+      {activeMainTab === "webinars" && <WebinarsAdmin />}
 
-                <h3 className="font-bricolage text-[1.1rem] font-semibold text-[#1a1a1a] mb-1">{member.name}</h3>
-                <p className="text-[#4CAF7D] font-medium text-sm mb-1">{member.role}</p>
-                <p className="text-gray-400 text-xs mb-3">{member.department}</p>
-                <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">{member.bio}</p>
+      {/* ----------------- MEMBERS TAB ----------------- */}
+      {activeMainTab === "members" && (
+        <>
+          <div className="flex gap-4 border-b-2 border-gray-200 mb-8">
+            <button
+              onClick={() => setActiveTab("pending")}
+              className={`flex items-center gap-2 px-6 py-3 font-medium text-[0.95rem] border-b-4 transition-colors -mb-[2px] ${
+                activeTab === "pending"
+                  ? "text-[#4CAF7D] border-[#4CAF7D]"
+                  : "text-gray-500 border-transparent hover:text-[#4CAF7D]"
+              }`}
+            >
+              Pending
+              <span className="bg-[#4CAF7D] text-white px-2 py-0.5 rounded-full text-xs font-bold">
+                {pendingMembers.length}
+              </span>
+            </button>
+            <button
+              onClick={() => setActiveTab("approved")}
+              className={`flex items-center gap-2 px-6 py-3 font-medium text-[0.95rem] border-b-4 transition-colors -mb-[2px] ${
+                activeTab === "approved"
+                  ? "text-[#4CAF7D] border-[#4CAF7D]"
+                  : "text-gray-500 border-transparent hover:text-[#4CAF7D]"
+              }`}
+            >
+              Approved
+              <span className="bg-[#4CAF7D] text-white px-2 py-0.5 rounded-full text-xs font-bold">
+                {approvedMembers.length}
+              </span>
+            </button>
+          </div>
 
-                <div className="text-xs text-gray-400 mb-4">
-                  Applied {new Date(member.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                </div>
-
-                <div className="mt-auto flex flex-col gap-2 pt-4 border-t border-gray-50">
-                  <div className="flex gap-2">
-                    {!member.approved ? (
-                      <>
-                        <button
-                          onClick={() => handleApprove(member.id)}
-                          className="flex-1 py-2 bg-[#4CAF7D] hover:bg-[#2d8659] text-white text-sm font-semibold rounded transition-colors"
-                        >
-                          Approve
-                        </button>
-                        <button
-                          onClick={() => handleRejectOrRemove(member.id, false)}
-                          className="flex-1 py-2 bg-[#f5f5f5] hover:bg-[#ffebee] text-[#c62828] border border-gray-200 text-sm font-semibold rounded transition-colors"
-                        >
-                          Reject
-                        </button>
-                      </>
-                    ) : (
-                      <button
-                        onClick={() => handleRejectOrRemove(member.id, true)}
-                        className="flex-1 py-2 bg-[#f5f5f5] hover:bg-[#ffebee] text-[#c62828] border border-gray-200 text-sm font-semibold rounded transition-colors"
-                      >
-                        Remove
-                      </button>
-                    )}
-                  </div>
-                  <button
-                    onClick={() => handleEditClick(member)}
-                    className="w-full py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-transparent text-sm font-semibold rounded transition-colors"
-                  >
-                    Edit Info
-                  </button>
-                </div>
-              </div>
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-20 text-gray-500">
+              <Loader2 className="w-8 h-8 animate-spin mb-4 text-[#4CAF7D]" />
+              <p>Loading members...</p>
             </div>
-          ))}
-        </div>
+          ) : displayMembers.length === 0 ? (
+            <div className="text-center py-20 text-gray-500">
+              No {activeTab} members
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {displayMembers.map((member) => (
+                <div key={member.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden flex flex-col">
+                  <img
+                    src={member.image || "data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22200%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22280%22 height=%22200%22/%3E%3C/svg%3E"}
+                    alt={member.name}
+                    className="w-full h-[200px] object-cover bg-gray-100"
+                  />
+                  <div className="p-5 flex flex-col flex-grow">
+                    <div className="mb-3">
+                      {member.approved ? (
+                        <span className="inline-block bg-[#d4edda] text-[#155724] px-2 py-1 rounded text-xs font-bold">
+                          APPROVED
+                        </span>
+                      ) : (
+                        <span className="inline-block bg-[#fff3cd] text-[#856404] px-2 py-1 rounded text-xs font-bold">
+                          PENDING
+                        </span>
+                      )}
+                    </div>
+
+                    <h3 className="font-bricolage text-[1.1rem] font-semibold text-[#1a1a1a] mb-1">{member.name}</h3>
+                    <p className="text-[#4CAF7D] font-medium text-sm mb-1">{member.role}</p>
+                    <p className="text-gray-400 text-xs mb-3">{member.department}</p>
+                    <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">{member.bio}</p>
+
+                    <div className="text-xs text-gray-400 mb-4">
+                      Applied {new Date(member.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                    </div>
+
+                    <div className="mt-auto flex flex-col gap-2 pt-4 border-t border-gray-50">
+                      <div className="flex gap-2">
+                        {!member.approved ? (
+                          <>
+                            <button
+                              onClick={() => handleApprove(member.id)}
+                              className="flex-1 py-2 bg-[#4CAF7D] hover:bg-[#2d8659] text-white text-sm font-semibold rounded transition-colors"
+                            >
+                              Approve
+                            </button>
+                            <button
+                              onClick={() => handleRejectOrRemove(member.id, false)}
+                              className="flex-1 py-2 bg-[#f5f5f5] hover:bg-[#ffebee] text-[#c62828] border border-gray-200 text-sm font-semibold rounded transition-colors"
+                            >
+                              Reject
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            onClick={() => handleRejectOrRemove(member.id, true)}
+                            className="flex-1 py-2 bg-[#f5f5f5] hover:bg-[#ffebee] text-[#c62828] border border-gray-200 text-sm font-semibold rounded transition-colors"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => handleEditClick(member)}
+                        className="w-full py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-transparent text-sm font-semibold rounded transition-colors"
+                      >
+                        Edit Info
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
       )}
 
-      {/* Edit Modal */}
+      {/* ----------------- BLOGS TAB ----------------- */}
+      {activeMainTab === "blogs" && (
+        <>
+          <div className="flex justify-between items-center border-b-2 border-gray-200 pb-4 mb-8">
+            <h2 className="text-xl font-semibold text-gray-800">Published Blogs</h2>
+            <button
+              onClick={() => {
+                setBlogForm({})
+                setIsCreatingBlog(true)
+              }}
+              className="px-4 py-2 bg-[#4CAF7D] hover:bg-[#2d8659] text-white font-semibold rounded-lg transition-colors"
+            >
+              + Create New Blog
+            </button>
+          </div>
+
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-20 text-gray-500">
+              <Loader2 className="w-8 h-8 animate-spin mb-4 text-[#4CAF7D]" />
+              <p>Loading blogs...</p>
+            </div>
+          ) : blogs.length === 0 ? (
+            <div className="text-center py-20 text-gray-500">
+              No blogs found
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {blogs.map((blog) => (
+                <div key={blog.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden flex flex-col">
+                  <div className="relative h-[200px] w-full bg-gray-100">
+                    <img src={blog.cover_image || "/placeholder.svg"} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="p-5 flex flex-col flex-grow">
+                    <div className="text-xs text-gray-500 mb-2">{new Date(blog.created_at).toLocaleDateString()} • {blog.reading_time}</div>
+                    <h3 className="font-bricolage text-[1.1rem] font-semibold text-[#1a1a1a] mb-2">{blog.title}</h3>
+                    <p className="text-gray-600 text-sm line-clamp-3 mb-4">{blog.excerpt}</p>
+                    
+                    <div className="mt-auto flex gap-2 border-t pt-4 border-gray-50">
+                      <button
+                        onClick={() => {
+                          setEditingBlog(blog)
+                          setBlogForm(blog)
+                        }}
+                        className="flex-1 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold text-sm rounded transition-colors"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteBlog(blog.id)}
+                        className="flex-1 py-2 bg-red-50 hover:bg-red-100 text-red-700 font-semibold text-sm rounded transition-colors"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Edit Member Modal */}
       {editingMember && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
@@ -432,6 +637,129 @@ export default function DbAdminPage() {
               >
                 {savingEdit && <Loader2 className="w-4 h-4 animate-spin" />}
                 Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit/Create Blog Modal */}
+      {(isCreatingBlog || editingBlog) && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl p-8 w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl">
+            <h2 className="text-2xl font-bold font-bricolage mb-6 text-[#1a1a1a]">
+              {isCreatingBlog ? "Write New Blog" : "Edit Blog"}
+            </h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Title</label>
+                <input
+                  type="text"
+                  value={blogForm.title || ""}
+                  onChange={(e) => setBlogForm({ ...blogForm, title: e.target.value })}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4CAF7D]"
+                />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Topic</label>
+                  <input
+                    type="text"
+                    value={blogForm.topic || ""}
+                    onChange={(e) => setBlogForm({ ...blogForm, topic: e.target.value })}
+                    placeholder="Health, Medicine, etc."
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4CAF7D]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Author</label>
+                  <select
+                    value={blogForm.author_id || ""}
+                    onChange={(e) => setBlogForm({ ...blogForm, author_id: e.target.value })}
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4CAF7D]"
+                  >
+                    <option value="" disabled>Select an Author</option>
+                    {members.map(m => (
+                      <option key={m.id} value={m.id}>{m.name} ({m.role})</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Cover Image URL</label>
+                  <input
+                    type="text"
+                    value={blogForm.cover_image || ""}
+                    onChange={(e) => setBlogForm({ ...blogForm, cover_image: e.target.value })}
+                    placeholder="/cover.png"
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4CAF7D]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Reading Time</label>
+                  <input
+                    type="text"
+                    value={blogForm.reading_time || ""}
+                    onChange={(e) => setBlogForm({ ...blogForm, reading_time: e.target.value })}
+                    placeholder="5 min read"
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4CAF7D]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Excerpt (Short Summary)</label>
+                <textarea
+                  value={blogForm.excerpt || ""}
+                  onChange={(e) => setBlogForm({ ...blogForm, excerpt: e.target.value })}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4CAF7D]"
+                  rows={2}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Content (Markdown Supported)</label>
+                <textarea
+                  value={blogForm.content || ""}
+                  onChange={(e) => setBlogForm({ ...blogForm, content: e.target.value })}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4CAF7D] font-mono text-sm"
+                  rows={15}
+                  placeholder="## Heading\n\nWrite your markdown content here..."
+                />
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <input 
+                  type="checkbox" 
+                  id="featured"
+                  checked={!!blogForm.featured}
+                  onChange={(e) => setBlogForm({ ...blogForm, featured: e.target.checked })}
+                />
+                <label htmlFor="featured" className="text-sm font-semibold text-gray-700">Feature this post on the main page</label>
+              </div>
+
+            </div>
+            <div className="flex justify-end gap-3 mt-8">
+              <button
+                onClick={() => {
+                  setEditingBlog(null)
+                  setIsCreatingBlog(false)
+                }}
+                className="px-6 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold rounded transition-colors"
+                disabled={savingBlog}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveBlog}
+                className="px-6 py-2 bg-[#4CAF7D] hover:bg-[#2d8659] text-white font-semibold rounded transition-colors flex items-center gap-2"
+                disabled={savingBlog}
+              >
+                {savingBlog && <Loader2 className="w-4 h-4 animate-spin" />}
+                {isCreatingBlog ? "Publish Blog" : "Save Changes"}
               </button>
             </div>
           </div>

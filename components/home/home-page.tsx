@@ -24,7 +24,7 @@ import ScrollToTop from "@/components/scroll-to-top"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { getLatestOngoingEvent } from "@/data/events"
-import { getFeaturedPosts, getRecentPosts } from "@/data/blog"
+import { getFeaturedPosts } from "@/data/blog"
 import NewsletterForm from "@/components/newsletter-form"
 import { motion } from "framer-motion"
 import { Quote, Users, TrendingUp, Heart, Award, BookOpen, Sparkles, Globe } from "lucide-react"
@@ -32,12 +32,11 @@ import SeoSchema from "@/components/seo-schema"
 import { generateOrganizationSchema } from "@/lib/seo-utils"
 import DiscordIcon from "@/components/icons/discord-icon"
 
-
   const scaleIn = {
     hidden: { opacity: 0, scale: 0.9 },
     visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
   }
-export default function HomePage() {
+export default function HomePage({ recentPost }: { recentPost?: any }) {
   const [isLoaded, setIsLoaded] = useState(false)
 
   // Scroll to top on page load test
@@ -50,8 +49,6 @@ export default function HomePage() {
   const latestEvent = getLatestOngoingEvent()
   // Get featured blog posts
   const featuredPosts = getFeaturedPosts().slice(0, 3)
-  // Get the most recent blog post
-  const recentPost = getRecentPosts(1)[0]
 
   // Animation variants
   const fadeIn = {

@@ -3,23 +3,46 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { blogPosts, blogTopics, getFeaturedPosts, getRecentPosts } from "@/data/blog"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Clock, ChevronRight, Search } from "lucide-react"
 import ScrollToTop from "@/components/scroll-to-top"
-import NewsletterForm from "@/components/newsletter-form"
 import SeoSchema from "@/components/seo-schema"
 
-export default function BlogClientPage() {
+type BlogPost = {
+  slug: string
+  title: string
+  excerpt: string
+  content: string
+  coverImage: string
+  topic: string
+  readingTime: string
+  featured?: boolean
+  date: string
+  author: {
+    name: string
+    image: string
+    bio: string
+    linkedIn?: string
+    twitter?: string
+    instagram?: string
+  }
+}
+
+export default function BlogClientPage({ initialBlogs }: { initialBlogs: BlogPost[] }) {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null)
-  const [filteredPosts, setFilteredPosts] = useState(blogPosts)
-  const featuredPosts = getFeaturedPosts()
-  const recentPosts = getRecentPosts(4)
+  const [filteredPosts, setFilteredPosts] = useState(initialBlogs)
+  
+  const featuredPosts = initialBlogs.filter(p => p.featured)
+  const recentPosts = initialBlogs.slice(0, 4)
+
+  // Extract unique topics from the dynamic data
+  const blogTopics = Array.from(new Set(initialBlogs.map(b => b.topic)))
+    .map(topicName => ({ name: topicName }))
 
   useEffect(() => {
-    let results = blogPosts
+    let results = initialBlogs
 
     if (searchTerm) {
       results = results.filter(
@@ -35,7 +58,7 @@ export default function BlogClientPage() {
     }
 
     setFilteredPosts(results)
-  }, [searchTerm, selectedTopic])
+  }, [searchTerm, selectedTopic, initialBlogs])
 
   // SEO schema for blog listing page
   const blogListingSchema = {
@@ -132,9 +155,6 @@ export default function BlogClientPage() {
           {selectedTopic && (
             <div className="mb-8 p-6 bg-white rounded-lg shadow-sm">
               <h3 className="text-xl font-bold mb-2 text-[#405862]">{selectedTopic}</h3>
-              <p className="text-[#405862]/80">
-                {blogTopics.find((topic) => topic.name === selectedTopic)?.description}
-              </p>
             </div>
           )}
         </div>

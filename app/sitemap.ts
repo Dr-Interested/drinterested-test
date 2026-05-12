@@ -1,6 +1,4 @@
 import type { MetadataRoute } from "next"
-import { blogPosts, blogTopics } from "@/data/blog"
-import { webinars } from "@/data/webinars"
 import { supabase } from "@/lib/supabase-client"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -142,30 +140,35 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
+  // Fetch blogs
+  const { data: blogs } = await supabase.from('blogs').select('slug, created_at, topic')
+  const blogTopics = [...new Set((blogs || []).map(b => b.topic).filter(Boolean))]
+
   const blogTopicPages: MetadataRoute.Sitemap = blogTopics.map((topic) => ({
-    url: `${baseUrl}/blog/topic/${topic.slug}`,
+    url: `${baseUrl}/blog/topic/${topic.toLowerCase().replace(/\s+/g, '-')}`,
     lastModified: currentDate,
     changeFrequency: "weekly" as const,
     priority: 0.65,
   }))
 
-  const blogPostPages: MetadataRoute.Sitemap = blogPosts.map((post) => ({
+  const blogPostPages: MetadataRoute.Sitemap = (blogs || []).map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: currentDate,
+    lastModified: new Date(post.created_at),
     changeFrequency: "monthly" as const,
     priority: 0.6,
   }))
 
-  const watchPages: MetadataRoute.Sitemap = webinars.map((webinar) => ({
-    url: `${baseUrl}/watch/${webinar.slug}`,
-    lastModified: currentDate,
+  // Fetch webinars
+  const { data: webinars } = await supabase.from('webinars').select('id, created_at')
+  const watchPages: MetadataRoute.Sitemap = (webinars || []).map((webinar) => ({
+    url: `${baseUrl}/watch/${webinar.id}`,
+    lastModified: new Date(webinar.created_at),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }))
 
   // Fetch all members from supabase
   const { data: members } = await supabase.from('members').select('id')
-
   const teamPages: MetadataRoute.Sitemap = (members || []).map((member) => ({
     url: `${baseUrl}/team/${member.id}`,
     lastModified: currentDate,

@@ -1,22 +1,25 @@
-"use client"
-
-import { useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import ScrollToTop from "@/components/scroll-to-top"
-import { webinars } from "@/data/webinars" // adjust path if needed
+import { createClient } from "@supabase/supabase-js"
 
-export default function WebinarGalleryPage() {
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
+export const revalidate = 0; // Don't statically cache
+
+export default async function WebinarGalleryPage() {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+
+  const { data: webinars } = await supabase
+    .from("webinars")
+    .select("*")
+    .order("created_at", { ascending: true })
 
   return (
     <div>
-      <ScrollToTop />
       {/* Header Section */}
       <section className="hero-section bg-[#f5f1eb] py-12">
         <div className="container">
@@ -44,17 +47,17 @@ export default function WebinarGalleryPage() {
       <section className="py-16 bg-white">
         <div className="container">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {webinars.map((webinar) => (
+            {webinars && webinars.map((webinar) => (
               <Link
                 key={webinar.id}
-                href={`/watch/${webinar.slug}`}
+                href={`/watch/${webinar.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <Card className="overflow-hidden border-[#405862] shadow-md hover:shadow-lg transition-shadow cursor-pointer">
                   <div className="relative w-full aspect-video">
                     <Image
-                      src={webinar.thumbnailPath || "/placeholder.svg"}
+                      src={webinar.image || "/placeholder.svg"}
                       alt={webinar.title}
                       fill
                       className="object-cover"
@@ -68,7 +71,7 @@ export default function WebinarGalleryPage() {
                       {webinar.description}
                     </p>
                     <p className="text-xs text-[#4ecdc4]">
-                      {webinar.date} • {webinar.duration}
+                      {webinar.date} • {webinar.time}
                     </p>
                   </div>
                 </Card>

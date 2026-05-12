@@ -5,11 +5,10 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Calendar, Clock, MapPin, AlertCircle, CheckCircle, ExternalLink, ArrowRight } from "lucide-react"
-import { upcomingEvents, pastEvents } from "@/data/events"
 import NewsletterForm from "@/components/newsletter-form"
 import { motion } from "framer-motion"
 
-export default function EventsClientPage() {
+export default function EventsClientPage({ upcomingEvents, pastEvents }: { upcomingEvents: any[], pastEvents: any[] }) {
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
