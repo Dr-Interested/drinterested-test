@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase-client"
 import { Loader2, Github, Linkedin, Instagram } from "lucide-react"
+import Image from "next/image"
 
 type Member = {
   id: string
@@ -221,11 +222,14 @@ export default function DbMembersPage() {
 function MemberCard({ member, isFeatured = false }: { member: Member; isFeatured?: boolean }) {
   return (
     <div className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-[#4CAF7D] hover:shadow-[0_8px_24px_rgba(76,175,125,0.12)] transition-all flex flex-col group">
-      <img
-        src={member.image || "data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22200%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22280%22 height=%22200%22/%3E%3C/svg%3E"}
-        alt={member.name}
-        className="w-full h-[200px] object-cover bg-gray-100"
-      />
+      <div className="relative w-full h-[200px] bg-gray-100">
+        <Image
+          src={member.image?.startsWith('http') ? member.image : (member.image?.startsWith('/') ? member.image : `/${member.image || 'logo.png'}`)}
+          alt={member.name}
+          fill
+          className="object-cover"
+        />
+      </div>
       <div className="p-6 flex flex-col flex-grow">
         {isFeatured && (
           <div className="mb-2">
