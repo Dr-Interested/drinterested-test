@@ -240,7 +240,7 @@ function MemberCard({ member, isFeatured = false }: { member: Member; isFeatured
         )}
         <h3 className="font-bricolage text-[1.1rem] font-semibold text-[#1a1a1a] mb-1">{member.name}</h3>
         <p className="text-[#4CAF7D] font-medium text-sm mb-3">{member.role}</p>
-        <p className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow line-clamp-4">{member.bio}</p>
+        <p className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow">{member.bio}</p>
         
         {/* Socials */}
         <div className="flex gap-3 mt-auto pt-4 border-t border-gray-50">
