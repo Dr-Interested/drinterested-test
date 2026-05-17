@@ -10,10 +10,8 @@ const baseUrl = "https://www.drinterested.org"
 const truncate = (text: string, maxLength = 160) =>
   text.length > maxLength ? `${text.slice(0, maxLength - 3)}...` : text
 
-export async function generateStaticParams() {
-  const { data } = await supabase.from('members').select('id')
-  return (data || []).map((member) => ({ id: member.id }))
-}
+export const dynamic = 'force-dynamic'
+export const revalidate = 3600 // revalidate every hour
 
 export async function generateMetadata({
   params,

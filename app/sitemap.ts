@@ -19,10 +19,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/members/join`,
+      url: `${baseUrl}/members/apply`,
       lastModified: currentDate,
       changeFrequency: "monthly",
-      priority: 1.0,
+      priority: 0.9,
     },
     {
       url: `${baseUrl}/members`,

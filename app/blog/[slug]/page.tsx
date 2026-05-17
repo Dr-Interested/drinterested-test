@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     title: blog.title,
     description: blog.excerpt,
     openGraph: {
-      images: [blog.cover_image],
+      images: blog.cover_image ? [blog.cover_image] : ["/websitebanner.jpg"],
     },
   }
 }
@@ -85,8 +85,9 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       image: authorData.image || "/logo.png",
       bio: authorData.bio || "",
       linkedIn: authorData.socials?.linkedin || "",
-      twitter: authorData.socials?.github || "",
+      twitter: authorData.socials?.twitter || "",
       instagram: authorData.socials?.instagram || "",
+      github: authorData.socials?.github || "",
     }
   }
 

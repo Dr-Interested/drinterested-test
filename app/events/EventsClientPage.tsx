@@ -211,7 +211,21 @@ export default function EventsClientPage({ upcomingEvents, pastEvents }: { upcom
 
       {/* Stay Updated */}
       <section className="py-10 bg-[#405862] text-white">
-        <div className="container max-w-4xl">
+        <div className="container max-w-4xl text-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-3">Stay in the Loop</h2>
+          <p className="text-white/80 mb-8 max-w-xl mx-auto">
+            Get notified about upcoming events, new initiatives, and opportunities — delivered straight to your inbox.
+          </p>
+          <div className="max-w-md mx-auto mb-6">
+            <NewsletterForm darkMode={true} showFirstName={false} compact={true} />
+          </div>
+          <p className="text-white/60 text-sm">
+            Or join our{" "}
+            <Link href="https://discord.gg/pzbGRgsGXY" target="_blank" rel="noopener noreferrer" className="underline hover:text-white transition-colors">
+              Discord community
+            </Link>{" "}
+            for real-time updates.
+          </p>
         </div>
       </section>
     </div>

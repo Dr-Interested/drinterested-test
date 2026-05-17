@@ -26,3 +26,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# original static project (reference copy, not part of build)
+/drinterested-final-main/
+
+# dev/migration scripts (not needed in production)
+/scripts/

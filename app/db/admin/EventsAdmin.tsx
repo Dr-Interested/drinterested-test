@@ -79,11 +79,31 @@ export default function EventsAdmin() {
     }
   }
 
+  const extractStoragePath = (url: string | null | undefined, bucket: string): string | null => {
+    if (!url) return null
+    try {
+      const marker = `/storage/v1/object/public/${bucket}/`
+      const idx = url.indexOf(marker)
+      if (idx === -1) return null
+      return decodeURIComponent(url.slice(idx + marker.length))
+    } catch {
+      return null
+    }
+  }
+
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this event?")) return
     try {
+      const { data: eventData } = await supabase.from("events").select("image").eq("id", id).single()
       const { error } = await supabase.from("events").delete().eq("id", id)
       if (error) throw error
+
+      // Cascade: delete event image from Supabase Storage if it was an uploaded file
+      const imgPath = extractStoragePath(eventData?.image, "event-images")
+      if (imgPath) {
+        await supabase.storage.from("event-images").remove([imgPath])
+      }
+
       fetchEvents()
     } catch (err) {
       console.error(err)

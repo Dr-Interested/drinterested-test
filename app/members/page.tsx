@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase-client"
-import { Loader2, Github, Linkedin, Instagram } from "lucide-react"
+import { Loader2, Github, Linkedin, Instagram, ChevronDown, ChevronUp } from "lucide-react"
 import Image from "next/image"
 
 type Member = {
@@ -23,6 +23,7 @@ export default function DbMembersPage() {
   const [members, setMembers] = useState<Member[]>([])
   const [departments, setDepartments] = useState<string[]>([])
   const [currentDepartment, setCurrentDepartment] = useState("All")
+  const [searchTerm, setSearchTerm] = useState("")
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -53,15 +54,41 @@ export default function DbMembersPage() {
     fetchMembers()
   }, [])
 
+  const searchedMembers = members.filter(m => 
+    m.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    m.role.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    (m.bio && m.bio.toLowerCase().includes(searchTerm.toLowerCase()))
+  )
+
   const filteredMembers = currentDepartment === "All"
-    ? members
-    : members.filter((m) => m.department === currentDepartment)
+    ? searchedMembers
+    : searchedMembers.filter((m) => m.department === currentDepartment)
 
   const adminTeam = filteredMembers.filter((m) => m.department === "Admin Team")
-  const execDirector = adminTeam.filter(m => m.role === "Executive Director")
-  const deputyExecDirectors = adminTeam.filter(m => m.role === "Deputy Executive Director")
-  const execAssistants = adminTeam.filter(m => m.role === "Executive Assistant")
-  const otherAdmin = adminTeam.filter(m => !["Executive Director", "Deputy Executive Director", "Executive Assistant"].includes(m.role))
+  const hasValidImage = (img: string | undefined | null) => {
+    if (!img) return false;
+    if (img === '/logo.png' || img.includes('logo.png')) return false;
+    return true;
+  }
+
+  // Helper to sort by image presence first, then by provided secondary sort
+  const sortByImageThen = <T extends Member>(arr: T[], secondarySort: (a: T, b: T) => number): T[] => {
+    return [...arr].sort((a, b) => {
+      const aValid = hasValidImage(a.image);
+      const bValid = hasValidImage(b.image);
+      if (aValid && !bValid) return -1;
+      if (!aValid && bValid) return 1;
+      return secondarySort(a, b);
+    });
+  }
+
+  const execDirector = sortByImageThen(adminTeam.filter(m => m.role === "Executive Director"), (a, b) => a.name.localeCompare(b.name))
+  const deputyExecDirectors = sortByImageThen(adminTeam.filter(m => m.role === "Deputy Executive Director"), (a, b) => a.name.localeCompare(b.name))
+  const execAssistants = sortByImageThen(adminTeam.filter(m => m.role === "Executive Assistant"), (a, b) => a.name.localeCompare(b.name))
+  const otherAdmin = sortByImageThen(
+    adminTeam.filter(m => !["Executive Director", "Deputy Executive Director", "Executive Assistant"].includes(m.role)),
+    (a, b) => a.name.localeCompare(b.name)
+  )
 
   const others = filteredMembers.filter((m) => m.department !== "Admin Team")
 
@@ -80,7 +107,7 @@ export default function DbMembersPage() {
     return rolePriority[baseRole] || 99
   }
 
-  const sortedOthers = [...others].sort((a, b) => {
+  const sortedOthers = sortByImageThen(others, (a, b) => {
     const rankA = getRoleRank(a.role)
     const rankB = getRoleRank(b.role)
     if (rankA !== rankB) return rankA - rankB
@@ -106,13 +133,27 @@ export default function DbMembersPage() {
 
   return (
     <div className="container max-w-6xl mx-auto py-12 px-4">
-      <h1 className="text-3xl font-bold font-bricolage mb-8 text-[#1a1a1a]">Our Members</h1>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <h1 className="text-3xl font-bold font-bricolage text-[#1a1a1a]">Our Members</h1>
+        <div className="relative w-full md:w-72">
+          <input
+            type="text"
+            placeholder="Search members..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4CAF7D] transition-all"
+          />
+          <svg className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+      </div>
 
       <div className="flex flex-wrap gap-4 mb-8 border-b-2 border-gray-200">
         {departments.map((dept) => (
           <button
             key={dept}
-            onClick={() => setCurrentDepartment(dept)}
+            onClick={() => { setCurrentDepartment(dept); setSearchTerm("") }}
             className={`px-6 py-3 font-medium text-[0.95rem] border-b-4 transition-colors -mb-[2px] ${
               currentDepartment === dept
                 ? "text-[#4CAF7D] border-[#4CAF7D]"
@@ -125,7 +166,9 @@ export default function DbMembersPage() {
       </div>
 
       {filteredMembers.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">No members yet in this department.</div>
+        <div className="text-center py-12 text-gray-500">
+          {searchTerm ? `No members found matching "${searchTerm}"` : "No members yet in this department."}
+        </div>
       ) : (
         <div className="space-y-12">
           {/* Admin Team Section */}
@@ -220,6 +263,10 @@ export default function DbMembersPage() {
 }
 
 function MemberCard({ member, isFeatured = false }: { member: Member; isFeatured?: boolean }) {
+  const [isBioExpanded, setIsBioExpanded] = useState(false)
+  const MAX_BIO_LENGTH = 150
+  const needsExpansion = member.bio && member.bio.length > MAX_BIO_LENGTH
+
   return (
     <div className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-[#4CAF7D] hover:shadow-[0_8px_24px_rgba(76,175,125,0.12)] transition-all flex flex-col group">
       <div className="relative w-full h-[200px] bg-gray-100">
@@ -240,7 +287,25 @@ function MemberCard({ member, isFeatured = false }: { member: Member; isFeatured
         )}
         <h3 className="font-bricolage text-[1.1rem] font-semibold text-[#1a1a1a] mb-1">{member.name}</h3>
         <p className="text-[#4CAF7D] font-medium text-sm mb-3">{member.role}</p>
-        <p className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow">{member.bio}</p>
+        
+        <div className="flex-grow flex flex-col">
+          <p className="text-gray-600 text-sm leading-relaxed mb-1">
+            {isBioExpanded ? member.bio : (needsExpansion ? `${member.bio.slice(0, MAX_BIO_LENGTH)}...` : member.bio)}
+          </p>
+          {needsExpansion && (
+            <button 
+              onClick={() => setIsBioExpanded(!isBioExpanded)}
+              className="text-[#4CAF7D] text-xs font-semibold hover:text-[#2d8659] flex items-center gap-1 transition-colors self-start mb-4 mt-1"
+            >
+              {isBioExpanded ? (
+                <>Read Less <ChevronUp className="w-3 h-3" /></>
+              ) : (
+                <>Read More <ChevronDown className="w-3 h-3" /></>
+              )}
+            </button>
+          )}
+          {!needsExpansion && <div className="mb-4"></div>}
+        </div>
         
         {/* Socials */}
         <div className="flex gap-3 mt-auto pt-4 border-t border-gray-50">

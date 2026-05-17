@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import { supabase } from "@/lib/supabase-client"
 import { Button } from "@/components/ui/button"
+import Cropper from "react-easy-crop"
 
 const DEPARTMENTS = [
   "Admin Team",
@@ -37,11 +38,95 @@ const ROLES_BY_DEPARTMENT: Record<string, string[]> = {
   "Ambassadors": ["Deputy Director", "Organizational Ambassador"],
 }
 
+const getCroppedImg = async (imageSrc: string, pixelCrop: any): Promise<File> => {
+  const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const img = new globalThis.Image()
+    img.src = imageSrc
+    img.onload = () => resolve(img)
+    img.onerror = (error) => reject(error)
+  })
+  
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+  if (!ctx) throw new Error("No 2d context")
+
+  canvas.width = pixelCrop.width
+  canvas.height = pixelCrop.height
+
+  ctx.drawImage(
+    image,
+    pixelCrop.x,
+    pixelCrop.y,
+    pixelCrop.width,
+    pixelCrop.height,
+    0,
+    0,
+    pixelCrop.width,
+    pixelCrop.height
+  )
+
+  let targetWidth = pixelCrop.width
+  let targetHeight = pixelCrop.height
+  const MAX_SIZE = 800
+  if (targetWidth > MAX_SIZE) {
+    targetHeight *= MAX_SIZE / targetWidth
+    targetWidth = MAX_SIZE
+  }
+  
+  const resizeCanvas = document.createElement('canvas')
+  resizeCanvas.width = targetWidth
+  resizeCanvas.height = targetHeight
+  const resizeCtx = resizeCanvas.getContext('2d')
+  resizeCtx?.drawImage(canvas, 0, 0, targetWidth, targetHeight)
+
+  return new Promise((resolve, reject) => {
+    resizeCanvas.toBlob((blob) => {
+      if (!blob) reject(new Error("Canvas is empty"))
+      else resolve(new File([blob], `avatar-${Date.now()}.webp`, { type: "image/webp" }))
+    }, "image/webp", 0.85)
+  })
+}
+
 export default function DbApplyPage() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
   const [selectedDepartment, setSelectedDepartment] = useState("")
   const [selectedRole, setSelectedRole] = useState("")
+
+  // Cropper State
+  const [imageSrc, setImageSrc] = useState<string | null>(null)
+  const [crop, setCrop] = useState({ x: 0, y: 0 })
+  const [zoom, setZoom] = useState(1)
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
+  const [showCropper, setShowCropper] = useState(false)
+  const [finalCroppedFile, setFinalCroppedFile] = useState<File | null>(null)
+
+  const onCropComplete = useCallback((croppedArea: any, croppedAreaPixels: any) => {
+    setCroppedAreaPixels(croppedAreaPixels)
+  }, [])
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0]
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => {
+        setImageSrc(reader.result as string)
+        setShowCropper(true)
+      }
+    }
+  }
+
+  const handleSaveCrop = async () => {
+    if (!imageSrc || !croppedAreaPixels) return
+    try {
+      const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels)
+      setFinalCroppedFile(croppedImage)
+      setShowCropper(false)
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -50,28 +135,25 @@ export default function DbApplyPage() {
 
     const formData = new FormData(e.currentTarget)
     
-    // Handle image upload first
-    const imageFile = formData.get("image") as File
-    if (!imageFile || imageFile.size === 0) {
-      setMessage({ type: "error", text: "Profile image is required" })
+    if (!finalCroppedFile) {
+      setMessage({ type: "error", text: "Please select and crop a profile image" })
       setLoading(false)
       return
     }
 
-    if (imageFile.size > 2.5 * 1024 * 1024) {
-      setMessage({ type: "error", text: "Image size exceeds 2.5 MB limit" })
+    if (finalCroppedFile.size > 2.5 * 1024 * 1024) {
+      setMessage({ type: "error", text: "Image size exceeds 2.5 MB limit even after compression" })
       setLoading(false)
       return
     }
 
     let imageUrl = ""
     try {
-      const fileExt = imageFile.name.split('.').pop()
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.webp`
       
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from("avatar")
-        .upload(fileName, imageFile)
+        .upload(fileName, finalCroppedFile)
 
       if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`)
 
@@ -108,8 +190,6 @@ export default function DbApplyPage() {
     }
 
     try {
-      // Basic validation
-
       if (newMember.socials.github) new URL(newMember.socials.github)
       if (newMember.socials.linkedin) new URL(newMember.socials.linkedin)
       if (newMember.socials.instagram) new URL(newMember.socials.instagram)
@@ -122,6 +202,8 @@ export default function DbApplyPage() {
       ;(e.target as HTMLFormElement).reset()
       setSelectedDepartment("")
       setSelectedRole("")
+      setFinalCroppedFile(null)
+      setImageSrc(null)
     } catch (err: any) {
       console.error(err)
       setMessage({ type: "error", text: `Error: ${err.message || "Invalid input"}` })
@@ -142,6 +224,42 @@ export default function DbApplyPage() {
           }`}
         >
           {message.text}
+        </div>
+      )}
+
+      {showCropper && imageSrc && (
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+          <div className="bg-white p-4 rounded-xl w-full max-w-lg flex flex-col items-center">
+            <h2 className="text-xl font-bold mb-4 font-bricolage">Crop your avatar</h2>
+            <div className="relative w-full h-64 sm:h-80 bg-gray-100 rounded-lg overflow-hidden mb-4">
+              <Cropper
+                image={imageSrc}
+                crop={crop}
+                zoom={zoom}
+                aspect={1}
+                onCropChange={setCrop}
+                onCropComplete={onCropComplete}
+                onZoomChange={setZoom}
+              />
+            </div>
+            <div className="w-full mb-6">
+              <label className="text-sm font-medium text-gray-600 mb-2 block">Zoom</label>
+              <input 
+                type="range" 
+                value={zoom} 
+                min={1} 
+                max={3} 
+                step={0.1} 
+                aria-labelledby="Zoom" 
+                onChange={(e) => setZoom(Number(e.target.value))} 
+                className="w-full" 
+              />
+            </div>
+            <div className="flex gap-4 w-full">
+              <Button onClick={() => setShowCropper(false)} variant="outline" className="flex-1">Cancel</Button>
+              <Button onClick={handleSaveCrop} className="flex-1 bg-[#4CAF7D] hover:bg-[#2d8659]">Save Crop</Button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -235,11 +353,16 @@ export default function DbApplyPage() {
           <input
             type="file"
             id="image"
-            name="image"
             accept="image/*"
-            required
+            onChange={handleFileChange}
+            required={!finalCroppedFile}
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4CAF7D] focus:border-transparent transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#e8f5e9] file:text-[#2e7d32] hover:file:bg-[#c8e6c9] bg-white cursor-pointer"
           />
+          {finalCroppedFile && (
+            <div className="mt-2 text-sm text-green-600 font-medium flex items-center gap-2">
+              ✓ Image cropped and compressed ready for upload
+            </div>
+          )}
         </div>
 
         <div className="space-y-4">

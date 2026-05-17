@@ -22,6 +22,13 @@ const nextConfig = {
 
   images: {
     formats: ["image/avif", "image/webp"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+    ],
   },
 
   async headers() {
@@ -37,6 +44,17 @@ const nextConfig = {
       },
     ];
   },
+
+  async redirects() {
+    return [
+      {
+        source: "/db/apply",
+        destination: "/members/apply",
+        permanent: true,
+      },
+    ];
+  },
+
 
   experimental: {
     webpackBuildWorker: true,

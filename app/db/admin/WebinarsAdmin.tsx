@@ -81,11 +81,31 @@ export default function WebinarsAdmin() {
     }
   }
 
+  const extractStoragePath = (url: string | null | undefined, bucket: string): string | null => {
+    if (!url) return null
+    try {
+      const marker = `/storage/v1/object/public/${bucket}/`
+      const idx = url.indexOf(marker)
+      if (idx === -1) return null
+      return decodeURIComponent(url.slice(idx + marker.length))
+    } catch {
+      return null
+    }
+  }
+
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this webinar?")) return
     try {
+      const { data: webinarData } = await supabase.from("webinars").select("image").eq("id", id).single()
       const { error } = await supabase.from("webinars").delete().eq("id", id)
       if (error) throw error
+
+      // Cascade: delete thumbnail from Supabase Storage if it was an uploaded file
+      const imgPath = extractStoragePath(webinarData?.image, "webinar-images")
+      if (imgPath) {
+        await supabase.storage.from("webinar-images").remove([imgPath])
+      }
+
       fetchWebinars()
     } catch (err) {
       console.error(err)

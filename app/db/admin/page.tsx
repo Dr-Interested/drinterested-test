@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase-client"
 import { Loader2 } from "lucide-react"
 import EventsAdmin from "./EventsAdmin"
 import WebinarsAdmin from "./WebinarsAdmin"
+import ReactMarkdown from "react-markdown"
 
 type Member = {
   id: string
@@ -60,6 +61,14 @@ export default function DbAdminPage() {
   const [blogForm, setBlogForm] = useState<Partial<Blog>>({})
   const [savingBlog, setSavingBlog] = useState(false)
 
+  // Stats State
+  const [stats, setStats] = useState({
+    approvedMembers: 0,
+    pendingMembers: 0,
+    publishedBlogs: 0,
+    totalEvents: 0
+  })
+
   // Auth Effect
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -86,6 +95,27 @@ export default function DbAdminPage() {
       // We also need members for the author dropdown
       fetchMembers()
     }
+
+    const fetchStats = async () => {
+      try {
+        const [membersApproved, membersPending, blogsCount, eventsCount] = await Promise.all([
+          supabase.from("members").select("*", { count: "exact", head: true }).eq("approved", true),
+          supabase.from("members").select("*", { count: "exact", head: true }).eq("approved", false),
+          supabase.from("blogs").select("*", { count: "exact", head: true }),
+          supabase.from("events").select("*", { count: "exact", head: true }),
+        ])
+        
+        setStats({
+          approvedMembers: membersApproved.count || 0,
+          pendingMembers: membersPending.count || 0,
+          publishedBlogs: blogsCount.count || 0,
+          totalEvents: eventsCount.count || 0
+        })
+      } catch (err) {
+        console.error("Error fetching stats:", err)
+      }
+    }
+    fetchStats()
   }, [isAuthenticated, activeMainTab])
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -160,12 +190,36 @@ export default function DbAdminPage() {
     }
   }
 
+  // Helper: extract Supabase Storage file path from a public URL
+  const extractStoragePath = (url: string | null | undefined, bucket: string): string | null => {
+    if (!url) return null
+    try {
+      const marker = `/storage/v1/object/public/${bucket}/`
+      const idx = url.indexOf(marker)
+      if (idx === -1) return null
+      return decodeURIComponent(url.slice(idx + marker.length))
+    } catch {
+      return null
+    }
+  }
+
   const handleRejectOrRemove = async (id: string, isRemove = false) => {
     if (!confirm(isRemove ? "Are you sure you want to remove this approved member?" : "Are you sure you want to reject this pending application?")) return
 
     try {
+      // Fetch image URL first (use maybeSingle so it never throws on no rows)
+      const { data: memberData } = await supabase.from("members").select("image").eq("id", id).maybeSingle()
+
+      // Delete the DB record — this is the critical operation
       const { error } = await supabase.from("members").delete().eq("id", id)
       if (error) throw error
+
+      // Fire-and-forget: delete avatar from Supabase Storage (non-blocking)
+      const avatarPath = extractStoragePath(memberData?.image, "avatar")
+      if (avatarPath) {
+        supabase.storage.from("avatar").remove([avatarPath]).catch(console.warn)
+      }
+
       fetchMembers()
     } catch (error) {
       console.error(error)
@@ -245,10 +299,19 @@ export default function DbAdminPage() {
   }
 
   const handleDeleteBlog = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this blog?")) return
+    if (!confirm("Are you sure you want to delete this blog? This will also delete any uploaded cover image.")) return
     try {
+      // Fetch blog data before deleting to get the cover image URL
+      const { data: blogData } = await supabase.from("blogs").select("cover_image").eq("id", id).single()
       const { error } = await supabase.from("blogs").delete().eq("id", id)
       if (error) throw error
+
+      // Cascade: delete cover image from Supabase Storage (only if it was uploaded, not a relative /path)
+      const coverPath = extractStoragePath(blogData?.cover_image, "blog-images")
+      if (coverPath) {
+        await supabase.storage.from("blog-images").remove([coverPath])
+      }
+
       fetchBlogs()
     } catch (error) {
       console.error(error)
@@ -313,7 +376,7 @@ export default function DbAdminPage() {
 
   return (
     <div className="container max-w-6xl mx-auto py-12 px-4 relative">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h1 className="text-3xl font-bold font-bricolage text-[#1a1a1a]">Admin Dashboard</h1>
         <button
           onClick={handleLogout}
@@ -321,6 +384,26 @@ export default function DbAdminPage() {
         >
           Logout Admin
         </button>
+      </div>
+
+      {/* Dashboard Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-center transition-all hover:shadow-md">
+          <p className="text-gray-500 text-sm font-medium mb-1">Approved Members</p>
+          <p className="text-3xl font-bold text-[#1a1a1a]">{stats.approvedMembers}</p>
+        </div>
+        <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-center transition-all hover:shadow-md">
+          <p className="text-gray-500 text-sm font-medium mb-1">Pending Applications</p>
+          <p className="text-3xl font-bold text-[#c62828]">{stats.pendingMembers}</p>
+        </div>
+        <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-center transition-all hover:shadow-md">
+          <p className="text-gray-500 text-sm font-medium mb-1">Published Blogs</p>
+          <p className="text-3xl font-bold text-[#4CAF7D]">{stats.publishedBlogs}</p>
+        </div>
+        <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-center transition-all hover:shadow-md">
+          <p className="text-gray-500 text-sm font-medium mb-1">Total Events</p>
+          <p className="text-3xl font-bold text-blue-600">{stats.totalEvents}</p>
+        </div>
       </div>
 
       {/* Main Navigation */}
@@ -722,13 +805,17 @@ export default function DbAdminPage() {
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">Content (Markdown Supported)</label>
-                <textarea
-                  value={blogForm.content || ""}
-                  onChange={(e) => setBlogForm({ ...blogForm, content: e.target.value })}
-                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4CAF7D] font-mono text-sm"
-                  rows={15}
-                  placeholder="## Heading\n\nWrite your markdown content here..."
-                />
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <textarea
+                    value={blogForm.content || ""}
+                    onChange={(e) => setBlogForm({ ...blogForm, content: e.target.value })}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4CAF7D] font-mono text-sm h-[400px] resize-y"
+                    placeholder="## Heading\n\nWrite your markdown content here..."
+                  />
+                  <div className="w-full p-4 border border-gray-200 rounded-lg bg-gray-50 h-[400px] overflow-y-auto prose prose-sm max-w-none prose-green">
+                    <ReactMarkdown>{blogForm.content || "*Preview will appear here...*"}</ReactMarkdown>
+                  </div>
+                </div>
               </div>
               
               <div className="flex items-center gap-2">

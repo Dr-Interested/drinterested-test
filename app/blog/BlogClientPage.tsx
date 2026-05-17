@@ -5,9 +5,10 @@ import Image from "next/image"
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Clock, ChevronRight, Search } from "lucide-react"
+import { Clock, ChevronRight, Search, X } from "lucide-react"
 import ScrollToTop from "@/components/scroll-to-top"
 import SeoSchema from "@/components/seo-schema"
+import NewsletterForm from "@/components/newsletter-form"
 
 type BlogPost = {
   slug: string
@@ -131,7 +132,7 @@ export default function BlogClientPage({ initialBlogs }: { initialBlogs: BlogPos
                   ? "bg-[#405862] hover:bg-[#334852]"
                   : "border-[#405862] text-[#405862] hover:bg-[#405862] hover:text-white"
               }
-              onClick={() => setSelectedTopic(null)}
+              onClick={() => { setSelectedTopic(null); setSearchTerm("") }}
             >
               All Topics
             </Button>
@@ -150,6 +151,16 @@ export default function BlogClientPage({ initialBlogs }: { initialBlogs: BlogPos
                 {topic.name}
               </Button>
             ))}
+
+            {(searchTerm || selectedTopic) && (
+              <Button
+                variant="ghost"
+                className="text-gray-400 hover:text-[#c62828] gap-1"
+                onClick={() => { setSearchTerm(""); setSelectedTopic(null) }}
+              >
+                <X className="h-3.5 w-3.5" /> Clear filters
+              </Button>
+            )}
           </div>
 
           {selectedTopic && (
@@ -298,7 +309,20 @@ export default function BlogClientPage({ initialBlogs }: { initialBlogs: BlogPos
 
       {/* Newsletter */}
       <section className="py-16 bg-[#405862] text-white">
-        <div className="container">
+        <div className="container max-w-4xl text-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-3">Never Miss an Article</h2>
+          <p className="text-white/80 mb-8 max-w-xl mx-auto">
+            Subscribe to get the latest healthcare insights, career guides, and research breakdowns from our team.
+          </p>
+          <div className="max-w-md mx-auto mb-6">
+            <NewsletterForm darkMode={true} showFirstName={false} compact={true} />
+          </div>
+          <p className="text-white/60 text-sm">
+            Or join the conversation on our{" "}
+            <Link href="https://discord.gg/pzbGRgsGXY" target="_blank" rel="noopener noreferrer" className="underline hover:text-white transition-colors">
+              Discord server
+            </Link>.
+          </p>
         </div>
       </section>
     </div>
