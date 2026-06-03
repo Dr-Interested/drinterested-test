@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import MembersClient from "./MembersClient"
+import MembersClient from "../MembersClient"
 
 export const metadata: Metadata = {
   title: "Our Team",
@@ -33,6 +33,6 @@ export const metadata: Metadata = {
   },
 }
 
-export default function MembersPage() {
+export default function TabPage() {
   return <MembersClient />
 }
