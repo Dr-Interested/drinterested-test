@@ -190,9 +190,17 @@ export default function DbApplyPage() {
     }
 
     try {
-      if (newMember.socials.github) new URL(newMember.socials.github)
-      if (newMember.socials.linkedin) new URL(newMember.socials.linkedin)
-      if (newMember.socials.instagram) new URL(newMember.socials.instagram)
+      const validateSocialUrl = (urlStr: string | null) => {
+        if (!urlStr) return
+        const parsed = new URL(urlStr)
+        if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+          throw new Error("Social links must use http:// or https:// protocol.")
+        }
+      }
+
+      validateSocialUrl(newMember.socials.github)
+      validateSocialUrl(newMember.socials.linkedin)
+      validateSocialUrl(newMember.socials.instagram)
       
       const { error } = await supabase.from("members").insert([newMember])
 

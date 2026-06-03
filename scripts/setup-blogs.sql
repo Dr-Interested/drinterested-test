@@ -22,4 +22,6 @@ USING (true);
 -- Allow all operations for authenticated users (your admin page)
 CREATE POLICY "Allow all operations for authenticated users on blogs" 
 ON public.blogs FOR ALL 
-USING (true);
+TO authenticated
+USING (true)
+WITH CHECK (true);
