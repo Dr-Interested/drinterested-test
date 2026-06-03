@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase-client"
 import { Loader2, Github, Linkedin, Instagram, ChevronDown, ChevronUp } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 
 type Member = {
   id: string

@@ -83,6 +83,12 @@ export default function Navbar() {
         </nav>
         <div className="flex items-center gap-4">
           <Link
+            href="/join"
+            className="hidden md:inline-flex border border-[#405862] text-[#405862] hover:bg-[#405862]/10 px-4 py-2 rounded-md text-sm font-medium transition-all"
+          >
+            Join Us
+          </Link>
+          <Link
             href="https://forms.gle/i3Y6vazF5TErGBxG7"
             target="_blank"
             rel="noopener noreferrer"
