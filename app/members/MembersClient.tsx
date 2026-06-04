@@ -168,8 +168,19 @@ export default function MembersClient() {
   const departmentsList: DepartmentType[] = staticDepartments.map((staticDept) => {
     const deptMembers = dbMembers.filter((m) => getDepartmentMatch(staticDept.id, m.department))
 
+    const staticGeneralMembers = [
+      ...(staticDept.deputyDirectors || []),
+      ...(staticDept.coordinators || []),
+    ]
+
     if (deptMembers.length === 0) {
-      return staticDept // Fallback to static data
+      return {
+        id: staticDept.id,
+        name: staticDept.name,
+        description: staticDept.description,
+        director: staticDept.director,
+        members: staticGeneralMembers,
+      } as any
     }
 
     // Directors (role contains director or lead)
@@ -199,8 +210,8 @@ export default function MembersClient() {
       name: staticDept.name,
       description: staticDept.description,
       director: directors.length > 0 ? (directors.length === 1 ? directors[0] : directors) : staticDept.director,
-      members: members.length > 0 ? members : staticDept.members,
-    }
+      members: members.length > 0 ? members : staticGeneralMembers,
+    } as any
   })
 
   if (loading) {
