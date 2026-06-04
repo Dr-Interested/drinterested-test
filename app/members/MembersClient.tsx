@@ -150,7 +150,7 @@ export default function MembersClient() {
     (m) =>
       m.department === "Advisory Board" ||
       m.department === "Advisors" ||
-      m.role.toLowerCase().includes("advisor"),
+      (m.role || "").toLowerCase().includes("advisor"),
   )
   const advisorsList: MemberType[] =
     rawAdvisors.length > 0
@@ -173,7 +173,7 @@ export default function MembersClient() {
     }
 
     // Directors (role contains director or lead)
-    const rawDirs = deptMembers.filter((m) => m.role.toLowerCase().includes("director"))
+    const rawDirs = deptMembers.filter((m) => (m.role || "").toLowerCase().includes("director"))
     const directors: MemberType[] = rawDirs.map((dir) => ({
       id: dir.id,
       name: dir.name,
@@ -184,7 +184,7 @@ export default function MembersClient() {
     }))
 
     // General members
-    const rawMems = deptMembers.filter((m) => !m.role.toLowerCase().includes("director"))
+    const rawMems = deptMembers.filter((m) => !(m.role || "").toLowerCase().includes("director"))
     const members: MemberType[] = rawMems.map((mem) => ({
       id: mem.id,
       name: mem.name,
