@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js"
+import { supabase } from "@/lib/supabase-client"
 import { notFound } from "next/navigation"
 import BlogPostClient from "./BlogPostClient"
 import { Metadata } from "next"
@@ -6,11 +6,6 @@ import { Metadata } from "next"
 export const revalidate = 0;
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
-
   const { data: blog } = await supabase
     .from("blogs")
     .select("title, excerpt, cover_image")
@@ -31,10 +26,6 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
 
   const { data: post, error } = await supabase
     .from("blogs")

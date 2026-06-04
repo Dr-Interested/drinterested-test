@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import WatchPageClient from "@/components/watch/WatchPageClient"
-import { createClient } from "@supabase/supabase-js"
+import { supabase } from "@/lib/supabase-client"
 
 export const revalidate = 0; // Don't statically cache
 
@@ -15,11 +15,6 @@ export async function generateMetadata({
   if (!id) {
     notFound()
   }
-
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
 
   const { data: webinar } = await supabase.from("webinars").select("*").eq("id", id).single()
 
@@ -99,11 +94,6 @@ export default async function WatchPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
 
   const { data: webinar } = await supabase.from("webinars").select("*").eq("id", id).single()
 

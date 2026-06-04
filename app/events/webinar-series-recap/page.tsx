@@ -3,15 +3,11 @@ import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { createClient } from "@supabase/supabase-js"
+import { supabase } from "@/lib/supabase-client"
 
 export const revalidate = 0; // Don't statically cache
 
 export default async function WebinarGalleryPage() {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
 
   const { data: webinars } = await supabase
     .from("webinars")

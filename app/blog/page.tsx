@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { generateSeoMetadata } from "@/lib/seo-utils"
 import BlogClientPage from "./BlogClientPage"
-import { createClient } from "@supabase/supabase-js"
+import { supabase } from "@/lib/supabase-client"
 
 export const revalidate = 0; // Don't statically cache, fetch dynamically
 
@@ -22,10 +22,6 @@ export const metadata: Metadata = generateSeoMetadata({
 })
 
 export default async function BlogPage() {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
 
   const { data: blogsData, error: blogsError } = await supabase
     .from("blogs")
