@@ -12,7 +12,7 @@ export default function SeoSchema({ schema }: SEOSchemaProps) {
       id="seo-schema"
       type="application/ld+json"
       dangerouslySetInnerHTML={{
-        __html: JSON.stringify(schema),
+        __html: JSON.stringify(schema).replace(/</g, '\\u003c'),
       }}
     />
   )
