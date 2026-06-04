@@ -13,40 +13,30 @@ export type EventType = {
 
 // Upcoming events data
 export const upcomingEvents: EventType[] = [
-  {
-    title:
-      "The Race to Fight Cancer: Documentary Watch Party & Surgeon-Scientist Q&A",
-    date: "April 17, 2026",
-    time: "5:00 PM",
-    location: "Virtual (Discord)",
-    description:
-      "Can we cut cancer diagnostic wait times from weeks to minutes? Join Dr. Interested and Curiosity Films for an exclusive virtual screening of the groundbreaking CBC The Nature of Things documentary, \"Doctor, Doctor: The Race to Fight Lung Cancer.\" We are diving deep into the world of medical innovation to see how surgeon-scientist Dr. Kazuhiro Yasufuku and his team are fighting the Canadian healthcare crisis head-on. Following the documentary, we will host a live Q&A session with the experts featured in the film from the Yasufuku Lab (UHN). This is a rare opportunity for students and aspiring MDs to go behind the scenes of life-saving research and hear directly from the doctors and researchers at the forefront of surgical innovation. What to Expect: Exclusive Screening: Watch the newly released documentary detailing the high-stakes race to innovate lung cancer diagnostics. Live Q&A: Meet Nicholas Bernards, Judy McConnell, and the team from the Yasufuku Lab to ask your questions about research, medicine, and the future of surgery. Career Insight: Learn what it’s really like to work at the intersection of clinical practice and groundbreaking lab research.",
-    image: "/The Race to Fight Cancer Documentary.png",
-    status: "open",
-    link: "https://discord.gg/yEZzREht?event=1489666317731500213",
-    featured: true,
-  },
+  
   {
     title: "Canadian Innovation Week (CIW) Event",
     date: "May 11, 2026",
-    time: "TBA",
-    location: "TBA",
+    time: "5:00 PM - 6:00 PM",
+    location: "Virtual(Discord)",
     description:
-      "Dr. Interested at Canadian Innovation Week (CIW). Full event details are still being planned.",
+      "Dr. Interested’s session at Canadian Innovation Week explores how youth-driven innovation can make healthcare more accessible and inclusive, featuring insights from founder Adil Mukhi on breaking systemic barriers, a student showcase of real-world healthcare solutions, and an interactive workshop designed to help participants identify challenges in their communities and turn ideas into actionable impact.",
     image: "/CIWEvent.png",
     status: "open",
-    link: "https://canadianinnovationspace.ca/partners/dr-interested/",
+    link: "https://discord.com/events/1321261267482312775/1489672884061470815",
+    featured: true,
   },
   {
     title: "Code Blue Planet: Indigenous Wisdom & Climate Medicine",
     date: "June 7, 2026",
-    time: "10:00 AM – 4:00 PM",
-    location: "Toronto, ON (Location TBA)",
+    time: "11:00 AM – 3:00 PM",
+    location: "Humber Polytechnic, Toronto, ON ",
     description:
-      "As part of Toronto Climate Week, Dr. Interested is hosting Code Blue Planet. The future of medicine isn't just about new tech, it's about remembering our connection to the land. Climate change is already reshaping healthcare, from rising temperatures to disrupted ecosystems. To face these challenges, we need to look at the intersection of climate science, modern healthcare, and Indigenous medicine. Join Dr. Interested for a high-energy day at Code Blue Planet. We're bringing together high school and university students with Indigenous Elders, Knowledge Holders, and health experts to explore how we can build a climate-resilient future. This isn't just a lecture; it's an interactive dive into traditional healing, nature-based wellness, and emerging career pathways. Cost: Free. (1-hour lunch break included)",
+      "As part of Toronto Climate Week, Dr. Interested is hosting Code Blue Planet. The future of medicine isn't just about new tech; it's about remembering our connection to the land. Climate change is already reshaping healthcare, from rising temperatures to disrupted ecosystems. To face these challenges, we need to look at the intersection of climate science, modern healthcare, and Indigenous medicine. Join Dr. Interested for a high-energy day at Code Blue Planet. We're bringing together high school and university students with Indigenous Elders, Knowledge Holders, and health experts to explore how we can build a climate-resilient future. This isn't just a lecture; it's an interactive dive into traditional healing, nature-based wellness, and emerging career pathways. Cost: Free. (1-hour lunch break included)",
     image: "/Code Blue Planet.png",
     status: "open",
-    link: "https://luma.com/svfafgrk",
+    link: "https://luma.com/codeblue",
+    featured: true,
   },
   {
     title: "Career Exploration Summer Event",
@@ -91,6 +81,18 @@ export const upcomingEvents: EventType[] = [
 
 // Past events data
 export const pastEvents: EventType[] = [
+  {
+    title:
+      "The Race to Fight Cancer: Documentary Watch Party & Surgeon-Scientist Q&A",
+    date: "April 17, 2026",
+    time: "5:00 PM",
+    location: "Virtual (Discord)",
+    description:
+      "Can we cut cancer diagnostic wait times from weeks to minutes? Join Dr. Interested and Curiosity Films for an exclusive virtual screening of the groundbreaking CBC The Nature of Things documentary, \"Doctor, Doctor: The Race to Fight Lung Cancer.\" We are diving deep into the world of medical innovation to see how surgeon-scientist Dr. Kazuhiro Yasufuku and his team are fighting the Canadian healthcare crisis head-on. Following the documentary, we will host a live Q&A session with the experts featured in the film from the Yasufuku Lab (UHN). This is a rare opportunity for students and aspiring MDs to go behind the scenes of life-saving research and hear directly from the doctors and researchers at the forefront of surgical innovation. What to Expect: Exclusive Screening: Watch the newly released documentary detailing the high-stakes race to innovate lung cancer diagnostics. Live Q&A: Meet Nicholas Bernards, Judy McConnell, and the team from the Yasufuku Lab to ask your questions about research, medicine, and the future of surgery. Career Insight: Learn what it’s really like to work at the intersection of clinical practice and groundbreaking lab research.",
+    image: "/The Race to Fight Cancer Documentary.png",
+    status: "completed",
+    link: "https://discord.gg/yEZzREht?event=1489666317731500213",
+  },
   {
     title: "Future Doctors Forum (Dr. Interested x HEAAL)",
     date: "March 29, 2026",
