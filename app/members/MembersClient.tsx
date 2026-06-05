@@ -7,7 +7,7 @@ import { useParams, useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Instagram, Linkedin, Globe, ChevronDown, ChevronUp, Loader2, Sparkles, Clock, Award, FileText, CheckCircle2 } from "lucide-react"
-import { executiveDirector as staticEd, deputyexecdir as staticVps, advisors as staticAdvisors, departments as staticDepartments } from "@/data/members"
+import { departments as staticDepartments } from "@/data/members"
 import ScrollToTop from "@/components/scroll-to-top"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { supabase } from "@/lib/supabase-client"
@@ -114,13 +114,13 @@ export default function MembersClient() {
     if (id === "publications") return mDept.includes("publication")
     if (id === "hr") return mDept.includes("human resources") || mDept.includes("hr")
     if (id === "events") return mDept.includes("event")
-    if (id === "grants") return mDept.includes("grant")
+    if (id === "grants") return mDept.includes("grant") || mDept.includes("finance")
     return false
   }
 
   // 1. Executive Director / President
   const rawEd = dbMembers.find((m) => m.role === "Executive Director" || m.role === "President")
-  const executiveDirector: MemberType = rawEd
+  const executiveDirector: MemberType | null = rawEd
     ? {
         id: rawEd.id,
         name: rawEd.name,
@@ -129,21 +129,18 @@ export default function MembersClient() {
         bio: rawEd.bio || "",
         socialLinks: rawEd.socials || {},
       }
-    : staticEd
+    : null
 
   // 2. Deputy Executive Directors
   const rawVps = dbMembers.filter((m) => m.role === "Deputy Executive Director")
-  const deputyexecdir: MemberType[] =
-    rawVps.length > 0
-      ? rawVps.map((vp) => ({
-          id: vp.id,
-          name: vp.name,
-          role: vp.role,
-          image: formatImagePath(vp.image),
-          bio: vp.bio || "",
-          socialLinks: vp.socials || {},
-        }))
-      : staticVps
+  const deputyexecdir: MemberType[] = rawVps.map((vp) => ({
+    id: vp.id,
+    name: vp.name,
+    role: vp.role,
+    image: formatImagePath(vp.image),
+    bio: vp.bio || "",
+    socialLinks: vp.socials || {},
+  }))
 
   // 3. Advisors
   const rawAdvisors = dbMembers.filter(
@@ -152,36 +149,18 @@ export default function MembersClient() {
       m.department === "Advisors" ||
       (m.role || "").toLowerCase().includes("advisor"),
   )
-  const advisorsList: MemberType[] =
-    rawAdvisors.length > 0
-      ? rawAdvisors.map((adv) => ({
-          id: adv.id,
-          name: adv.name,
-          role: adv.role,
-          image: formatImagePath(adv.image),
-          bio: adv.bio || "",
-          socialLinks: adv.socials || {},
-        }))
-      : staticAdvisors
+  const advisorsList: MemberType[] = rawAdvisors.map((adv) => ({
+    id: adv.id,
+    name: adv.name,
+    role: adv.role,
+    image: formatImagePath(adv.image),
+    bio: adv.bio || "",
+    socialLinks: adv.socials || {},
+  }))
 
   // 4. Departments
   const departmentsList: DepartmentType[] = staticDepartments.map((staticDept) => {
     const deptMembers = dbMembers.filter((m) => getDepartmentMatch(staticDept.id, m.department))
-
-    const staticGeneralMembers = [
-      ...(staticDept.deputyDirectors || []),
-      ...(staticDept.coordinators || []),
-    ]
-
-    if (deptMembers.length === 0) {
-      return {
-        id: staticDept.id,
-        name: staticDept.name,
-        description: staticDept.description,
-        director: staticDept.director,
-        members: staticGeneralMembers,
-      } as any
-    }
 
     // Directors (role contains director or lead)
     const rawDirs = deptMembers.filter((m) => (m.role || "").toLowerCase().includes("director"))
@@ -194,7 +173,7 @@ export default function MembersClient() {
       socialLinks: dir.socials || {},
     }))
 
-    // General members
+    // General members (excluding directors)
     const rawMems = deptMembers.filter((m) => !(m.role || "").toLowerCase().includes("director"))
     const members: MemberType[] = rawMems.map((mem) => ({
       id: mem.id,
@@ -205,23 +184,31 @@ export default function MembersClient() {
       socialLinks: mem.socials || {},
     }))
 
+    // Filter out any general members that are already listed as directors
+    const finalMembers = members.filter(
+      (m) => !directors.some((d) => d.id === m.id || d.name.toLowerCase() === m.name.toLowerCase())
+    )
+
     return {
       id: staticDept.id,
       name: staticDept.name,
       description: staticDept.description,
-      director: directors.length > 0 ? (directors.length === 1 ? directors[0] : directors) : staticDept.director,
-      members: members.length > 0 ? members : staticGeneralMembers,
+      director: directors,
+      members: finalMembers,
     } as any
   })
+
+  const visibleDepartments = departmentsList.filter(
+    (dept) => (dept.director && dept.director.length > 0) || (dept.members && dept.members.length > 0)
+  )
 
   console.log("DEBUG DEPARTMENTS:", {
     deputyexecdir: typeof deputyexecdir,
     deputyexecdirLength: deputyexecdir?.length,
     advisorsList: typeof advisorsList,
     advisorsListLength: advisorsList?.length,
-    departmentsList: typeof departmentsList,
-    departmentsListLength: departmentsList?.length,
-    departmentsData: departmentsList.map(d => ({ id: d.id, hasMembers: !!d.members, membersType: typeof d.members, membersCount: d.members?.length }))
+    visibleDepartmentsCount: visibleDepartments.length,
+    departmentsData: visibleDepartments.map(d => ({ id: d.id, hasMembers: !!d.members, membersType: typeof d.members, membersCount: d.members?.length }))
   })
 
   if (loading) {
@@ -270,259 +257,281 @@ export default function MembersClient() {
 
             {/* TAB: Leadership */}
             <TabsContent value="leadership" className="space-y-6">
-              
-              {/* Executive Director */}
-              <div>
-                <h3 className="text-lg font-semibold mb-4 text-center text-[#405862] font-bricolage">Executive Director</h3>
-                <div className="max-w-2xl mx-auto">
-                  <Card className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="grid md:grid-cols-3">
-                      <div className="md:col-span-1 bg-[#f5f1eb] flex items-center justify-center">
-                        <div className="relative h-full w-full aspect-square">
-                          <Image src={executiveDirector.image} alt={executiveDirector.name} fill className="object-cover" />
+              {executiveDirector && (
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 text-center text-[#405862] font-bricolage">Executive Director</h3>
+                  <div className="max-w-2xl mx-auto">
+                    <Card className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
+                      <div className="grid md:grid-cols-3">
+                        <div className="md:col-span-1 bg-[#f5f1eb] flex items-center justify-center">
+                          <div className="relative h-full w-full aspect-square">
+                            <Image src={executiveDirector.image} alt={executiveDirector.name} fill className="object-cover" />
+                          </div>
                         </div>
-                      </div>
-                      <CardContent className="md:col-span-2 p-4">
-                        <h4 className="text-lg font-semibold text-[#405862] font-bricolage">{executiveDirector.name}</h4>
-                        <p className="text-sm text-[#4ecdc4] font-medium mb-2">{executiveDirector.role}</p>
-                        <p className="text-sm text-[#405862]/90 leading-relaxed mb-3">
-                          {expandedBios[executiveDirector.id] ? (executiveDirector.bio || "") : truncateBio(executiveDirector.bio)}
-                        </p>
-                        {(executiveDirector.bio || "").length > 150 && (
-                          <button
-                            onClick={() => toggleBio(executiveDirector.id)}
-                            className="text-[#405862] text-sm font-semibold hover:text-[#4ecdc4] transition-colors mb-3 flex items-center"
-                          >
-                            {expandedBios[executiveDirector.id] ? (
-                              <>
-                                Show Less <ChevronUp className="h-4 w-4 ml-1" />
-                              </>
-                            ) : (
-                              <>
-                                See More <ChevronDown className="h-4 w-4 ml-1" />
-                              </>
+                        <CardContent className="md:col-span-2 p-4">
+                          <h4 className="text-lg font-semibold text-[#405862] font-bricolage">{executiveDirector.name}</h4>
+                          <p className="text-sm text-[#4ecdc4] font-medium mb-2">{executiveDirector.role}</p>
+                          <p className="text-sm text-[#405862]/90 leading-relaxed mb-3">
+                            {expandedBios[executiveDirector.id] ? (executiveDirector.bio || "") : truncateBio(executiveDirector.bio)}
+                          </p>
+                          {(executiveDirector.bio || "").length > 150 && (
+                            <button
+                              onClick={() => toggleBio(executiveDirector.id)}
+                              className="text-[#405862] text-sm font-semibold hover:text-[#4ecdc4] transition-colors mb-3 flex items-center"
+                            >
+                              {expandedBios[executiveDirector.id] ? (
+                                <>
+                                  Show Less <ChevronUp className="h-4 w-4 ml-1" />
+                                </>
+                              ) : (
+                                <>
+                                  See More <ChevronDown className="h-4 w-4 ml-1" />
+                                </>
+                              )}
+                            </button>
+                          )}
+                          <div className="flex space-x-3">
+                            {executiveDirector.socialLinks?.linkedin && (
+                              <Link
+                                href={executiveDirector.socialLinks.linkedin}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                              >
+                                <Linkedin className="h-5 w-5" />
+                              </Link>
                             )}
-                          </button>
-                        )}
-                        <div className="flex space-x-3">
-                          {executiveDirector.socialLinks?.linkedin && (
-                            <Link
-                              href={executiveDirector.socialLinks.linkedin}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                            >
-                              <Linkedin className="h-5 w-5" />
-                            </Link>
-                          )}
-                          {executiveDirector.socialLinks?.instagram && (
-                            <Link
-                              href={executiveDirector.socialLinks.instagram}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                            >
-                              <Instagram className="h-5 w-5" />
-                            </Link>
-                          )}
-                          {executiveDirector.socialLinks?.website && (
-                            <Link
-                              href={executiveDirector.socialLinks.website}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                            >
-                              <Globe className="h-5 w-5" />
-                            </Link>
-                          )}
-                        </div>
-                      </CardContent>
-                    </div>
-                  </Card>
+                            {executiveDirector.socialLinks?.instagram && (
+                              <Link
+                                href={executiveDirector.socialLinks.instagram}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                              >
+                                <Instagram className="h-5 w-5" />
+                              </Link>
+                            )}
+                            {executiveDirector.socialLinks?.website && (
+                              <Link
+                                href={executiveDirector.socialLinks.website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                              >
+                                <Globe className="h-5 w-5" />
+                              </Link>
+                            )}
+                          </div>
+                        </CardContent>
+                      </div>
+                    </Card>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Deputy Exec Directors */}
-              <div>
-                <h3 className="text-lg font-semibold mb-4 text-center text-[#405862] font-bricolage">Deputy Executive Directors</h3>
-                <div className="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
-                  {(deputyexecdir || []).map((vp) => {
-                    if (!vp) return null;
-                    return (
-                      <Card key={vp.id} className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
-                        <div className="grid md:grid-cols-3">
-                          <div className="md:col-span-1 bg-[#f5f1eb] flex items-center justify-center">
-                            <div className="relative h-full w-full aspect-square">
-                              <Image src={vp.image} alt={vp.name} fill className="object-cover" />
+              {deputyexecdir && deputyexecdir.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 text-center text-[#405862] font-bricolage">Deputy Executive Directors</h3>
+                  <div className="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+                    {deputyexecdir.map((vp) => {
+                      if (!vp) return null;
+                      return (
+                        <Card key={vp.id} className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
+                          <div className="grid md:grid-cols-3">
+                            <div className="md:col-span-1 bg-[#f5f1eb] flex items-center justify-center">
+                              <div className="relative h-full w-full aspect-square">
+                                <Image src={vp.image} alt={vp.name} fill className="object-cover" />
+                              </div>
                             </div>
-                          </div>
-                          <CardContent className="md:col-span-2 p-4">
-                            <h4 className="text-base font-semibold text-[#405862] font-bricolage">{vp.name}</h4>
-                            <p className="text-sm text-[#4ecdc4] font-medium mb-2">{vp.role}</p>
-                            <p className="text-sm text-[#405862]/90 leading-relaxed mb-3">
-                              {expandedBios[vp.id] ? (vp.bio || "") : truncateBio(vp.bio, 120)}
-                            </p>
-                            {(vp.bio || "").length > 120 && (
-                              <button
-                                onClick={() => toggleBio(vp.id)}
-                                className="text-[#405862] text-sm font-semibold hover:text-[#4ecdc4] transition-colors mb-3 flex items-center"
-                              >
-                                {expandedBios[vp.id] ? (
-                                  <>
-                                    Show Less <ChevronUp className="h-4 w-4 ml-1" />
-                                  </>
-                                ) : (
-                                  <>
-                                    See More <ChevronDown className="h-4 w-4 ml-1" />
-                                  </>
+                            <CardContent className="md:col-span-2 p-4">
+                              <h4 className="text-base font-semibold text-[#405862] font-bricolage">{vp.name}</h4>
+                              <p className="text-sm text-[#4ecdc4] font-medium mb-2">{vp.role}</p>
+                              <p className="text-sm text-[#405862]/90 leading-relaxed mb-3">
+                                {expandedBios[vp.id] ? (vp.bio || "") : truncateBio(vp.bio, 120)}
+                              </p>
+                              {(vp.bio || "").length > 120 && (
+                                <button
+                                  onClick={() => toggleBio(vp.id)}
+                                  className="text-[#405862] text-sm font-semibold hover:text-[#4ecdc4] transition-colors mb-3 flex items-center"
+                                >
+                                  {expandedBios[vp.id] ? (
+                                    <>
+                                      Show Less <ChevronUp className="h-4 w-4 ml-1" />
+                                    </>
+                                  ) : (
+                                    <>
+                                      See More <ChevronDown className="h-4 w-4 ml-1" />
+                                    </>
+                                  )}
+                                </button>
+                              )}
+                              <div className="flex space-x-3">
+                                {vp.socialLinks?.linkedin && (
+                                  <Link href={vp.socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
+                                    <Linkedin className="h-5 w-5" />
+                                  </Link>
                                 )}
-                              </button>
-                            )}
-                            <div className="flex space-x-3">
-                              {vp.socialLinks?.linkedin && (
-                                <Link href={vp.socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
-                                  <Linkedin className="h-5 w-5" />
-                                </Link>
-                              )}
-                              {vp.socialLinks?.instagram && (
-                                <Link href={vp.socialLinks.instagram} target="_blank" rel="noopener noreferrer">
-                                  <Instagram className="h-5 w-5" />
-                                </Link>
-                              )}
-                              {vp.socialLinks?.website && (
-                                <Link href={vp.socialLinks.website} target="_blank" rel="noopener noreferrer">
-                                  <Globe className="h-5 w-5" />
-                                </Link>
-                              )}
-                            </div>
-                          </CardContent>
-                        </div>
-                      </Card>
-                    );
-                  })}
+                                {vp.socialLinks?.instagram && (
+                                  <Link href={vp.socialLinks.instagram} target="_blank" rel="noopener noreferrer">
+                                    <Instagram className="h-5 w-5" />
+                                  </Link>
+                                )}
+                                {vp.socialLinks?.website && (
+                                  <Link href={vp.socialLinks.website} target="_blank" rel="noopener noreferrer">
+                                    <Globe className="h-5 w-5" />
+                                  </Link>
+                                )}
+                              </div>
+                            </CardContent>
+                          </div>
+                        </Card>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {!executiveDirector && (!deputyexecdir || deputyexecdir.length === 0) && (
+                <div className="text-center py-12 text-[#405862]/80">
+                  <p>No leadership team members currently listed.</p>
+                </div>
+              )}
             </TabsContent>
 
             {/* TAB: Departments */}
             <TabsContent value="departments" className="space-y-6">
-              {(departmentsList || []).map((department) => {
-                if (!department) return null;
-                return (
-                  <div
-                    key={department.id}
-                    className="border rounded-lg overflow-hidden bg-white border-[#405862]/20 shadow-sm mb-4"
-                  >
-                    <div className="p-4 border-b bg-[#f5f1eb]/30">
-                    <h3 className="text-lg font-semibold text-[#405862] font-bricolage">{department.name}</h3>
-                    <p className="text-[#405862]/80 text-sm mt-1">{department.description}</p>
-                  </div>
+              {visibleDepartments.length > 0 ? (
+                visibleDepartments.map((department) => {
+                  if (!department) return null;
+                  const hasDirector = department.director && department.director.length > 0;
+                  const hasMembers = department.members && department.members.length > 0;
 
-                  <div className="p-4 border-b">
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="text-base font-semibold text-[#405862] font-bricolage">Director</h4>
-                    </div>
-                    <div className="grid gap-4 md:grid-cols-2">
-                      {Array.isArray(department.director) ? (
-                        (department.director || []).map((director) => {
-                          if (!director) return null;
-                          return (
-                            <Card
-                              key={director.id}
-                              className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
-                            >
-                            <div className="grid grid-cols-3">
-                              <div className="col-span-1 bg-[#f5f1eb]">
-                                <div className="relative h-full w-full aspect-square">
-                                  <Image
-                                    src={director.image}
-                                    alt={director.name}
-                                    fill
-                                    className="object-cover"
-                                  />
-                                </div>
-                              </div>
-                              <CardContent className="col-span-2 p-3">
-                                <h5 className="font-semibold text-sm text-[#405862] font-bricolage">{director.name}</h5>
-                                <p className="text-xs text-[#4ecdc4] font-medium mb-1">{director.role}</p>
-                                <p className="text-xs text-[#405862]/90 leading-relaxed mb-1">
-                                  {expandedBios[director.id] ? (director.bio || "") : truncateBio(director.bio, 80)}
-                                </p>
-                                {(director.bio || "").length > 80 && (
-                                  <button
-                                    onClick={() => toggleBio(director.id)}
-                                    className="text-[#405862] text-xs font-semibold hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
-                                  >
-                                    {expandedBios[director.id] ? (
-                                      <>
-                                        Show Less <ChevronUp className="h-3 w-3 ml-1" />
-                                      </>
-                                    ) : (
-                                      <>
-                                        See More <ChevronDown className="h-3 w-3 ml-1" />
-                                      </>
-                                    )}
-                                  </button>
-                                )}
-                                <div className="flex space-x-2">
-                                  {director.socialLinks?.linkedin && (
-                                    <Link
-                                      href={director.socialLinks.linkedin}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                                    >
-                                      <Linkedin className="h-4 w-4" />
-                                    </Link>
-                                  )}
-                                  {director.socialLinks?.instagram && (
-                                    <Link
-                                      href={director.socialLinks.instagram}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                                    >
-                                      <Instagram className="h-4 w-4" />
-                                    </Link>
-                                  )}
-                                </div>
-                              </CardContent>
-                            </div>
-                          </Card>
-                        );
-                      })
-                      ) : (
-                        <>
-                          {(() => {
-                            const director = department.director as MemberType;
-                            if (!director) return null;
-                            return (
-                              <Card className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
-                                <div className="grid grid-cols-3">
-                                  <div className="col-span-1 bg-[#f5f1eb]">
-                                    <div className="relative h-full w-full aspect-square">
-                                      <Image
-                                        src={director.image}
-                                        alt={director.name}
-                                        fill
-                                        className="object-cover"
-                                      />
+                  return (
+                    <div
+                      key={department.id}
+                      className="border rounded-lg overflow-hidden bg-white border-[#405862]/20 shadow-sm mb-4"
+                    >
+                      <div className="p-4 border-b bg-[#f5f1eb]/30">
+                        <h3 className="text-lg font-semibold text-[#405862] font-bricolage">{department.name}</h3>
+                        <p className="text-[#405862]/80 text-sm mt-1">{department.description}</p>
+                      </div>
+
+                      {hasDirector && (
+                        <div className="p-4 border-b">
+                          <div className="flex items-center justify-between mb-3">
+                            <h4 className="text-base font-semibold text-[#405862] font-bricolage">Director</h4>
+                          </div>
+                          <div className="grid gap-4 md:grid-cols-2">
+                            {department.director.map((director: MemberType) => {
+                              if (!director) return null;
+                              return (
+                                <Card
+                                  key={director.id}
+                                  className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
+                                >
+                                  <div className="grid grid-cols-3">
+                                    <div className="col-span-1 bg-[#f5f1eb]">
+                                      <div className="relative h-full w-full aspect-square">
+                                        <Image
+                                          src={director.image}
+                                          alt={director.name}
+                                          fill
+                                          className="object-cover"
+                                        />
+                                      </div>
                                     </div>
+                                    <CardContent className="col-span-2 p-3">
+                                      <h5 className="font-semibold text-sm text-[#405862] font-bricolage">{director.name}</h5>
+                                      <p className="text-xs text-[#4ecdc4] font-medium mb-1">{director.role}</p>
+                                      <p className="text-xs text-[#405862]/90 leading-relaxed mb-1">
+                                        {expandedBios[director.id] ? (director.bio || "") : truncateBio(director.bio, 80)}
+                                      </p>
+                                      {(director.bio || "").length > 80 && (
+                                        <button
+                                          onClick={() => toggleBio(director.id)}
+                                          className="text-[#405862] text-xs font-semibold hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
+                                        >
+                                          {expandedBios[director.id] ? (
+                                            <>
+                                              Show Less <ChevronUp className="h-3 w-3 ml-1" />
+                                            </>
+                                          ) : (
+                                            <>
+                                              See More <ChevronDown className="h-3 w-3 ml-1" />
+                                            </>
+                                          )}
+                                        </button>
+                                      )}
+                                      <div className="flex space-x-2">
+                                        {director.socialLinks?.linkedin && (
+                                          <Link
+                                            href={director.socialLinks.linkedin}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                                          >
+                                            <Linkedin className="h-4 w-4" />
+                                          </Link>
+                                        )}
+                                        {director.socialLinks?.instagram && (
+                                          <Link
+                                            href={director.socialLinks.instagram}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                                          >
+                                            <Instagram className="h-4 w-4" />
+                                          </Link>
+                                        )}
+                                      </div>
+                                    </CardContent>
                                   </div>
-                                  <CardContent className="col-span-2 p-3">
-                                    <h5 className="font-semibold text-sm text-[#405862] font-bricolage">{director.name}</h5>
-                                    <p className="text-xs text-[#4ecdc4] font-medium mb-1">{director.role}</p>
+                                </Card>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
+                      {hasMembers && (
+                        <div className="p-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <h4 className="text-base font-semibold text-[#405862] font-bricolage"> Members</h4>
+                          </div>
+
+                          <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+                            {department.members.map((member: MemberType) => {
+                              if (!member) return null;
+                              return (
+                                <Card
+                                  key={member.id}
+                                  className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
+                                >
+                                  <CardContent className="p-3">
+                                    <div className="flex items-center gap-2 mb-1">
+                                      <div className="relative h-8 w-8 rounded-full overflow-hidden flex-shrink-0">
+                                        <Image
+                                          src={member.image}
+                                          alt={member.name}
+                                          fill
+                                          className="object-cover"
+                                        />
+                                      </div>
+                                      <div>
+                                        <h5 className="font-semibold text-sm text-[#405862] font-bricolage">{member.name}</h5>
+                                        <p className="text-xs text-[#405862]/75">{member.role}</p>
+                                      </div>
+                                    </div>
                                     <p className="text-xs text-[#405862]/90 leading-relaxed mb-1">
-                                      {expandedBios[director.id]
-                                        ? (director.bio || "")
-                                        : truncateBio(director.bio, 80)}
+                                      {expandedBios[member.id] ? (member.bio || "") : truncateBio(member.bio, 60)}
                                     </p>
-                                    {(director.bio || "").length > 80 && (
+                                    {(member.bio || "").length > 60 && (
                                       <button
-                                        onClick={() => toggleBio(director.id)}
+                                        onClick={() => toggleBio(member.id)}
                                         className="text-[#405862] text-xs font-semibold hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
                                       >
-                                        {expandedBios[director.id] ? (
+                                        {expandedBios[member.id] ? (
                                           <>
                                             Show Less <ChevronUp className="h-3 w-3 ml-1" />
                                           </>
@@ -533,10 +542,10 @@ export default function MembersClient() {
                                         )}
                                       </button>
                                     )}
-                                    <div className="flex space-x-2">
-                                      {director.socialLinks?.linkedin && (
+                                    <div className="flex space-x-2 mt-1">
+                                      {member.socialLinks?.linkedin && (
                                         <Link
-                                          href={director.socialLinks.linkedin}
+                                          href={member.socialLinks.linkedin}
                                           target="_blank"
                                           rel="noopener noreferrer"
                                           className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
@@ -544,9 +553,9 @@ export default function MembersClient() {
                                           <Linkedin className="h-4 w-4" />
                                         </Link>
                                       )}
-                                      {director.socialLinks?.instagram && (
+                                      {member.socialLinks?.instagram && (
                                         <Link
-                                          href={director.socialLinks.instagram}
+                                          href={member.socialLinks.instagram}
                                           target="_blank"
                                           rel="noopener noreferrer"
                                           className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
@@ -556,93 +565,20 @@ export default function MembersClient() {
                                       )}
                                     </div>
                                   </CardContent>
-                                </div>
-                              </Card>
-                            )
-                          })()}
-                        </>
+                                </Card>
+                              );
+                            })}
+                          </div>
+                        </div>
                       )}
                     </div>
-                  </div>
-
-                  <div className="p-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="text-base font-semibold text-[#405862] font-bricolage"> Members</h4>
-                    </div>
-
-                    <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-                      {(department.members || []).map((member) => {
-                        if (!member) return null;
-                        return (
-                          <Card
-                            key={member.id}
-                            className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
-                          >
-                            <CardContent className="p-3">
-                              <div className="flex items-center gap-2 mb-1">
-                                <div className="relative h-8 w-8 rounded-full overflow-hidden flex-shrink-0">
-                                  <Image
-                                    src={member.image}
-                                    alt={member.name}
-                                    fill
-                                    className="object-cover"
-                                  />
-                                </div>
-                                <div>
-                                  <h5 className="font-semibold text-sm text-[#405862] font-bricolage">{member.name}</h5>
-                                  <p className="text-xs text-[#405862]/75">{member.role}</p>
-                                </div>
-                              </div>
-                              <p className="text-xs text-[#405862]/90 leading-relaxed mb-1">
-                                {expandedBios[member.id] ? (member.bio || "") : truncateBio(member.bio, 60)}
-                              </p>
-                              {(member.bio || "").length > 60 && (
-                              <button
-                                onClick={() => toggleBio(member.id)}
-                                className="text-[#405862] text-xs font-semibold hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
-                              >
-                                {expandedBios[member.id] ? (
-                                  <>
-                                    Show Less <ChevronUp className="h-3 w-3 ml-1" />
-                                  </>
-                                ) : (
-                                  <>
-                                    See More <ChevronDown className="h-3 w-3 ml-1" />
-                                  </>
-                                )}
-                              </button>
-                            )}
-                            <div className="flex space-x-2 mt-1">
-                              {member.socialLinks?.linkedin && (
-                                <Link
-                                  href={member.socialLinks.linkedin}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                                >
-                                  <Linkedin className="h-4 w-4" />
-                                </Link>
-                              )}
-                              {member.socialLinks?.instagram && (
-                                <Link
-                                  href={member.socialLinks.instagram}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                                >
-                                  <Instagram className="h-4 w-4" />
-                                </Link>
-                              )}
-                            </div>
-                            </CardContent>
-                          </Card>
-                        );
-                      })}
-                    </div>
-                  </div>
+                  );
+                })
+              ) : (
+                <div className="text-center py-12 text-[#405862]/80">
+                  <p>No department members currently listed.</p>
                 </div>
-              );
-            })}
+              )}
               
               <div className="mt-8 p-6 bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 rounded-lg text-center">
                 <h3 className="text-lg font-semibold text-[#405862] mb-2 font-bricolage">Interested in Joining Our Team?</h3>
@@ -658,90 +594,96 @@ export default function MembersClient() {
 
             {/* TAB: Advisors */}
             <TabsContent value="advisors" className="space-y-6">
-              <div>
-                <h3 className="text-lg font-semibold mb-4 text-center text-[#405862] font-bricolage">Medical Student Advisors</h3>
-                <p className="text-center text-[#405862]/80 mb-6 max-w-2xl mx-auto text-sm">
-                  Our medical student advisors provide valuable guidance and mentorship, helping bridge the gap between
-                  high school and medical education.
-                </p>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {(advisorsList || []).map((advisor) => {
-                    if (!advisor) return null;
-                    return (
-                      <Card
-                        key={advisor.id}
-                        className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
-                      >
-                        <div className="bg-[#f5f1eb] flex items-center justify-center p-4">
-                          <div className="relative h-32 w-32 rounded-full overflow-hidden">
-                            <Image
-                              src={advisor.image}
-                              alt={advisor.name}
-                              fill
-                              className="object-cover"
-                            />
+              {advisorsList && advisorsList.length > 0 ? (
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 text-center text-[#405862] font-bricolage">Medical Student Advisors</h3>
+                  <p className="text-center text-[#405862]/80 mb-6 max-w-2xl mx-auto text-sm">
+                    Our medical student advisors provide valuable guidance and mentorship, helping bridge the gap between
+                    high school and medical education.
+                  </p>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {advisorsList.map((advisor) => {
+                      if (!advisor) return null;
+                      return (
+                        <Card
+                          key={advisor.id}
+                          className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
+                        >
+                          <div className="bg-[#f5f1eb] flex items-center justify-center p-4">
+                            <div className="relative h-32 w-32 rounded-full overflow-hidden">
+                              <Image
+                                src={advisor.image}
+                                alt={advisor.name}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <CardContent className="p-4">
-                          <h4 className="text-base font-semibold text-[#405862] font-bricolage">{advisor.name}</h4>
-                          <p className="text-sm text-[#4ecdc4] font-medium mb-2">{advisor.role}</p>
-                          <p className="text-sm text-[#405862]/90 leading-relaxed mb-3">
-                            {expandedBios[advisor.id] ? (advisor.bio || "") : truncateBio(advisor.bio, 120)}
-                          </p>
-                          {(advisor.bio || "").length > 120 && (
-                          <button
-                            onClick={() => toggleBio(advisor.id)}
-                            className="text-[#405862] text-sm font-semibold hover:text-[#4ecdc4] transition-colors mb-3 flex items-center"
-                          >
-                            {expandedBios[advisor.id] ? (
-                              <>
-                                Show Less <ChevronUp className="h-4 w-4 ml-1" />
-                              </>
-                            ) : (
-                              <>
-                                See More <ChevronDown className="h-4 w-4 ml-1" />
-                              </>
+                          <CardContent className="p-4">
+                            <h4 className="text-base font-semibold text-[#405862] font-bricolage">{advisor.name}</h4>
+                            <p className="text-sm text-[#4ecdc4] font-medium mb-2">{advisor.role}</p>
+                            <p className="text-sm text-[#405862]/90 leading-relaxed mb-3">
+                              {expandedBios[advisor.id] ? (advisor.bio || "") : truncateBio(advisor.bio, 120)}
+                            </p>
+                            {(advisor.bio || "").length > 120 && (
+                              <button
+                                onClick={() => toggleBio(advisor.id)}
+                                className="text-[#405862] text-sm font-semibold hover:text-[#4ecdc4] transition-colors mb-3 flex items-center"
+                              >
+                                {expandedBios[advisor.id] ? (
+                                  <>
+                                    Show Less <ChevronUp className="h-4 w-4 ml-1" />
+                                  </>
+                                ) : (
+                                  <>
+                                    See More <ChevronDown className="h-4 w-4 ml-1" />
+                                  </>
+                                )}
+                              </button>
                             )}
-                          </button>
-                        )}
-                        <div className="flex space-x-3">
-                          {advisor.socialLinks?.linkedin && (
-                            <Link
-                              href={advisor.socialLinks.linkedin}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                            >
-                              <Linkedin className="h-5 w-5" />
-                            </Link>
-                          )}
-                          {advisor.socialLinks?.instagram && (
-                            <Link
-                              href={advisor.socialLinks.instagram}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                            >
-                              <Instagram className="h-5 w-5" />
-                            </Link>
-                          )}
-                          {advisor.socialLinks?.website && (
-                            <Link
-                              href={advisor.socialLinks.website}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                            >
-                              <Globe className="h-5 w-5" />
-                            </Link>
-                          )}
-                        </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
+                            <div className="flex space-x-3">
+                              {advisor.socialLinks?.linkedin && (
+                                <Link
+                                  href={advisor.socialLinks.linkedin}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                                >
+                                  <Linkedin className="h-5 w-5" />
+                                </Link>
+                              )}
+                              {advisor.socialLinks?.instagram && (
+                                <Link
+                                  href={advisor.socialLinks.instagram}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                                >
+                                  <Instagram className="h-5 w-5" />
+                                </Link>
+                              )}
+                              {advisor.socialLinks?.website && (
+                                <Link
+                                  href={advisor.socialLinks.website}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                                >
+                                  <Globe className="h-5 w-5" />
+                                </Link>
+                              )}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="text-center py-12 text-[#405862]/80">
+                  <p>No advisors currently listed.</p>
+                </div>
+              )}
               <div className="mt-8 p-6 bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 rounded-lg text-center">
                 <h3 className="text-lg font-semibold text-[#405862] mb-2 font-bricolage">Interested in Joining Our Team?</h3>
                 <p className="text-[#405862]/80 mb-3">
