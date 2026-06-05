@@ -150,7 +150,7 @@ export default function MembersClient() {
     (m) =>
       m.department === "Advisory Board" ||
       m.department === "Advisors" ||
-      m.role.toLowerCase().includes("advisor"),
+      (m.role || "").toLowerCase().includes("advisor"),
   )
   const advisorsList: MemberType[] =
     rawAdvisors.length > 0
@@ -168,12 +168,23 @@ export default function MembersClient() {
   const departmentsList: DepartmentType[] = staticDepartments.map((staticDept) => {
     const deptMembers = dbMembers.filter((m) => getDepartmentMatch(staticDept.id, m.department))
 
+    const staticGeneralMembers = [
+      ...(staticDept.deputyDirectors || []),
+      ...(staticDept.coordinators || []),
+    ]
+
     if (deptMembers.length === 0) {
-      return staticDept // Fallback to static data
+      return {
+        id: staticDept.id,
+        name: staticDept.name,
+        description: staticDept.description,
+        director: staticDept.director,
+        members: staticGeneralMembers,
+      } as any
     }
 
     // Directors (role contains director or lead)
-    const rawDirs = deptMembers.filter((m) => m.role.toLowerCase().includes("director"))
+    const rawDirs = deptMembers.filter((m) => (m.role || "").toLowerCase().includes("director"))
     const directors: MemberType[] = rawDirs.map((dir) => ({
       id: dir.id,
       name: dir.name,
@@ -184,7 +195,7 @@ export default function MembersClient() {
     }))
 
     // General members
-    const rawMems = deptMembers.filter((m) => !m.role.toLowerCase().includes("director"))
+    const rawMems = deptMembers.filter((m) => !(m.role || "").toLowerCase().includes("director"))
     const members: MemberType[] = rawMems.map((mem) => ({
       id: mem.id,
       name: mem.name,
@@ -199,8 +210,18 @@ export default function MembersClient() {
       name: staticDept.name,
       description: staticDept.description,
       director: directors.length > 0 ? (directors.length === 1 ? directors[0] : directors) : staticDept.director,
-      members: members.length > 0 ? members : staticDept.members,
-    }
+      members: members.length > 0 ? members : staticGeneralMembers,
+    } as any
+  })
+
+  console.log("DEBUG DEPARTMENTS:", {
+    deputyexecdir: typeof deputyexecdir,
+    deputyexecdirLength: deputyexecdir?.length,
+    advisorsList: typeof advisorsList,
+    advisorsListLength: advisorsList?.length,
+    departmentsList: typeof departmentsList,
+    departmentsListLength: departmentsList?.length,
+    departmentsData: departmentsList.map(d => ({ id: d.id, hasMembers: !!d.members, membersType: typeof d.members, membersCount: d.members?.length }))
   })
 
   if (loading) {
@@ -265,9 +286,9 @@ export default function MembersClient() {
                         <h4 className="text-lg font-semibold text-[#405862] font-bricolage">{executiveDirector.name}</h4>
                         <p className="text-sm text-[#4ecdc4] font-medium mb-2">{executiveDirector.role}</p>
                         <p className="text-sm text-[#405862]/90 leading-relaxed mb-3">
-                          {expandedBios[executiveDirector.id] ? executiveDirector.bio : truncateBio(executiveDirector.bio)}
+                          {expandedBios[executiveDirector.id] ? (executiveDirector.bio || "") : truncateBio(executiveDirector.bio)}
                         </p>
-                        {executiveDirector.bio.length > 150 && (
+                        {(executiveDirector.bio || "").length > 150 && (
                           <button
                             onClick={() => toggleBio(executiveDirector.id)}
                             className="text-[#405862] text-sm font-semibold hover:text-[#4ecdc4] transition-colors mb-3 flex items-center"
@@ -325,69 +346,74 @@ export default function MembersClient() {
               <div>
                 <h3 className="text-lg font-semibold mb-4 text-center text-[#405862] font-bricolage">Deputy Executive Directors</h3>
                 <div className="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
-                  {deputyexecdir.map((vp) => (
-                    <Card key={vp.id} className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
-                      <div className="grid md:grid-cols-3">
-                        <div className="md:col-span-1 bg-[#f5f1eb] flex items-center justify-center">
-                          <div className="relative h-full w-full aspect-square">
-                            <Image src={vp.image} alt={vp.name} fill className="object-cover" />
+                  {(deputyexecdir || []).map((vp) => {
+                    if (!vp) return null;
+                    return (
+                      <Card key={vp.id} className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="grid md:grid-cols-3">
+                          <div className="md:col-span-1 bg-[#f5f1eb] flex items-center justify-center">
+                            <div className="relative h-full w-full aspect-square">
+                              <Image src={vp.image} alt={vp.name} fill className="object-cover" />
+                            </div>
                           </div>
-                        </div>
-                        <CardContent className="md:col-span-2 p-4">
-                          <h4 className="text-base font-semibold text-[#405862] font-bricolage">{vp.name}</h4>
-                          <p className="text-sm text-[#4ecdc4] font-medium mb-2">{vp.role}</p>
-                          <p className="text-sm text-[#405862]/90 leading-relaxed mb-3">
-                            {expandedBios[vp.id] ? vp.bio : truncateBio(vp.bio, 120)}
-                          </p>
-                          {vp.bio.length > 120 && (
-                            <button
-                              onClick={() => toggleBio(vp.id)}
-                              className="text-[#405862] text-sm font-semibold hover:text-[#4ecdc4] transition-colors mb-3 flex items-center"
-                            >
-                              {expandedBios[vp.id] ? (
-                                <>
-                                  Show Less <ChevronUp className="h-4 w-4 ml-1" />
-                                </>
-                              ) : (
-                                <>
-                                  See More <ChevronDown className="h-4 w-4 ml-1" />
-                                </>
+                          <CardContent className="md:col-span-2 p-4">
+                            <h4 className="text-base font-semibold text-[#405862] font-bricolage">{vp.name}</h4>
+                            <p className="text-sm text-[#4ecdc4] font-medium mb-2">{vp.role}</p>
+                            <p className="text-sm text-[#405862]/90 leading-relaxed mb-3">
+                              {expandedBios[vp.id] ? (vp.bio || "") : truncateBio(vp.bio, 120)}
+                            </p>
+                            {(vp.bio || "").length > 120 && (
+                              <button
+                                onClick={() => toggleBio(vp.id)}
+                                className="text-[#405862] text-sm font-semibold hover:text-[#4ecdc4] transition-colors mb-3 flex items-center"
+                              >
+                                {expandedBios[vp.id] ? (
+                                  <>
+                                    Show Less <ChevronUp className="h-4 w-4 ml-1" />
+                                  </>
+                                ) : (
+                                  <>
+                                    See More <ChevronDown className="h-4 w-4 ml-1" />
+                                  </>
+                                )}
+                              </button>
+                            )}
+                            <div className="flex space-x-3">
+                              {vp.socialLinks?.linkedin && (
+                                <Link href={vp.socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
+                                  <Linkedin className="h-5 w-5" />
+                                </Link>
                               )}
-                            </button>
-                          )}
-                          <div className="flex space-x-3">
-                            {vp.socialLinks?.linkedin && (
-                              <Link href={vp.socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
-                                <Linkedin className="h-5 w-5" />
-                              </Link>
-                            )}
-                            {vp.socialLinks?.instagram && (
-                              <Link href={vp.socialLinks.instagram} target="_blank" rel="noopener noreferrer">
-                                <Instagram className="h-5 w-5" />
-                              </Link>
-                            )}
-                            {vp.socialLinks?.website && (
-                              <Link href={vp.socialLinks.website} target="_blank" rel="noopener noreferrer">
-                                <Globe className="h-5 w-5" />
-                              </Link>
-                            )}
-                          </div>
-                        </CardContent>
-                      </div>
-                    </Card>
-                  ))}
+                              {vp.socialLinks?.instagram && (
+                                <Link href={vp.socialLinks.instagram} target="_blank" rel="noopener noreferrer">
+                                  <Instagram className="h-5 w-5" />
+                                </Link>
+                              )}
+                              {vp.socialLinks?.website && (
+                                <Link href={vp.socialLinks.website} target="_blank" rel="noopener noreferrer">
+                                  <Globe className="h-5 w-5" />
+                                </Link>
+                              )}
+                            </div>
+                          </CardContent>
+                        </div>
+                      </Card>
+                    );
+                  })}
                 </div>
               </div>
             </TabsContent>
 
             {/* TAB: Departments */}
             <TabsContent value="departments" className="space-y-6">
-              {departmentsList.map((department) => (
-                <div
-                  key={department.id}
-                  className="border rounded-lg overflow-hidden bg-white border-[#405862]/20 shadow-sm mb-4"
-                >
-                  <div className="p-4 border-b bg-[#f5f1eb]/30">
+              {(departmentsList || []).map((department) => {
+                if (!department) return null;
+                return (
+                  <div
+                    key={department.id}
+                    className="border rounded-lg overflow-hidden bg-white border-[#405862]/20 shadow-sm mb-4"
+                  >
+                    <div className="p-4 border-b bg-[#f5f1eb]/30">
                     <h3 className="text-lg font-semibold text-[#405862] font-bricolage">{department.name}</h3>
                     <p className="text-[#405862]/80 text-sm mt-1">{department.description}</p>
                   </div>
@@ -398,11 +424,13 @@ export default function MembersClient() {
                     </div>
                     <div className="grid gap-4 md:grid-cols-2">
                       {Array.isArray(department.director) ? (
-                        department.director.map((director) => (
-                          <Card
-                            key={director.id}
-                            className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
-                          >
+                        (department.director || []).map((director) => {
+                          if (!director) return null;
+                          return (
+                            <Card
+                              key={director.id}
+                              className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
+                            >
                             <div className="grid grid-cols-3">
                               <div className="col-span-1 bg-[#f5f1eb]">
                                 <div className="relative h-full w-full aspect-square">
@@ -418,9 +446,9 @@ export default function MembersClient() {
                                 <h5 className="font-semibold text-sm text-[#405862] font-bricolage">{director.name}</h5>
                                 <p className="text-xs text-[#4ecdc4] font-medium mb-1">{director.role}</p>
                                 <p className="text-xs text-[#405862]/90 leading-relaxed mb-1">
-                                  {expandedBios[director.id] ? director.bio : truncateBio(director.bio, 80)}
+                                  {expandedBios[director.id] ? (director.bio || "") : truncateBio(director.bio, 80)}
                                 </p>
-                                {director.bio.length > 80 && (
+                                {(director.bio || "").length > 80 && (
                                   <button
                                     onClick={() => toggleBio(director.id)}
                                     className="text-[#405862] text-xs font-semibold hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
@@ -461,103 +489,114 @@ export default function MembersClient() {
                               </CardContent>
                             </div>
                           </Card>
-                        ))
+                        );
+                      })
                       ) : (
-                        <Card className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
-                          <div className="grid grid-cols-3">
-                            <div className="col-span-1 bg-[#f5f1eb]">
-                              <div className="relative h-full w-full aspect-square">
-                                <Image
-                                  src={department.director.image}
-                                  alt={department.director.name}
-                                  fill
-                                  className="object-cover"
-                                />
-                              </div>
-                            </div>
-                            <CardContent className="col-span-2 p-3">
-                              <h5 className="font-semibold text-sm text-[#405862] font-bricolage">{department.director.name}</h5>
-                              <p className="text-xs text-[#4ecdc4] font-medium mb-1">{department.director.role}</p>
-                              <p className="text-xs text-[#405862]/90 leading-relaxed mb-1">
-                                {expandedBios[department.director.id]
-                                  ? department.director.bio
-                                  : truncateBio(department.director.bio, 80)}
-                              </p>
-                              {department.director.bio.length > 80 && (
-                                <button
-                                  onClick={() => toggleBio(department.director.id)}
-                                  className="text-[#405862] text-xs font-semibold hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
-                                >
-                                  {expandedBios[department.director.id] ? (
-                                    <>
-                                      Show Less <ChevronUp className="h-3 w-3 ml-1" />
-                                    </>
-                                  ) : (
-                                    <>
-                                      See More <ChevronDown className="h-3 w-3 ml-1" />
-                                    </>
-                                  )}
-                                </button>
-                              )}
-                              <div className="flex space-x-2">
-                                {department.director.socialLinks?.linkedin && (
-                                  <Link
-                                    href={department.director.socialLinks.linkedin}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                                  >
-                                    <Linkedin className="h-4 w-4" />
-                                  </Link>
-                                )}
-                                {department.director.socialLinks?.instagram && (
-                                  <Link
-                                    href={department.director.socialLinks.instagram}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
-                                  >
-                                    <Instagram className="h-4 w-4" />
-                                  </Link>
-                                )}
-                              </div>
-                            </CardContent>
-                          </div>
-                        </Card>
+                        <>
+                          {(() => {
+                            const director = department.director as MemberType;
+                            if (!director) return null;
+                            return (
+                              <Card className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow">
+                                <div className="grid grid-cols-3">
+                                  <div className="col-span-1 bg-[#f5f1eb]">
+                                    <div className="relative h-full w-full aspect-square">
+                                      <Image
+                                        src={director.image}
+                                        alt={director.name}
+                                        fill
+                                        className="object-cover"
+                                      />
+                                    </div>
+                                  </div>
+                                  <CardContent className="col-span-2 p-3">
+                                    <h5 className="font-semibold text-sm text-[#405862] font-bricolage">{director.name}</h5>
+                                    <p className="text-xs text-[#4ecdc4] font-medium mb-1">{director.role}</p>
+                                    <p className="text-xs text-[#405862]/90 leading-relaxed mb-1">
+                                      {expandedBios[director.id]
+                                        ? (director.bio || "")
+                                        : truncateBio(director.bio, 80)}
+                                    </p>
+                                    {(director.bio || "").length > 80 && (
+                                      <button
+                                        onClick={() => toggleBio(director.id)}
+                                        className="text-[#405862] text-xs font-semibold hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
+                                      >
+                                        {expandedBios[director.id] ? (
+                                          <>
+                                            Show Less <ChevronUp className="h-3 w-3 ml-1" />
+                                          </>
+                                        ) : (
+                                          <>
+                                            See More <ChevronDown className="h-3 w-3 ml-1" />
+                                          </>
+                                        )}
+                                      </button>
+                                    )}
+                                    <div className="flex space-x-2">
+                                      {director.socialLinks?.linkedin && (
+                                        <Link
+                                          href={director.socialLinks.linkedin}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                                        >
+                                          <Linkedin className="h-4 w-4" />
+                                        </Link>
+                                      )}
+                                      {director.socialLinks?.instagram && (
+                                        <Link
+                                          href={director.socialLinks.instagram}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="text-[#405862] hover:text-[#4ecdc4] transition-colors"
+                                        >
+                                          <Instagram className="h-4 w-4" />
+                                        </Link>
+                                      )}
+                                    </div>
+                                  </CardContent>
+                                </div>
+                              </Card>
+                            )
+                          })()}
+                        </>
                       )}
                     </div>
                   </div>
 
                   <div className="p-4">
                     <div className="flex items-center justify-between mb-3">
-                      <h4 className="text-base font-semibold text-[#405862] font-bricolage">Members</h4>
+                      <h4 className="text-base font-semibold text-[#405862] font-bricolage"> Members</h4>
                     </div>
 
                     <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-                      {department.members.map((member) => (
-                        <Card
-                          key={member.id}
-                          className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
-                        >
-                          <CardContent className="p-3">
-                            <div className="flex items-center gap-2 mb-1">
-                              <div className="relative h-8 w-8 rounded-full overflow-hidden flex-shrink-0">
-                                <Image
-                                  src={member.image}
-                                  alt={member.name}
-                                  fill
-                                  className="object-cover"
-                                />
+                      {(department.members || []).map((member) => {
+                        if (!member) return null;
+                        return (
+                          <Card
+                            key={member.id}
+                            className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
+                          >
+                            <CardContent className="p-3">
+                              <div className="flex items-center gap-2 mb-1">
+                                <div className="relative h-8 w-8 rounded-full overflow-hidden flex-shrink-0">
+                                  <Image
+                                    src={member.image}
+                                    alt={member.name}
+                                    fill
+                                    className="object-cover"
+                                  />
+                                </div>
+                                <div>
+                                  <h5 className="font-semibold text-sm text-[#405862] font-bricolage">{member.name}</h5>
+                                  <p className="text-xs text-[#405862]/75">{member.role}</p>
+                                </div>
                               </div>
-                              <div>
-                                <h5 className="font-semibold text-sm text-[#405862] font-bricolage">{member.name}</h5>
-                                <p className="text-xs text-[#405862]/75">{member.role}</p>
-                              </div>
-                            </div>
-                            <p className="text-xs text-[#405862]/90 leading-relaxed mb-1">
-                              {expandedBios[member.id] ? member.bio : truncateBio(member.bio, 60)}
-                            </p>
-                            {member.bio.length > 60 && (
+                              <p className="text-xs text-[#405862]/90 leading-relaxed mb-1">
+                                {expandedBios[member.id] ? (member.bio || "") : truncateBio(member.bio, 60)}
+                              </p>
+                              {(member.bio || "").length > 60 && (
                               <button
                                 onClick={() => toggleBio(member.id)}
                                 className="text-[#405862] text-xs font-semibold hover:text-[#4ecdc4] transition-colors mb-1 flex items-center"
@@ -595,13 +634,15 @@ export default function MembersClient() {
                                 </Link>
                               )}
                             </div>
-                          </CardContent>
-                        </Card>
-                      ))}
+                            </CardContent>
+                          </Card>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
-              ))}
+              );
+            })}
               
               <div className="mt-8 p-6 bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 rounded-lg text-center">
                 <h3 className="text-lg font-semibold text-[#405862] mb-2 font-bricolage">Interested in Joining Our Team?</h3>
@@ -624,28 +665,30 @@ export default function MembersClient() {
                   high school and medical education.
                 </p>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {advisorsList.map((advisor) => (
-                    <Card
-                      key={advisor.id}
-                      className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
-                    >
-                      <div className="bg-[#f5f1eb] flex items-center justify-center p-4">
-                        <div className="relative h-32 w-32 rounded-full overflow-hidden">
-                          <Image
-                            src={advisor.image}
-                            alt={advisor.name}
-                            fill
-                            className="object-cover"
-                          />
+                  {(advisorsList || []).map((advisor) => {
+                    if (!advisor) return null;
+                    return (
+                      <Card
+                        key={advisor.id}
+                        className="overflow-hidden border-[#405862]/20 shadow-sm hover:shadow-md transition-shadow"
+                      >
+                        <div className="bg-[#f5f1eb] flex items-center justify-center p-4">
+                          <div className="relative h-32 w-32 rounded-full overflow-hidden">
+                            <Image
+                              src={advisor.image}
+                              alt={advisor.name}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
                         </div>
-                      </div>
-                      <CardContent className="p-4">
-                        <h4 className="text-base font-semibold text-[#405862] font-bricolage">{advisor.name}</h4>
-                        <p className="text-sm text-[#4ecdc4] font-medium mb-2">{advisor.role}</p>
-                        <p className="text-sm text-[#405862]/90 leading-relaxed mb-3">
-                          {expandedBios[advisor.id] ? advisor.bio : truncateBio(advisor.bio, 120)}
-                        </p>
-                        {advisor.bio.length > 120 && (
+                        <CardContent className="p-4">
+                          <h4 className="text-base font-semibold text-[#405862] font-bricolage">{advisor.name}</h4>
+                          <p className="text-sm text-[#4ecdc4] font-medium mb-2">{advisor.role}</p>
+                          <p className="text-sm text-[#405862]/90 leading-relaxed mb-3">
+                            {expandedBios[advisor.id] ? (advisor.bio || "") : truncateBio(advisor.bio, 120)}
+                          </p>
+                          {(advisor.bio || "").length > 120 && (
                           <button
                             onClick={() => toggleBio(advisor.id)}
                             className="text-[#405862] text-sm font-semibold hover:text-[#4ecdc4] transition-colors mb-3 flex items-center"
@@ -693,9 +736,10 @@ export default function MembersClient() {
                             </Link>
                           )}
                         </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
                 </div>
               </div>
               <div className="mt-8 p-6 bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 rounded-lg text-center">
