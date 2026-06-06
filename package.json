@@ -62,7 +62,7 @@
     "react-easy-crop": "^5.5.7",
     "react-hook-form": "latest",
     "react-markdown": "latest",
-    "react-resizable-panels": "latest",
+    "react-resizable-panels": "^4.11.2",
     "recharts": "latest",
     "sonner": "latest",
     "tailwind-merge": "^2.5.5",
