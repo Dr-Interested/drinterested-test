@@ -2,11 +2,11 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 /**
- * Combined proxy rules for Dr. Interested.
+ * Combined middleware rules for Dr. Interested.
  * Serves as both the router redirect tool (for /team routes) and the server-side
- * admin session gatekeeper (gatekeeping /admin routes).
+ * admin session gatekeeper (gatekeeping /dashboard routes).
  */
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 1. Team redirects
