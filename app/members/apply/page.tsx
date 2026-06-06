@@ -203,6 +203,7 @@ export default function DbApplyPage() {
     const newMember = {
       name: formData.get("name") as string,
       email: (formData.get("email") as string).trim().toLowerCase(),
+      discord_username: (formData.get("discord_username") as string).trim(),
       role: finalRole,
       department: formData.get("department") as string,
       bio: formData.get("bio") as string,
@@ -231,6 +232,20 @@ export default function DbApplyPage() {
       const { error } = await supabase.from("members").insert([newMember])
 
       if (error) throw error
+
+      // Securely trigger the Discord webhook notification via our Next.js API route
+      try {
+        await fetch("/api/members/apply/notify", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newMember),
+        })
+      } catch (notifyErr) {
+        // Log notification error but don't fail the user application submission UX
+        console.error("Discord notification failed to send:", notifyErr)
+      }
 
       setMessage({ type: "success", text: "✓ Application submitted successfully! We'll review it soon." })
       ;(e.target as HTMLFormElement).reset()
@@ -315,6 +330,18 @@ export default function DbApplyPage() {
             type="email"
             id="email"
             name="email"
+            required
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4CAF7D] focus:border-transparent transition-all"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="discord_username" className="block font-medium mb-1 text-[#1a1a1a]">Discord Username *</label>
+          <input
+            type="text"
+            id="discord_username"
+            name="discord_username"
+            placeholder="e.g. username"
             required
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4CAF7D] focus:border-transparent transition-all"
           />

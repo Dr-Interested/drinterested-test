@@ -12,6 +12,7 @@ type Member = {
   id: string
   name: string
   email?: string
+  discord_username?: string
   role: string
   department: string
   bio: string
@@ -654,6 +655,8 @@ export default function DbAdminPage() {
         .from("members")
         .update({
           name: editForm.name,
+          email: editForm.email?.trim().toLowerCase() || null,
+          discord_username: editForm.discord_username?.trim() || null,
           role: editForm.role,
           department: editForm.department,
           bio: editForm.bio,
@@ -1393,6 +1396,26 @@ export default function DbAdminPage() {
                   onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
                   className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4CAF7D]"
                 />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Email Address</label>
+                  <input
+                    type="email"
+                    value={editForm.email || ""}
+                    onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4CAF7D]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Discord Username</label>
+                  <input
+                    type="text"
+                    value={editForm.discord_username || ""}
+                    onChange={(e) => setEditForm({ ...editForm, discord_username: e.target.value })}
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4CAF7D]"
+                  />
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
