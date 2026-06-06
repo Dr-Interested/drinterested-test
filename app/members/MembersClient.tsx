@@ -429,6 +429,7 @@ export default function MembersClient() {
                                           src={director.image}
                                           alt={director.name}
                                           fill
+                                          sizes="(max-width: 768px) 33vw, 150px"
                                           className="object-cover"
                                         />
                                       </div>
@@ -507,6 +508,7 @@ export default function MembersClient() {
                                           src={member.image}
                                           alt={member.name}
                                           fill
+                                          sizes="32px"
                                           className="object-cover"
                                         />
                                       </div>
