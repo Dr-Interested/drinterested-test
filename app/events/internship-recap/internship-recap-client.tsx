@@ -10,6 +10,9 @@ import ScrollToTop from "@/components/scroll-to-top"
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog"
 
 export default function InternshipRecapClientPage() {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [zoomLevel, setZoomLevel] = useState(1)
+
   // Scroll to top on page load
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -18,9 +21,6 @@ export default function InternshipRecapClientPage() {
       setZoomLevel(1)
     }
   }, [])
-
-  const [selectedImage, setSelectedImage] = useState<string | null>(null)
-  const [zoomLevel, setZoomLevel] = useState(1)
 
   const handleZoomIn = () => {
     setZoomLevel((prev) => Math.min(prev + 0.25, 3))
