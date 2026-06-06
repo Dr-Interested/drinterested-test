@@ -116,6 +116,7 @@ export default async function MemberPage({ params }: { params: Promise<{ id: str
                   src={member.image || "/logo.png"}
                   alt={member.name}
                   fill
+                  sizes="(max-width: 768px) 224px, 256px"
                   className="object-cover"
                 />
               </div>

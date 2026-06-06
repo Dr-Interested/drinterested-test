@@ -257,7 +257,7 @@ export default function MembersClient() {
                       <div className="grid md:grid-cols-3">
                         <div className="md:col-span-1 bg-[#f5f1eb] flex items-center justify-center">
                           <div className="relative h-full w-full aspect-square">
-                            <Image src={executiveDirector.image} alt={executiveDirector.name} fill className="object-cover" />
+                            <Image src={executiveDirector.image} alt={executiveDirector.name} fill sizes="(max-width: 768px) 100vw, 300px" className="object-cover" />
                           </div>
                         </div>
                         <CardContent className="md:col-span-2 p-4">
@@ -333,7 +333,7 @@ export default function MembersClient() {
                           <div className="grid md:grid-cols-3">
                             <div className="md:col-span-1 bg-[#f5f1eb] flex items-center justify-center">
                               <div className="relative h-full w-full aspect-square">
-                                <Image src={vp.image} alt={vp.name} fill className="object-cover" />
+                                <Image src={vp.image} alt={vp.name} fill sizes="(max-width: 768px) 100vw, 300px" className="object-cover" />
                               </div>
                             </div>
                             <CardContent className="md:col-span-2 p-4">
@@ -609,6 +609,7 @@ export default function MembersClient() {
                                 src={advisor.image}
                                 alt={advisor.name}
                                 fill
+                                sizes="128px"
                                 className="object-cover"
                               />
                             </div>
@@ -749,7 +750,7 @@ export default function MembersClient() {
                         Extra Opportunities <span className="text-[10px] font-semibold px-1.5 py-0.5 bg-[#405862]/10 rounded text-[#405862] ml-1">Canada · Under 18</span>
                       </h4>
                       <div className="relative w-20 h-6 shrink-0">
-                        <Image src="/glocal.webp" alt="GLOCAL Foundation Logo" fill className="object-contain" />
+                        <Image src="/glocal.webp" alt="GLOCAL Foundation Logo" fill sizes="80px" className="object-contain" />
                       </div>
                     </div>
                     <p className="text-[11px] text-[#405862]/70 mb-3 italic">

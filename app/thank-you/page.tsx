@@ -43,7 +43,7 @@ export default function ThankYouPage() {
       <div className="max-w-md mx-auto">
         <div className="mb-6 flex justify-center">
           <div className="relative h-24 w-24">
-            <Image src="/logo.png" alt="Dr. Interested Logo" fill className="object-contain rounded-lg" priority />
+            <Image src="/logo.png" alt="Dr. Interested Logo" fill sizes="96px" className="object-contain rounded-lg" priority />
           </div>
         </div>
 
