@@ -22,14 +22,14 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // 2. Server-side admin route protection (defense-in-depth)
-  if (pathname.startsWith("/admin")) {
-    const adminSession = request.cookies.get("admin-session")?.value;
+  // 2. Server-side portal route protection (defense-in-depth)
+  if (pathname.startsWith("/dashboard")) {
+    const portalSession = request.cookies.get("portal-session")?.value;
     const isLoginFlow = request.nextUrl.searchParams.get("login") === "true";
 
-    if (!adminSession || adminSession !== "authenticated") {
-      // Allow access to /admin if explicitly entering the login flow
-      if (isLoginFlow && pathname === "/admin") {
+    if (!portalSession || portalSession !== "authenticated") {
+      // Allow access to /dashboard if explicitly entering the login flow
+      if (isLoginFlow && pathname === "/dashboard") {
         return NextResponse.next();
       }
 
@@ -44,5 +44,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/team", "/team/:path*", "/admin/:path*"],
+  matcher: ["/team", "/team/:path*", "/dashboard/:path*"],
 };

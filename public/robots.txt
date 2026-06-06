@@ -7,6 +7,6 @@ Sitemap: https://drinterested.tech/sitemap.xml
 
 # Disallow specific paths
 Disallow: /api/
-Disallow: /admin/
+Disallow: /dashboard/
 Disallow: /private/
 

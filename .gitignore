@@ -32,3 +32,6 @@ next-env.d.ts
 
 # dev/migration scripts (not needed in production)
 /scripts/
+
+# temporary agent scratch files
+/scratch/

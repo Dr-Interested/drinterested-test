@@ -7,13 +7,13 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/admin/"],
+        disallow: ["/dashboard/"],
       },
       // ChatGPT and OpenAI crawlers
       {
         userAgent: ["ChatGPT-User", "GPTBot", "GPT-Actions", "OAI-SearchBot"],
         allow: "/",
-        disallow: ["/admin/"],
+        disallow: ["/dashboard/"],
       },
       // Major search engines
       {
@@ -29,7 +29,7 @@ export default function robots(): MetadataRoute.Robots {
           "PetalBot", // Huawei Petal Search
         ],
         allow: "/",
-        disallow: ["/admin/"],
+        disallow: ["/dashboard/"],
       },
       // AI and assistant crawlers
       {
@@ -45,7 +45,7 @@ export default function robots(): MetadataRoute.Robots {
           "meta-externalfetcher",
         ],
         allow: "/",
-        disallow: ["/admin/"],
+        disallow: ["/dashboard/"],
       },
       // Social media crawlers
       {
@@ -58,7 +58,7 @@ export default function robots(): MetadataRoute.Robots {
           "OpenGraphXYZBot",
         ],
         allow: "/",
-        disallow: ["/admin/"],
+        disallow: ["/dashboard/"],
       },
       // SEO and analytics tools
       {
@@ -76,7 +76,7 @@ export default function robots(): MetadataRoute.Robots {
           "SeekportBot",
         ],
         allow: "/",
-        disallow: ["/admin/"],
+        disallow: ["/dashboard/"],
       },
       // Monitoring and uptime services
       {
@@ -96,7 +96,7 @@ export default function robots(): MetadataRoute.Robots {
           "Amazon Route 53 Health Check Service",
         ],
         allow: "/",
-        disallow: ["/admin/"],
+        disallow: ["/dashboard/"],
       },
       // Feed readers and content services
       {
@@ -108,7 +108,7 @@ export default function robots(): MetadataRoute.Robots {
           "Cotoyogi",
         ],
         allow: "/",
-        disallow: ["/admin/"],
+        disallow: ["/dashboard/"],
       },
       // Ad and marketing crawlers
       {
@@ -122,13 +122,13 @@ export default function robots(): MetadataRoute.Robots {
           "naver-blueno", // Naver preview
         ],
         allow: "/",
-        disallow: ["/admin/"],
+        disallow: ["/dashboard/"],
       },
       // Security and compliance
       {
         userAgent: ["Detectify", "CookieScript", "Cookiebot", "SBIntuitionsBot"],
         allow: "/",
-        disallow: ["/admin/"],
+        disallow: ["/dashboard/"],
       },
       // Webhook and API services
       {
@@ -146,7 +146,7 @@ export default function robots(): MetadataRoute.Robots {
           "Hookdeck",
         ],
         allow: "/",
-        disallow: ["/admin/"],
+        disallow: ["/dashboard/"],
       },
     ],
     sitemap: [

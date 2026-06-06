@@ -202,6 +202,7 @@ export default function DbApplyPage() {
 
     const newMember = {
       name: formData.get("name") as string,
+      email: (formData.get("email") as string).trim().toLowerCase(),
       role: finalRole,
       department: formData.get("department") as string,
       bio: formData.get("bio") as string,
@@ -303,6 +304,17 @@ export default function DbApplyPage() {
             type="text"
             id="name"
             name="name"
+            required
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4CAF7D] focus:border-transparent transition-all"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="email" className="block font-medium mb-1 text-[#1a1a1a]">Email Address *</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
             required
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4CAF7D] focus:border-transparent transition-all"
           />
