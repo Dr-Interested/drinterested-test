@@ -67,6 +67,20 @@ export default function ContactClientPage() {
       if (response.ok) {
         setIsSubmitted(true)
         setSubmitError(null)
+        
+        // Securely trigger the Discord webhook notification via our API route
+        try {
+          await fetch("/api/contact/notify", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          })
+        } catch (notifyErr) {
+          console.error("Discord contact notification failed:", notifyErr)
+        }
+
         setFormData({ name: "", email: "", subject: "", message: "" })
         setTimeout(() => setIsSubmitted(false), 5000)
       } else {

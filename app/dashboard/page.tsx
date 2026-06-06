@@ -318,6 +318,22 @@ export default function DbAdminPage() {
 
       if (error) throw error
       setActiveTimecard(data)
+
+      // Securely trigger the Discord notification via our API route
+      try {
+        await fetch("/api/members/timecard/notify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            member_name: currentUser.name,
+            action: "in",
+            description: clockInInput.trim() || undefined
+          })
+        })
+      } catch (notifyErr) {
+        console.error("Failed to send clock-in notification:", notifyErr)
+      }
+
       setClockInInput("")
     } catch (err: any) {
       console.error(err)
@@ -342,6 +358,23 @@ export default function DbAdminPage() {
         .eq("id", activeTimecard.id)
 
       if (error) throw error
+
+      // Securely trigger the Discord notification via our API route
+      try {
+        await fetch("/api/members/timecard/notify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            member_name: currentUser.name,
+            action: "out",
+            description: clockInInput.trim() || undefined,
+            duration_minutes: durationMin
+          })
+        })
+      } catch (notifyErr) {
+        console.error("Failed to send clock-out notification:", notifyErr)
+      }
+
       setActiveTimecard(null)
       setClockInInput("")
       fetchMemberTimecardHistory()
