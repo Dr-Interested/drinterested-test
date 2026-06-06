@@ -11,6 +11,10 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      "drinterested-final-main/**",
+      "scratch/**",
+      "scripts/**",
+      "public/**"
     ],
   },
 ];
